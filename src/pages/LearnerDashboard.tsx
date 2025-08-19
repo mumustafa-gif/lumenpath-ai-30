@@ -16,13 +16,19 @@ import {
   TrendingUp,
   Award,
   Calendar,
-  CheckCircle
+  CheckCircle,
+  Settings
 } from "lucide-react";
 import { LearnerHeader } from "@/components/LearnerHeader";
 import { ChatInterface } from "@/components/ChatInterface";
 import { StudyBuddyCard } from "@/components/StudyBuddyCard";
+import OnboardingFlow, { OnboardingData } from "@/components/OnboardingFlow";
+import AdaptiveLearningEngine from "@/components/AdaptiveLearningEngine";
 
 const LearnerDashboard = () => {
+  const [showOnboarding, setShowOnboarding] = useState(false); // Set to true for new users
+  const [learnerProfile, setLearnerProfile] = useState<OnboardingData | null>(null);
+  
   const [currentCourses] = useState([
     {
       id: 1,
@@ -79,11 +85,23 @@ const LearnerDashboard = () => {
   ]);
 
   const [learningPath] = useState({
-    currentGoal: "AI Researcher",
-    skillsAcquired: ["Python Basics", "Statistics", "Linear Algebra"],
+    currentGoal: learnerProfile?.goal || "AI Researcher",
+    skillsAcquired: learnerProfile?.experience || ["Python Basics", "Statistics", "Linear Algebra"],
     nextMilestones: ["Machine Learning", "Deep Learning", "Neural Networks"],
     overallProgress: 34
   });
+
+  const handleOnboardingComplete = (data: OnboardingData) => {
+    setLearnerProfile(data);
+    setShowOnboarding(false);
+    // Here you would typically save to backend/Supabase
+    console.log('Onboarding completed:', data);
+  };
+
+  // Show onboarding flow for new users
+  if (showOnboarding) {
+    return <OnboardingFlow onComplete={handleOnboardingComplete} />;
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -156,10 +174,24 @@ const LearnerDashboard = () => {
           </Card>
         </div>
 
+        {/* Quick Action: Retake Onboarding */}
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-xl font-semibold">Your Learning Journey</h2>
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setShowOnboarding(true)}
+          >
+            <Settings className="w-4 h-4 mr-2" />
+            Retake Assessment
+          </Button>
+        </div>
+
         <Tabs defaultValue="courses" className="space-y-6">
           <TabsList>
             <TabsTrigger value="courses">My Courses</TabsTrigger>
             <TabsTrigger value="ai-tutor">AI Tutor</TabsTrigger>
+            <TabsTrigger value="adaptive-engine">Adaptive Learning</TabsTrigger>
             <TabsTrigger value="study-buddies">Study Buddies</TabsTrigger>
             <TabsTrigger value="progress">Progress & Analytics</TabsTrigger>
           </TabsList>
@@ -241,6 +273,17 @@ const LearnerDashboard = () => {
                 />
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="adaptive-engine">
+            <AdaptiveLearningEngine 
+              learnerData={{
+                currentModule: "Linear Algebra",
+                overallProgress: learningPath.overallProgress,
+                weakAreas: ["Mathematics", "Statistics"],
+                strengths: learnerProfile?.experience || ["Python", "Programming"]
+              }}
+            />
           </TabsContent>
 
           <TabsContent value="study-buddies" className="space-y-6">
