@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { X, Bot, TrendingUp, BarChart3, LineChart, PieChart, Minimize2 } from "lucide-react";
 import { ChatInterface } from "./ChatInterface";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, LineChart as RechartsLineChart, Line, PieChart as RechartsPieChart, Pie, Cell } from 'recharts';
@@ -161,8 +162,10 @@ export const LearnerAIAssistant = () => {
 
       {/* Chart Visualization Modal */}
       <Dialog open={showVisualization} onOpenChange={setShowVisualization}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto z-[9999] backdrop:blur-md">
-          {isGeneratingChart ? (
+        <DialogContent className="max-w-4xl max-h-[90vh] z-[9999] backdrop:blur-md p-0">
+          <ScrollArea className="max-h-[90vh]">
+            <div className="p-6">
+              {isGeneratingChart ? (
             <div className="flex flex-col items-center justify-center py-16 space-y-6">
               <div className="relative">
                 <div className="w-20 h-20 border-4 border-ai-primary/20 rounded-full animate-spin">
@@ -258,6 +261,8 @@ export const LearnerAIAssistant = () => {
               </div>
             </>
           )}
+            </div>
+          </ScrollArea>
         </DialogContent>
       </Dialog>
     </>

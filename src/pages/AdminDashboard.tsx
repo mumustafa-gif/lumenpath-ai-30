@@ -836,8 +836,10 @@ const AdminDashboard = () => {
 
       {/* Chart Visualization Modal */}
       <Dialog open={showChartModal} onOpenChange={setShowChartModal}>
-        <DialogContent className="max-w-6xl max-h-[90vh] bg-gradient-to-br from-card to-card/90 z-[9999] backdrop:blur-md">
-          {isGeneratingChart ? (
+        <DialogContent className="max-w-6xl max-h-[90vh] bg-gradient-to-br from-card to-card/90 z-[9999] backdrop:blur-md p-0">
+          <ScrollArea className="max-h-[90vh]">
+            <div className="p-6">
+              {isGeneratingChart ? (
             <div className="flex flex-col items-center justify-center py-16 space-y-6">
               <div className="relative">
                 <div className="w-20 h-20 border-4 border-ai-primary/20 rounded-full animate-spin">
@@ -982,6 +984,8 @@ const AdminDashboard = () => {
               </div>
             </>
           )}
+            </div>
+          </ScrollArea>
         </DialogContent>
       </Dialog>
     </div>
