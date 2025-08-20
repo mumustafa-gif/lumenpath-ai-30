@@ -50,6 +50,10 @@ export const CourseGenerator = () => {
   const [showAssessmentGenerator, setShowAssessmentGenerator] = useState(false);
   const [showCoursePreview, setShowCoursePreview] = useState(false);
   const [isGeneratingContent, setIsGeneratingContent] = useState(false);
+  const [isCreatingCourse, setIsCreatingCourse] = useState(false);
+  const [courseCreated, setCourseCreated] = useState(false);
+  const [coverImage, setCoverImage] = useState<string | null>(null);
+  const [isGeneratingCoverImage, setIsGeneratingCoverImage] = useState(false);
 
   const handleGenerateCourse = async () => {
     setIsGenerating(true);
@@ -228,6 +232,85 @@ export const CourseGenerator = () => {
     setIsGeneratingContent(false);
   };
 
+  const handleGenerateCoverImage = async () => {
+    setIsGeneratingCoverImage(true);
+    
+    // Simulate AI image generation
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    
+    // Set a mock generated image
+    setCoverImage("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80");
+    setIsGeneratingCoverImage(false);
+  };
+
+  const handleUploadCoverImage = () => {
+    // Simulate file upload
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setCoverImage(e.target?.result as string);
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+    input.click();
+  };
+
+  const handleCreateCourse = async () => {
+    setIsCreatingCourse(true);
+    
+    // Simulate course creation process
+    const creationSteps = [
+      "Setting up course structure...",
+      "Creating course content...",
+      "Generating assessments...",
+      "Setting up learning paths...",
+      "Configuring analytics...",
+      "Publishing course..."
+    ];
+    
+    let progress = 0;
+    for (const step of creationSteps) {
+      setGenerationPhase(step);
+      await new Promise(resolve => setTimeout(resolve, 800));
+      progress += 100 / creationSteps.length;
+      setResearchProgress(Math.min(progress, 100));
+    }
+    
+    // Create course entry in the system
+    const newCourse = {
+      id: Date.now(),
+      title: generatedCourse.title,
+      description: generatedCourse.description,
+      coverImage: coverImage,
+      modules: generatedCourse.modules,
+      status: "active",
+      createdAt: new Date().toISOString(),
+      students: 0,
+      totalLessons: generatedCourse.modules.reduce((acc: number, module: any) => acc + module.lessons.length, 0),
+      estimatedDuration: generatedCourse.estimatedCompletion,
+      difficulty: difficulty,
+      targetAudience: targetAudience,
+      prerequisites: generatedCourse.prerequisites,
+      learningOutcomes: generatedCourse.learningOutcomes,
+      tags: generatedCourse.tags
+    };
+    
+    // Store in localStorage for demo purposes
+    const existingCourses = JSON.parse(localStorage.getItem('instructorCourses') || '[]');
+    existingCourses.push(newCourse);
+    localStorage.setItem('instructorCourses', JSON.stringify(existingCourses));
+    
+    setCourseCreated(true);
+    setIsCreatingCourse(false);
+    setCurrentStep("courseCreated");
+  };
+
   return (
     <div className="space-y-6">
       {currentStep === "input" && (
@@ -314,20 +397,50 @@ export const CourseGenerator = () => {
                   <Label>Course Cover Image</Label>
                   <div className="space-y-3">
                     <div className="grid grid-cols-2 gap-2">
-                      <Button type="button" variant="outline" size="sm" className="h-20 flex-col">
-                        <Sparkles className="w-5 h-5 mb-1 text-ai-primary" />
-                        <span className="text-xs">AI Generate</span>
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        size="sm" 
+                        className="h-20 flex-col"
+                        onClick={handleGenerateCoverImage}
+                        disabled={isGeneratingCoverImage}
+                      >
+                        {isGeneratingCoverImage ? (
+                          <>
+                            <Sparkles className="w-5 h-5 mb-1 text-ai-primary animate-spin" />
+                            <span className="text-xs">Generating...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Sparkles className="w-5 h-5 mb-1 text-ai-primary" />
+                            <span className="text-xs">AI Generate</span>
+                          </>
+                        )}
                       </Button>
-                      <Button type="button" variant="outline" size="sm" className="h-20 flex-col">
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        size="sm" 
+                        className="h-20 flex-col"
+                        onClick={handleUploadCoverImage}
+                      >
                         <Upload className="w-5 h-5 mb-1" />
                         <span className="text-xs">Upload Image</span>
                       </Button>
                     </div>
                     <div className="w-full h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center bg-gray-50">
-                      <div className="text-center">
-                        <Camera className="w-8 h-8 mx-auto text-gray-400 mb-2" />
-                        <p className="text-sm text-gray-500">Cover image preview</p>
-                      </div>
+                      {coverImage ? (
+                        <img 
+                          src={coverImage} 
+                          alt="Course cover" 
+                          className="w-full h-full object-cover rounded-lg"
+                        />
+                      ) : (
+                        <div className="text-center">
+                          <Camera className="w-8 h-8 mx-auto text-gray-400 mb-2" />
+                          <p className="text-sm text-gray-500">Cover image preview</p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -460,9 +573,18 @@ export const CourseGenerator = () => {
                     <Eye className="w-4 h-4 mr-1" />
                     Preview Course
                   </Button>
-                  <Button size="sm" variant="ai">
-                    <Plus className="w-4 h-4 mr-1" />
-                    Create Course
+                  <Button size="sm" variant="ai" onClick={handleCreateCourse} disabled={isCreatingCourse}>
+                    {isCreatingCourse ? (
+                      <>
+                        <Sparkles className="w-4 h-4 mr-1 animate-spin" />
+                        Creating Course...
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="w-4 h-4 mr-1" />
+                        Create Course
+                      </>
+                    )}
                   </Button>
                 </div>
               </CardTitle>
@@ -799,6 +921,129 @@ export const CourseGenerator = () => {
             </Card>
           )}
         </div>
+      )}
+
+      {(currentStep === "courseCreating" || isCreatingCourse) && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <Brain className="w-5 h-5 mr-2 text-ai-primary animate-pulse" />
+              Creating Your Course
+            </CardTitle>
+            <CardDescription>
+              Setting up your course in the learning management system
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">{generationPhase}</span>
+                <span className="text-sm text-muted-foreground">{Math.round(researchProgress)}%</span>
+              </div>
+              <Progress value={researchProgress} className="h-2" />
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="flex items-center space-x-2 p-3 bg-ai-primary/5 rounded-lg">
+                <Settings className="w-5 h-5 text-ai-primary" />
+                <div>
+                  <p className="text-sm font-medium">Course Setup</p>
+                  <p className="text-xs text-muted-foreground">Creating structure</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2 p-3 bg-ai-secondary/5 rounded-lg">
+                <FileText className="w-5 h-5 text-ai-secondary" />
+                <div>
+                  <p className="text-sm font-medium">Content Upload</p>
+                  <p className="text-xs text-muted-foreground">Adding lessons</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2 p-3 bg-ai-accent/5 rounded-lg">
+                <CheckCircle className="w-5 h-5 text-ai-accent" />
+                <div>
+                  <p className="text-sm font-medium">Publishing</p>
+                  <p className="text-xs text-muted-foreground">Going live</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {currentStep === "courseCreated" && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <CheckCircle className="w-5 h-5 mr-2 text-ai-success" />
+              Course Created Successfully!
+            </CardTitle>
+            <CardDescription>
+              Your course has been published and is now available to students
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="p-4 bg-ai-success/10 rounded-lg border border-ai-success/20">
+                  <h4 className="font-semibold text-ai-success mb-2">Course Details</h4>
+                  <ul className="space-y-2 text-sm">
+                    <li><strong>Title:</strong> {generatedCourse?.title}</li>
+                    <li><strong>Modules:</strong> {generatedCourse?.modules?.length}</li>
+                    <li><strong>Duration:</strong> {generatedCourse?.estimatedCompletion}</li>
+                    <li><strong>Status:</strong> <Badge variant="default" className="ml-1">Active</Badge></li>
+                  </ul>
+                </div>
+                
+                <div className="space-y-2">
+                  <h4 className="font-semibold">What's Next?</h4>
+                  <ul className="space-y-1 text-sm text-muted-foreground">
+                    <li>• Course is live and ready for enrollment</li>
+                    <li>• Students can now access the content</li>
+                    <li>• Analytics tracking is enabled</li>
+                    <li>• You can modify content anytime</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                {coverImage && (
+                  <div>
+                    <h4 className="font-semibold mb-2">Course Cover</h4>
+                    <img 
+                      src={coverImage} 
+                      alt="Course cover" 
+                      className="w-full h-32 object-cover rounded-lg border"
+                    />
+                  </div>
+                )}
+                
+                <div className="space-y-2">
+                  <Button className="w-full" variant="ai">
+                    <Eye className="w-4 h-4 mr-2" />
+                    View Live Course
+                  </Button>
+                  <Button className="w-full" variant="outline">
+                    <Users className="w-4 h-4 mr-2" />
+                    Invite Students
+                  </Button>
+                  <Button 
+                    className="w-full" 
+                    variant="outline"
+                    onClick={() => {
+                      setCurrentStep("input");
+                      setGeneratedCourse(null);
+                      setCoverImage(null);
+                      setCourseCreated(false);
+                    }}
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Create Another Course
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       {showAssessmentGenerator && (

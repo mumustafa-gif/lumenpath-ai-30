@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { X, Bot, TrendingUp, BarChart3, LineChart, PieChart, Minimize2, BookOpen, FileText, Lightbulb, Sparkles, GraduationCap, Users, Target, Zap } from "lucide-react";
+import { X, Bot, TrendingUp, BarChart3, LineChart, PieChart, Minimize2, BookOpen, FileText, Lightbulb, Sparkles, GraduationCap, Users, Target, Zap, ChevronUp, ChevronDown } from "lucide-react";
 import { ChatInterface } from "./ChatInterface";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, LineChart as RechartsLineChart, Line, PieChart as RechartsPieChart, Pie, Cell } from 'recharts';
 
@@ -16,6 +16,8 @@ export const InstructorAIAssistant = () => {
   const [generatingProgress, setGeneratingProgress] = useState(0);
   const [currentChart, setCurrentChart] = useState<any>(null);
   const [activeQuickAction, setActiveQuickAction] = useState<string | null>(null);
+  const [isQuickActionsMinimized, setIsQuickActionsMinimized] = useState(false);
+  const [isFeaturesMinimized, setIsFeaturesMinimized] = useState(false);
 
   // Sample course data for visualization
   const courseData = [
@@ -414,99 +416,161 @@ What is the purpose of the \`__init__\` method in Python classes? Write a simple
           {!isMinimized && (
             <div className="flex flex-col h-[calc(680px-100px)] overflow-hidden">
               {/* Quick Actions */}
-              <div className="p-6 border-b border-gray-100 dark:border-gray-800">
-                <div className="grid grid-cols-2 gap-3">
-                  <Button 
-                    variant="outline" 
-                    className={`h-12 justify-start space-x-3 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 border-emerald-200 dark:border-emerald-800 hover:shadow-md transition-all duration-200 ${
-                      activeQuickAction === "lesson" ? "ring-2 ring-emerald-500 bg-emerald-100 dark:bg-emerald-900/50" : ""
-                    }`}
-                    onClick={() => handleQuickAction("lesson")}
-                    disabled={activeQuickAction === "lesson"}
-                  >
-                    <FileText className="w-4 h-4 text-emerald-600" />
-                    <span className="text-sm font-medium">
-                      {activeQuickAction === "lesson" ? "Generating..." : "Lesson Plans"}
-                    </span>
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    className={`h-12 justify-start space-x-3 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-800 hover:shadow-md transition-all duration-200 ${
-                      activeQuickAction === "assessment" ? "ring-2 ring-blue-500 bg-blue-100 dark:bg-blue-900/50" : ""
-                    }`}
-                    onClick={() => handleQuickAction("assessment")}
-                    disabled={activeQuickAction === "assessment"}
-                  >
-                    <Target className="w-4 h-4 text-blue-600" />
-                    <span className="text-sm font-medium">
-                      {activeQuickAction === "assessment" ? "Creating..." : "Assessments"}
-                    </span>
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    className={`h-12 justify-start space-x-3 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-purple-200 dark:border-purple-800 hover:shadow-md transition-all duration-200 ${
-                      activeQuickAction === "analytics" ? "ring-2 ring-purple-500 bg-purple-100 dark:bg-purple-900/50" : ""
-                    }`}
-                    onClick={() => handleQuickAction("analytics")}
-                    disabled={activeQuickAction === "analytics"}
-                  >
-                    <BarChart3 className="w-4 h-4 text-purple-600" />
-                    <span className="text-sm font-medium">
-                      {activeQuickAction === "analytics" ? "Analyzing..." : "Analytics"}
-                    </span>
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    className={`h-12 justify-start space-x-3 bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 border-orange-200 dark:border-orange-800 hover:shadow-md transition-all duration-200 ${
-                      activeQuickAction === "engagement" ? "ring-2 ring-orange-500 bg-orange-100 dark:bg-orange-900/50" : ""
-                    }`}
-                    onClick={() => handleQuickAction("engagement")}
-                    disabled={activeQuickAction === "engagement"}
-                  >
-                    <Users className="w-4 h-4 text-orange-600" />
-                    <span className="text-sm font-medium">
-                      {activeQuickAction === "engagement" ? "Planning..." : "Engagement"}
-                    </span>
-                  </Button>
+              {!isQuickActionsMinimized && (
+                <div className="p-6 border-b border-gray-100 dark:border-gray-800">
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="font-semibold text-gray-900 dark:text-gray-100">Quick Actions</h4>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-6 h-6 p-0 text-gray-500 hover:text-gray-700"
+                      onClick={() => setIsQuickActionsMinimized(true)}
+                    >
+                      <ChevronUp className="w-4 h-4" />
+                    </Button>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <Button 
+                      variant="outline" 
+                      className={`h-12 justify-start space-x-3 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 border-emerald-200 dark:border-emerald-800 hover:shadow-md transition-all duration-200 ${
+                        activeQuickAction === "lesson" ? "ring-2 ring-emerald-500 bg-emerald-100 dark:bg-emerald-900/50" : ""
+                      }`}
+                      onClick={() => handleQuickAction("lesson")}
+                      disabled={activeQuickAction === "lesson"}
+                    >
+                      <FileText className="w-4 h-4 text-emerald-600" />
+                      <span className="text-sm font-medium">
+                        {activeQuickAction === "lesson" ? "Generating..." : "Lesson Plans"}
+                      </span>
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      className={`h-12 justify-start space-x-3 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-800 hover:shadow-md transition-all duration-200 ${
+                        activeQuickAction === "assessment" ? "ring-2 ring-blue-500 bg-blue-100 dark:bg-blue-900/50" : ""
+                      }`}
+                      onClick={() => handleQuickAction("assessment")}
+                      disabled={activeQuickAction === "assessment"}
+                    >
+                      <Target className="w-4 h-4 text-blue-600" />
+                      <span className="text-sm font-medium">
+                        {activeQuickAction === "assessment" ? "Creating..." : "Assessments"}
+                      </span>
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      className={`h-12 justify-start space-x-3 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-purple-200 dark:border-purple-800 hover:shadow-md transition-all duration-200 ${
+                        activeQuickAction === "analytics" ? "ring-2 ring-purple-500 bg-purple-100 dark:bg-purple-900/50" : ""
+                      }`}
+                      onClick={() => handleQuickAction("analytics")}
+                      disabled={activeQuickAction === "analytics"}
+                    >
+                      <BarChart3 className="w-4 h-4 text-purple-600" />
+                      <span className="text-sm font-medium">
+                        {activeQuickAction === "analytics" ? "Analyzing..." : "Analytics"}
+                      </span>
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      className={`h-12 justify-start space-x-3 bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 border-orange-200 dark:border-orange-800 hover:shadow-md transition-all duration-200 ${
+                        activeQuickAction === "engagement" ? "ring-2 ring-orange-500 bg-orange-100 dark:bg-orange-900/50" : ""
+                      }`}
+                      onClick={() => handleQuickAction("engagement")}
+                      disabled={activeQuickAction === "engagement"}
+                    >
+                      <Users className="w-4 h-4 text-orange-600" />
+                      <span className="text-sm font-medium">
+                        {activeQuickAction === "engagement" ? "Planning..." : "Engagement"}
+                      </span>
+                    </Button>
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {/* Quick Actions - Minimized */}
+              {isQuickActionsMinimized && (
+                <div className="px-6 py-3 border-b border-gray-100 dark:border-gray-800">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Quick Actions</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-6 h-6 p-0 text-gray-500 hover:text-gray-700"
+                      onClick={() => setIsQuickActionsMinimized(false)}
+                    >
+                      <ChevronDown className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              )}
 
               {/* AI Features */}
-              <div className="p-6 border-b border-gray-100 dark:border-gray-800">
-                <div className="flex items-center space-x-2 mb-4">
-                  <Zap className="w-5 h-5 text-yellow-500" />
-                  <h4 className="font-semibold text-gray-900 dark:text-gray-100">AI-Powered Features</h4>
+              {!isFeaturesMinimized && (
+                <div className="p-6 border-b border-gray-100 dark:border-gray-800">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center space-x-2">
+                      <Zap className="w-5 h-5 text-yellow-500" />
+                      <h4 className="font-semibold text-gray-900 dark:text-gray-100">AI-Powered Features</h4>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-6 h-6 p-0 text-gray-500 hover:text-gray-700"
+                      onClick={() => setIsFeaturesMinimized(true)}
+                    >
+                      <ChevronUp className="w-4 h-4" />
+                    </Button>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-3 p-3 rounded-lg bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 hover:shadow-sm transition-all duration-200">
+                      <div className="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                        <BookOpen className="w-4 h-4 text-green-600" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Smart Content Generation</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">Create engaging course materials</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-3 p-3 rounded-lg bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 hover:shadow-sm transition-all duration-200">
+                      <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                        <TrendingUp className="w-4 h-4 text-blue-600" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Performance Analytics</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">Visualize student progress data</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-3 p-3 rounded-lg bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 hover:shadow-sm transition-all duration-200">
+                      <div className="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                        <Lightbulb className="w-4 h-4 text-purple-600" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Smart Recommendations</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">Get personalized teaching tips</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="space-y-3">
-                  <div className="flex items-center space-x-3 p-3 rounded-lg bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 hover:shadow-sm transition-all duration-200">
-                    <div className="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                      <BookOpen className="w-4 h-4 text-green-600" />
+              )}
+
+              {/* AI Features - Minimized */}
+              {isFeaturesMinimized && (
+                <div className="px-6 py-3 border-b border-gray-100 dark:border-gray-800">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <Zap className="w-4 h-4 text-yellow-500" />
+                      <span className="text-sm font-medium text-gray-600 dark:text-gray-400">AI Features</span>
                     </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Smart Content Generation</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">Create engaging course materials</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-3 p-3 rounded-lg bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 hover:shadow-sm transition-all duration-200">
-                    <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                      <TrendingUp className="w-4 h-4 text-blue-600" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Performance Analytics</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">Visualize student progress data</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-3 p-3 rounded-lg bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 hover:shadow-sm transition-all duration-200">
-                    <div className="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
-                      <Lightbulb className="w-4 h-4 text-purple-600" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Smart Recommendations</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">Get personalized teaching tips</p>
-                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-6 h-6 p-0 text-gray-500 hover:text-gray-700"
+                      onClick={() => setIsFeaturesMinimized(false)}
+                    >
+                      <ChevronDown className="w-4 h-4" />
+                    </Button>
                   </div>
                 </div>
-              </div>
+              )}
 
               {/* Chat Interface */}
               <div className="flex-1 flex flex-col min-h-0">
