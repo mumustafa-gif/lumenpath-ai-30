@@ -27,6 +27,7 @@ export const AdminHeader = () => {
           <img src={inceptionIcon} alt="Inception Icon" className="w-8 h-8" />
           <div>
             <h1 className="text-xl font-bold">INCEPTION</h1>
+            <p className="text-[10px] text-muted-foreground -mt-1">A G42 COMPANY</p>
             <p className="text-sm text-muted-foreground">Admin Dashboard</p>
           </div>
         </div>

@@ -63,7 +63,10 @@ const LoginPage = () => {
         <div className="relative z-10 flex flex-col justify-center px-12 text-white">
           <div className="flex items-center mb-8">
             <img src={inceptionIcon} alt="Inception Icon" className="w-12 h-12 mr-4" />
-            <h1 className="text-4xl font-bold">INCEPTION</h1>
+            <div>
+              <h1 className="text-4xl font-bold">INCEPTION</h1>
+              <p className="text-xs text-white/80 -mt-1">A G42 COMPANY</p>
+            </div>
           </div>
           <h2 className="text-2xl font-semibold mb-6">Intelligent Learning Management</h2>
           <p className="text-lg opacity-90 mb-8 leading-relaxed">
@@ -93,7 +96,10 @@ const LoginPage = () => {
           <CardHeader className="text-center">
             <div className="flex items-center justify-center mb-4 lg:hidden">
               <img src={inceptionIcon} alt="Inception Icon" className="w-10 h-10 mr-3" />
-              <h1 className="text-2xl font-bold">INCEPTION</h1>
+              <div>
+                <h1 className="text-2xl font-bold">INCEPTION</h1>
+                <p className="text-[10px] text-muted-foreground -mt-1 text-center">A G42 COMPANY</p>
+              </div>
             </div>
             <CardTitle className="text-2xl">Welcome Back</CardTitle>
             <CardDescription>
