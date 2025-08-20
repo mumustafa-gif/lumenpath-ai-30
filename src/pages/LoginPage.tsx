@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Brain, GraduationCap, Users, Settings } from "lucide-react";
 import heroImg from "@/assets/hero-bg.jpg";
-import aiIcon from "@/assets/ai-brain-icon.png";
+import inceptionIcon from "/lovable-uploads/2c76c7ae-2959-41c8-bfbb-ea45ef1e7044.png";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -62,8 +62,8 @@ const LoginPage = () => {
         <div className="absolute inset-0 bg-gradient-to-br from-ai-primary/80 via-ai-accent/70 to-ai-secondary/80" />
         <div className="relative z-10 flex flex-col justify-center px-12 text-white">
           <div className="flex items-center mb-8">
-            <img src={aiIcon} alt="AI Icon" className="w-12 h-12 mr-4" />
-            <h1 className="text-4xl font-bold">LumenPath AI</h1>
+            <img src={inceptionIcon} alt="Inception Icon" className="w-12 h-12 mr-4" />
+            <h1 className="text-4xl font-bold">INCEPTION</h1>
           </div>
           <h2 className="text-2xl font-semibold mb-6">Intelligent Learning Management</h2>
           <p className="text-lg opacity-90 mb-8 leading-relaxed">
@@ -92,8 +92,8 @@ const LoginPage = () => {
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <div className="flex items-center justify-center mb-4 lg:hidden">
-              <img src={aiIcon} alt="AI Icon" className="w-10 h-10 mr-3" />
-              <h1 className="text-2xl font-bold">LumenPath AI</h1>
+              <img src={inceptionIcon} alt="Inception Icon" className="w-10 h-10 mr-3" />
+              <h1 className="text-2xl font-bold">INCEPTION</h1>
             </div>
             <CardTitle className="text-2xl">Welcome Back</CardTitle>
             <CardDescription>

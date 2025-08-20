@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Bell, Settings, User, LogOut, BookOpen } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import aiIcon from "@/assets/ai-brain-icon.png";
+import inceptionIcon from "/lovable-uploads/2c76c7ae-2959-41c8-bfbb-ea45ef1e7044.png";
 
 export const LearnerHeader = () => {
   const navigate = useNavigate();
@@ -24,9 +24,9 @@ export const LearnerHeader = () => {
     <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
       <div className="flex items-center justify-between px-6 py-4">
         <div className="flex items-center space-x-4">
-          <img src={aiIcon} alt="AI Icon" className="w-8 h-8" />
+          <img src={inceptionIcon} alt="Inception Icon" className="w-8 h-8" />
           <div>
-            <h1 className="text-xl font-bold">LumenPath AI</h1>
+            <h1 className="text-xl font-bold">INCEPTION</h1>
             <p className="text-sm text-muted-foreground">Learning Portal</p>
           </div>
         </div>

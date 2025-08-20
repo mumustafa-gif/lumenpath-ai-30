@@ -17,7 +17,7 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 220 25% 12%;
 
-    --primary: 200 98% 39%;
+    --primary: 245 82% 67%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 220 20% 96%;
@@ -26,7 +26,7 @@ All colors MUST be HSL.
     --muted: 220 20% 96%;
     --muted-foreground: 220 15% 45%;
 
-    --accent: 180 78% 25%;
+    --accent: 245 70% 55%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
@@ -34,23 +34,23 @@ All colors MUST be HSL.
 
     --border: 220 20% 90%;
     --input: 220 20% 90%;
-    --ring: 200 98% 39%;
+    --ring: 245 82% 67%;
 
-    /* AI/LMS specific tokens */
-    --ai-primary: 200 98% 39%;
-    --ai-secondary: 180 78% 25%;
-    --ai-accent: 220 98% 61%;
+    /* Inception brand colors */
+    --ai-primary: 245 82% 67%;
+    --ai-secondary: 245 70% 55%;
+    --ai-accent: 15 85% 65%;
     --ai-success: 142 76% 36%;
     --ai-warning: 38 92% 50%;
-    --ai-info: 200 98% 39%;
+    --ai-info: 245 82% 67%;
     
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(200 98% 39%), hsl(180 78% 25%));
-    --gradient-secondary: linear-gradient(135deg, hsl(220 98% 61%), hsl(200 98% 39%));
-    --gradient-hero: linear-gradient(135deg, hsl(200 98% 39%) 0%, hsl(180 78% 25%) 50%, hsl(220 98% 61%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(245 82% 67%), hsl(245 70% 55%));
+    --gradient-secondary: linear-gradient(135deg, hsl(15 85% 65%), hsl(245 82% 67%));
+    --gradient-hero: linear-gradient(135deg, hsl(245 82% 67%) 0%, hsl(245 70% 55%) 50%, hsl(15 85% 65%) 100%);
     
     /* Shadows */
-    --shadow-ai: 0 4px 20px hsl(200 98% 39% / 0.15);
+    --shadow-ai: 0 4px 20px hsl(245 82% 67% / 0.15);
     --shadow-card: 0 2px 8px hsl(220 25% 12% / 0.08);
     --shadow-elevated: 0 8px 32px hsl(220 25% 12% / 0.12);
 
