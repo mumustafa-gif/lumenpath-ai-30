@@ -28,6 +28,7 @@ import AdaptiveLearningEngine from "@/components/AdaptiveLearningEngine";
 import CourseRecommendations from "@/components/CourseRecommendations";
 import LearnerProfile from "@/components/LearnerProfile";
 import { CoursePreview } from "@/components/CoursePreview";
+import { BuddyFinder } from "@/components/BuddyFinder";
 
 const LearnerDashboard = () => {
   const [showOnboarding, setShowOnboarding] = useState(false); // Set to true for new users
@@ -35,6 +36,7 @@ const LearnerDashboard = () => {
   const [showCourseRecommendations, setShowCourseRecommendations] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [activeCourse, setActiveCourse] = useState<any>(null);
+  const [showBuddyFinder, setShowBuddyFinder] = useState(false);
   
   const [currentCourses] = useState([
     {
@@ -119,7 +121,7 @@ const LearnerDashboard = () => {
     }
   ]);
 
-  const [studyBuddies] = useState([
+  const [studyBuddies, setStudyBuddies] = useState([
     {
       id: 1,
       name: "Amina Al-Zahra",
@@ -173,6 +175,11 @@ const LearnerDashboard = () => {
   const handleProfileSave = (profileData: any) => {
     console.log('Profile saved:', profileData);
     // Here you would typically save to backend/Supabase
+  };
+
+  const handleAddBuddy = (buddy: any) => {
+    setStudyBuddies(prev => [...prev, buddy]);
+    console.log('Added new study buddy:', buddy);
   };
 
   // Show onboarding flow for new users
@@ -312,12 +319,18 @@ const LearnerDashboard = () => {
         <Tabs defaultValue="courses" className="space-y-6">
           <TabsList>
             <TabsTrigger value="courses">My Courses</TabsTrigger>
-            <TabsTrigger value="ai-tutor">AI Tutor</TabsTrigger>
             <TabsTrigger value="adaptive-engine">Adaptive Learning</TabsTrigger>
             <TabsTrigger value="study-buddies">Study Buddies</TabsTrigger>
             <TabsTrigger value="progress">Progress & Analytics</TabsTrigger>
             <TabsTrigger value="profile">My Profile</TabsTrigger>
           </TabsList>
+
+          {showBuddyFinder && (
+            <BuddyFinder
+              onClose={() => setShowBuddyFinder(false)}
+              onAddBuddy={handleAddBuddy}
+            />
+          )}
 
           <TabsContent value="courses" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -382,77 +395,6 @@ const LearnerDashboard = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="ai-tutor">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-2xl font-bold flex items-center">
-                  <Brain className="w-6 h-6 mr-2 text-ai-primary" />
-                  AI Learning Assistant
-                </h2>
-                <p className="text-muted-foreground">Get instant help with any topic, concept explanation, or learning guidance</p>
-              </div>
-              <Button 
-                variant="ai"
-                className="flex items-center gap-2"
-              >
-                <Brain className="w-4 h-4" />
-                Open AI Assistant
-              </Button>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-                <CardHeader>
-                  <CardTitle className="flex items-center text-lg">
-                    <MessageCircle className="w-5 h-5 mr-2 text-ai-primary" />
-                    Concept Explanations
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">Get detailed explanations of complex AI and ML concepts in simple terms</p>
-                  <div className="mt-3 flex flex-wrap gap-1">
-                    <Badge variant="secondary" className="text-xs">Neural Networks</Badge>
-                    <Badge variant="secondary" className="text-xs">Algorithms</Badge>
-                    <Badge variant="secondary" className="text-xs">Statistics</Badge>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-                <CardHeader>
-                  <CardTitle className="flex items-center text-lg">
-                    <Target className="w-5 h-5 mr-2 text-ai-accent" />
-                    Study Planning
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">Create personalized study plans and learning roadmaps</p>
-                  <div className="mt-3 flex flex-wrap gap-1">
-                    <Badge variant="secondary" className="text-xs">Schedule</Badge>
-                    <Badge variant="secondary" className="text-xs">Goals</Badge>
-                    <Badge variant="secondary" className="text-xs">Progress</Badge>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-                <CardHeader>
-                  <CardTitle className="flex items-center text-lg">
-                    <BookOpen className="w-5 h-5 mr-2 text-ai-secondary" />
-                    Assignment Help
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">Get guidance on projects, coding exercises, and case studies</p>
-                  <div className="mt-3 flex flex-wrap gap-1">
-                    <Badge variant="secondary" className="text-xs">Debugging</Badge>
-                    <Badge variant="secondary" className="text-xs">Code Review</Badge>
-                    <Badge variant="secondary" className="text-xs">Best Practices</Badge>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
 
           <TabsContent value="adaptive-engine">
             <AdaptiveLearningEngine 
@@ -468,7 +410,7 @@ const LearnerDashboard = () => {
           <TabsContent value="study-buddies" className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold">Study Buddies</h2>
-              <Button variant="ai">
+              <Button variant="ai" onClick={() => setShowBuddyFinder(true)}>
                 <Users className="w-4 h-4 mr-2" />
                 Find New Buddy
               </Button>
