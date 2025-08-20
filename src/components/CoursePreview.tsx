@@ -22,9 +22,11 @@ import {
   Award,
   TrendingUp,
   MessageSquare,
-  Download,
-  Share
+  ChevronDown,
+  ChevronUp
 } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { ChatInterface } from "@/components/ChatInterface";
 
 interface CoursePreviewProps {
   course: any;
@@ -35,6 +37,8 @@ export const CoursePreview = ({ course, onClose }: CoursePreviewProps) => {
   const [currentModule, setCurrentModule] = useState(0);
   const [completedLessons, setCompletedLessons] = useState<number[]>([]);
   const [enrollmentProgress, setEnrollmentProgress] = useState(45);
+  const [expandedLessons, setExpandedLessons] = useState<number[]>([]);
+  const [aiTutorOpen, setAiTutorOpen] = useState(false);
 
   const mockLearnerData = {
     name: "Alex Johnson",
@@ -61,7 +65,8 @@ export const CoursePreview = ({ course, onClose }: CoursePreviewProps) => {
           ...module.quiz,
           questions: generateQuizQuestions(module.title, module.quiz.questions)
         }
-      }
+      },
+      moduleContent: generateModuleContent(module.title)
     }))
   };
 
@@ -94,6 +99,25 @@ export const CoursePreview = ({ course, onClose }: CoursePreviewProps) => {
     return baseContent[type as keyof typeof baseContent] || baseContent.video;
   }
 
+  function generateModuleContent(moduleTitle: string) {
+    return {
+      overview: `This module provides a comprehensive introduction to ${moduleTitle}. You'll learn fundamental concepts, practical applications, and industry best practices. The content is designed to build your expertise progressively through theoretical understanding and hands-on practice.`,
+      keyTopics: [
+        `Core principles of ${moduleTitle}`,
+        "Industry standards and best practices", 
+        "Real-world implementation strategies",
+        "Common challenges and solutions",
+        "Future trends and developments"
+      ],
+      learningOutcomes: [
+        `Understand the fundamental concepts of ${moduleTitle}`,
+        "Apply theoretical knowledge to practical scenarios",
+        "Analyze complex problems and develop solutions",
+        "Evaluate different approaches and methodologies"
+      ]
+    };
+  }
+
   function generateQuizQuestions(moduleTitle: string, count: number) {
     return Array.from({ length: count }, (_, i) => ({
       id: i + 1,
@@ -118,6 +142,14 @@ export const CoursePreview = ({ course, onClose }: CoursePreviewProps) => {
     );
   };
 
+  const toggleLessonExpansion = (lessonIndex: number) => {
+    setExpandedLessons(prev => 
+      prev.includes(lessonIndex) 
+        ? prev.filter(id => id !== lessonIndex)
+        : [...prev, lessonIndex]
+    );
+  };
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-card rounded-lg shadow-xl w-full max-w-7xl h-[90vh] flex flex-col">
@@ -129,15 +161,9 @@ export const CoursePreview = ({ course, onClose }: CoursePreviewProps) => {
               <p className="text-sm text-muted-foreground">Learner Experience View</p>
             </div>
           </div>
-          <div className="flex items-center space-x-2">
-            <Button variant="outline" size="sm">
-              <Share className="w-4 h-4 mr-1" />
-              Share Preview
-            </Button>
-            <Button variant="ghost" size="sm" onClick={onClose}>
-              ✕
-            </Button>
-          </div>
+          <Button variant="ghost" size="sm" onClick={onClose}>
+            ✕
+          </Button>
         </div>
 
         <div className="flex-1 flex overflow-hidden">
@@ -256,16 +282,33 @@ export const CoursePreview = ({ course, onClose }: CoursePreviewProps) => {
                   <h3 className="font-semibold">Module {currentModule + 1}: {mockFullContent.modules[currentModule]?.title}</h3>
                   <p className="text-sm text-muted-foreground">{mockFullContent.modules[currentModule]?.duration} • {mockFullContent.modules[currentModule]?.lessons.length} lessons</p>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Button size="sm" variant="outline">
-                    <Download className="w-4 h-4 mr-1" />
-                    Resources
-                  </Button>
-                  <Button size="sm" variant="ai">
-                    <MessageSquare className="w-4 h-4 mr-1" />
-                    Ask AI Tutor
-                  </Button>
-                </div>
+                <Dialog open={aiTutorOpen} onOpenChange={setAiTutorOpen}>
+                  <DialogTrigger asChild>
+                    <Button size="sm" variant="ai">
+                      <MessageSquare className="w-4 h-4 mr-1" />
+                      Ask AI Tutor
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-4xl h-[80vh]">
+                    <DialogHeader>
+                      <DialogTitle className="flex items-center">
+                        <Brain className="w-5 h-5 mr-2 text-ai-primary" />
+                        AI Learning Assistant
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className="flex-1 overflow-hidden">
+                      <ChatInterface 
+                        placeholder="Ask about this module, concepts, or get study help..."
+                        suggestions={[
+                          `Explain key concepts in ${mockFullContent.modules[currentModule]?.title}`,
+                          "What are the main learning objectives?",
+                          "Give me practice questions for this module",
+                          "How does this relate to real-world applications?"
+                        ]}
+                      />
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
 
@@ -279,12 +322,48 @@ export const CoursePreview = ({ course, onClose }: CoursePreviewProps) => {
                 </TabsList>
 
                 <TabsContent value="lessons" className="flex-1 m-4 mt-4">
-                  <ScrollArea className="h-full">
+                  <ScrollArea className="h-[500px]">
                     <div className="space-y-4">
+                      {/* Module Overview */}
+                      <Card className="p-4 bg-gradient-to-r from-ai-primary/5 to-ai-secondary/5 border-ai-primary/20">
+                        <h4 className="font-semibold mb-2 flex items-center">
+                          <BookOpen className="w-4 h-4 mr-2 text-ai-primary" />
+                          Module Overview
+                        </h4>
+                        <p className="text-sm text-muted-foreground mb-3">
+                          {mockFullContent.modules[currentModule]?.moduleContent?.overview}
+                        </p>
+                        <div className="grid md:grid-cols-2 gap-4">
+                          <div>
+                            <h5 className="font-medium text-sm mb-2">Key Topics:</h5>
+                            <ul className="text-xs text-muted-foreground space-y-1">
+                              {mockFullContent.modules[currentModule]?.moduleContent?.keyTopics?.map((topic: string, i: number) => (
+                                <li key={i} className="flex items-start space-x-2">
+                                  <span className="w-1 h-1 bg-ai-primary rounded-full mt-1.5 flex-shrink-0" />
+                                  <span>{topic}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                          <div>
+                            <h5 className="font-medium text-sm mb-2">Learning Outcomes:</h5>
+                            <ul className="text-xs text-muted-foreground space-y-1">
+                              {mockFullContent.modules[currentModule]?.moduleContent?.learningOutcomes?.map((outcome: string, i: number) => (
+                                <li key={i} className="flex items-start space-x-2">
+                                  <Target className="w-3 h-3 text-ai-success mt-0.5 flex-shrink-0" />
+                                  <span>{outcome}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      </Card>
+
+                      {/* Lessons */}
                       {mockFullContent.modules[currentModule]?.content.lessons.map((lesson: any, index: number) => (
                         <Card key={index} className="p-4">
                           <div className="flex items-start justify-between mb-3">
-                            <div className="flex items-start space-x-3">
+                            <div className="flex items-start space-x-3 flex-1">
                               <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
                                 lesson.completed ? 'bg-ai-success text-white' : 'bg-muted'
                               }`}>
@@ -294,8 +373,23 @@ export const CoursePreview = ({ course, onClose }: CoursePreviewProps) => {
                                 {lesson.type === 'hands_on' && <PenTool className="w-4 h-4" />}
                                 {lesson.type === 'simulation' && <Settings className="w-4 h-4" />}
                               </div>
-                              <div>
-                                <h4 className="font-medium">{lesson.title}</h4>
+                              <div className="flex-1">
+                                <div className="flex items-center justify-between">
+                                  <h4 className="font-medium cursor-pointer hover:text-ai-primary" onClick={() => toggleLessonExpansion(index)}>
+                                    {lesson.title}
+                                  </h4>
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm"
+                                    onClick={() => toggleLessonExpansion(index)}
+                                    className="p-1 h-auto"
+                                  >
+                                    {expandedLessons.includes(index) ? 
+                                      <ChevronUp className="w-4 h-4" /> : 
+                                      <ChevronDown className="w-4 h-4" />
+                                    }
+                                  </Button>
+                                </div>
                                 <p className="text-sm text-muted-foreground">{lesson.content?.description}</p>
                                 <div className="flex items-center space-x-2 mt-2">
                                   <Badge variant="outline" className="text-xs">{lesson.duration}</Badge>
@@ -305,7 +399,7 @@ export const CoursePreview = ({ course, onClose }: CoursePreviewProps) => {
                                 </div>
                               </div>
                             </div>
-                            <div className="flex space-x-2">
+                            <div className="flex space-x-2 ml-2">
                               <Button 
                                 size="sm" 
                                 variant={lesson.completed ? "outline" : "default"}
@@ -326,14 +420,82 @@ export const CoursePreview = ({ course, onClose }: CoursePreviewProps) => {
                             </div>
                           </div>
                           
-                          {lesson.type === 'video' && lesson.content && (
-                            <div className="mt-3 p-3 bg-muted/50 rounded">
-                              <p className="text-sm mb-2">Video Content Preview:</p>
-                              <p className="text-xs text-muted-foreground">{lesson.content.transcript?.substring(0, 200)}...</p>
-                              <div className="flex items-center space-x-2 mt-2">
-                                <Clock className="w-3 h-3" />
-                                <span className="text-xs">{lesson.content.duration}</span>
-                              </div>
+                          {/* Expanded Lesson Details */}
+                          {expandedLessons.includes(index) && (
+                            <div className="mt-4 space-y-3 border-t pt-3">
+                              {lesson.type === 'video' && lesson.content && (
+                                <div className="p-3 bg-muted/30 rounded">
+                                  <h5 className="font-medium text-sm mb-2">Video Content:</h5>
+                                  <p className="text-xs text-muted-foreground mb-2">{lesson.content.transcript?.substring(0, 300)}...</p>
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex items-center space-x-2">
+                                      <Clock className="w-3 h-3" />
+                                      <span className="text-xs">{lesson.content.duration}</span>
+                                    </div>
+                                    {lesson.content.resources && (
+                                      <div className="text-xs text-muted-foreground">
+                                        Resources: {lesson.content.resources.join(', ')}
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {lesson.type === 'interactive' && lesson.content && (
+                                <div className="p-3 bg-muted/30 rounded">
+                                  <h5 className="font-medium text-sm mb-2">Interactive Activities:</h5>
+                                  <ul className="text-xs text-muted-foreground space-y-1">
+                                    {lesson.content.activities?.map((activity: string, i: number) => (
+                                      <li key={i} className="flex items-center space-x-2">
+                                        <Lightbulb className="w-3 h-3 text-ai-primary" />
+                                        <span>{activity}</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                  <p className="text-xs text-muted-foreground mt-2">
+                                    Estimated time: {lesson.content.estimatedTime}
+                                  </p>
+                                </div>
+                              )}
+
+                              {lesson.type === 'case_study' && lesson.content && (
+                                <div className="p-3 bg-muted/30 rounded">
+                                  <h5 className="font-medium text-sm mb-2">Case Study: {lesson.content.company}</h5>
+                                  <p className="text-xs text-muted-foreground mb-2">{lesson.content.scenario}</p>
+                                  <div>
+                                    <p className="text-xs font-medium mb-1">Discussion Questions:</p>
+                                    <ul className="text-xs text-muted-foreground space-y-1">
+                                      {lesson.content.questions?.map((question: string, i: number) => (
+                                        <li key={i}>• {question}</li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                </div>
+                              )}
+
+                              {lesson.type === 'hands_on' && lesson.content && (
+                                <div className="p-3 bg-muted/30 rounded">
+                                  <h5 className="font-medium text-sm mb-2">Hands-on Workshop:</h5>
+                                  <div className="grid grid-cols-2 gap-3 text-xs">
+                                    <div>
+                                      <p className="font-medium mb-1">Tools:</p>
+                                      <ul className="text-muted-foreground space-y-1">
+                                        {lesson.content.tools?.map((tool: string, i: number) => (
+                                          <li key={i}>• {tool}</li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                    <div>
+                                      <p className="font-medium mb-1">Deliverables:</p>
+                                      <ul className="text-muted-foreground space-y-1">
+                                        {lesson.content.deliverables?.map((deliverable: string, i: number) => (
+                                          <li key={i}>• {deliverable}</li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           )}
                         </Card>
@@ -343,7 +505,8 @@ export const CoursePreview = ({ course, onClose }: CoursePreviewProps) => {
                 </TabsContent>
 
                 <TabsContent value="quiz" className="flex-1 m-4 mt-4">
-                  <Card>
+                  <ScrollArea className="h-[500px]">
+                    <Card>
                     <CardHeader>
                       <CardTitle className="flex items-center justify-between">
                         <span>Module Assessment</span>
@@ -390,12 +553,14 @@ export const CoursePreview = ({ course, onClose }: CoursePreviewProps) => {
                           Start Assessment
                         </Button>
                       </div>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
+                     </CardContent>
+                   </Card>
+                  </ScrollArea>
+                 </TabsContent>
 
                 <TabsContent value="case-study" className="flex-1 m-4 mt-4">
-                  <Card>
+                  <ScrollArea className="h-[500px]">
+                    <Card>
                     <CardHeader>
                       <CardTitle>{mockFullContent.modules[currentModule]?.caseStudy.title}</CardTitle>
                       <CardDescription>Real-world application of module concepts</CardDescription>
@@ -422,12 +587,14 @@ export const CoursePreview = ({ course, onClose }: CoursePreviewProps) => {
                         <FileText className="w-4 h-4 mr-2" />
                         Start Case Study
                       </Button>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
+                     </CardContent>
+                   </Card>
+                  </ScrollArea>
+                 </TabsContent>
 
-                <TabsContent value="analytics" className="flex-1 m-4 mt-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                 <TabsContent value="analytics" className="flex-1 m-4 mt-4">
+                  <ScrollArea className="h-[500px]">
+                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Card>
                       <CardHeader>
                         <CardTitle className="flex items-center">
@@ -475,9 +642,10 @@ export const CoursePreview = ({ course, onClose }: CoursePreviewProps) => {
                           ))}
                         </div>
                       </CardContent>
-                    </Card>
-                  </div>
-                </TabsContent>
+                     </Card>
+                   </div>
+                  </ScrollArea>
+                 </TabsContent>
               </Tabs>
             </div>
           </div>
