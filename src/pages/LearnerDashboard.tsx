@@ -35,8 +35,6 @@ const LearnerDashboard = () => {
   const [showCourseRecommendations, setShowCourseRecommendations] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [activeCourse, setActiveCourse] = useState<any>(null);
-  const [showAiAssistant, setShowAiAssistant] = useState(false);
-  const [isAiAssistantMinimized, setIsAiAssistantMinimized] = useState(false);
   
   const [currentCourses] = useState([
     {
@@ -394,10 +392,6 @@ const LearnerDashboard = () => {
                 <p className="text-muted-foreground">Get instant help with any topic, concept explanation, or learning guidance</p>
               </div>
               <Button 
-                onClick={() => {
-                  setShowAiAssistant(true);
-                  setIsAiAssistantMinimized(false);
-                }}
                 variant="ai"
                 className="flex items-center gap-2"
               >
@@ -407,12 +401,7 @@ const LearnerDashboard = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Card className="hover:shadow-lg transition-shadow cursor-pointer" 
-                onClick={() => {
-                  setShowAiAssistant(true);
-                  setIsAiAssistantMinimized(false);
-                }}
-              >
+              <Card className="hover:shadow-lg transition-shadow cursor-pointer">
                 <CardHeader>
                   <CardTitle className="flex items-center text-lg">
                     <MessageCircle className="w-5 h-5 mr-2 text-ai-primary" />
@@ -429,12 +418,7 @@ const LearnerDashboard = () => {
                 </CardContent>
               </Card>
 
-              <Card className="hover:shadow-lg transition-shadow cursor-pointer"
-                onClick={() => {
-                  setShowAiAssistant(true);
-                  setIsAiAssistantMinimized(false);
-                }}
-              >
+              <Card className="hover:shadow-lg transition-shadow cursor-pointer">
                 <CardHeader>
                   <CardTitle className="flex items-center text-lg">
                     <Target className="w-5 h-5 mr-2 text-ai-accent" />
@@ -451,12 +435,7 @@ const LearnerDashboard = () => {
                 </CardContent>
               </Card>
 
-              <Card className="hover:shadow-lg transition-shadow cursor-pointer"
-                onClick={() => {
-                  setShowAiAssistant(true);
-                  setIsAiAssistantMinimized(false);
-                }}
-              >
+              <Card className="hover:shadow-lg transition-shadow cursor-pointer">
                 <CardHeader>
                   <CardTitle className="flex items-center text-lg">
                     <BookOpen className="w-5 h-5 mr-2 text-ai-secondary" />
@@ -588,95 +567,6 @@ const LearnerDashboard = () => {
           </TabsContent>
         </Tabs>
       </main>
-
-      {/* AI Assistant Sidebar */}
-      {showAiAssistant && (
-        <>
-          {/* Backdrop */}
-          <div 
-            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 lg:hidden"
-            onClick={() => setShowAiAssistant(false)}
-          />
-          
-          {/* AI Assistant Sidebar */}
-          <div className={`fixed top-0 right-0 h-full bg-background border-l shadow-xl z-50 transition-all duration-300 ${
-            isAiAssistantMinimized ? 'w-16' : 'w-80 lg:w-96'
-          }`}>
-            {isAiAssistantMinimized ? (
-              // Minimized state
-              <div className="flex flex-col items-center p-4 space-y-4">
-                <Button
-                  onClick={() => setIsAiAssistantMinimized(false)}
-                  size="sm"
-                  variant="ghost"
-                  className="w-10 h-10 p-0"
-                >
-                  <Brain className="w-5 h-5 text-ai-primary" />
-                </Button>
-                <div className="writing-vertical text-xs text-muted-foreground whitespace-nowrap transform rotate-90 origin-center mt-8">
-                  AI Assistant
-                </div>
-              </div>
-            ) : (
-              // Expanded state
-              <div className="flex flex-col h-full">
-                {/* Header */}
-                <div className="flex items-center justify-between p-4 border-b">
-                  <div className="flex items-center space-x-2">
-                    <Brain className="w-5 h-5 text-ai-primary" />
-                    <span className="font-semibold">AI Learning Assistant</span>
-                  </div>
-                  <div className="flex items-center space-x-1">
-                    <Button
-                      onClick={() => setIsAiAssistantMinimized(true)}
-                      size="sm"
-                      variant="ghost"
-                      className="w-8 h-8 p-0"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M9 18l6-6-6-6"/>
-                      </svg>
-                    </Button>
-                    <Button
-                      onClick={() => setShowAiAssistant(false)}
-                      size="sm"
-                      variant="ghost"
-                      className="w-8 h-8 p-0"
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-                
-                {/* Content */}
-                <div className="flex-1 overflow-hidden">
-                  <div className="h-full p-4">
-                    <ChatInterface 
-                      placeholder="Ask about any concept, get explanations, or request study help..."
-                      suggestions={[
-                        "Explain neural networks in simple terms",
-                        "What's the difference between AI and ML?",
-                        "Help me understand gradient descent",
-                        "Create a study plan for machine learning"
-                      ]}
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </>
-      )}
     </div>
   );
 };
