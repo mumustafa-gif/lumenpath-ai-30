@@ -15,11 +15,13 @@ interface ChatMessage {
 interface ChatInterfaceProps {
   placeholder?: string;
   suggestions?: string[];
+  onVisualizationRequest?: (type: string, data: any[], title: string) => void;
 }
 
 export const ChatInterface = ({ 
   placeholder = "Ask your AI assistant...", 
-  suggestions = [] 
+  suggestions = [],
+  onVisualizationRequest
 }: ChatInterfaceProps) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -63,6 +65,58 @@ export const ChatInterface = ({
   const generateAIResponse = (query: string): string => {
     const lowerQuery = query.toLowerCase();
     
+    // Check for chart/visualization requests
+    if (lowerQuery.includes("chart") || lowerQuery.includes("visualize") || lowerQuery.includes("graph")) {
+      // Generate mock data based on query type
+      let chartData = [];
+      let chartTitle = "";
+      let chartType = "bar";
+      
+      if (lowerQuery.includes("skill")) {
+        chartData = [
+          { name: "Cloud Computing", value: 75 },
+          { name: "Data Science", value: 40 },
+          { name: "AI/ML", value: 15 },
+          { name: "Cybersecurity", value: 65 }
+        ];
+        chartTitle = "Skill Gaps Analysis";
+      } else if (lowerQuery.includes("enrollment") || lowerQuery.includes("course")) {
+        chartData = [
+          { name: "AI Fundamentals", value: 234 },
+          { name: "Data Science", value: 189 },
+          { name: "Cloud Computing", value: 156 },
+          { name: "DevOps", value: 134 }
+        ];
+        chartTitle = "Course Enrollments";
+      } else if (lowerQuery.includes("completion") || lowerQuery.includes("progress")) {
+        chartData = [
+          { name: "Jan", value: 65 },
+          { name: "Feb", value: 72 },
+          { name: "Mar", value: 78 },
+          { name: "Apr", value: 83 }
+        ];
+        chartTitle = "Course Completion Rates Over Time";
+        chartType = "line";
+      } else {
+        chartData = [
+          { name: "Total Learners", value: 1247 },
+          { name: "Active Courses", value: 24 },
+          { name: "Completion Rate", value: 78 },
+          { name: "Avg Engagement", value: 85 }
+        ];
+        chartTitle = "Platform Overview Statistics";
+      }
+      
+      // Trigger visualization
+      if (onVisualizationRequest) {
+        setTimeout(() => {
+          onVisualizationRequest(chartType, chartData, chartTitle);
+        }, 1000);
+      }
+      
+      return `I'll create a ${chartType} chart showing ${chartTitle.toLowerCase()}. The visualization will open in a separate modal where you can switch between different chart types and export the data.`;
+    }
+    
     if (lowerQuery.includes("dropout") || lowerQuery.includes("risk")) {
       return "I've analyzed the current dropout risk data. Here are 3 learners with >50% dropout risk:\n\n• Mike Chen (AI Fundamentals) - Last active 3 days ago\n• Alex Rivera (Cloud Computing) - Last active 5 days ago\n• Emma Thompson (Data Science) - Last active 4 days ago\n\nWould you like me to generate automatic intervention recommendations?";
     }
@@ -79,7 +133,7 @@ export const ChatInterface = ({
       return "Top skill gaps identified across the organization:\n\n🔴 Critical Gaps:\n• Cloud Architecture (78% of teams lack proficiency)\n• Advanced Python (65% skill gap)\n• Machine Learning Operations (72% gap)\n\n🟡 Moderate Gaps:\n• Data Visualization (45% gap)\n• API Development (38% gap)\n\n✅ Well-Covered Skills:\n• Basic Programming (92% proficiency)\n• Project Management (88% proficiency)\n\nShall I create targeted learning paths for critical gaps?";
     }
     
-    return "I understand your query. Based on the current system data, I can provide detailed analytics and insights. Could you be more specific about what aspect you'd like me to analyze? I can help with:\n\n• Learner performance and progress tracking\n• Course effectiveness and engagement rates\n• Skill gap analysis and recommendations\n• Risk assessment and intervention strategies\n• Instructor performance metrics\n• Certification and compliance tracking";
+    return "I understand your query. Based on the current system data, I can provide detailed analytics and insights. Could you be more specific about what aspect you'd like me to analyze? I can help with:\n\n• Learner performance and progress tracking\n• Course effectiveness and engagement rates\n• Skill gap analysis and recommendations\n• Risk assessment and intervention strategies\n• Instructor performance metrics\n• Certification and compliance tracking\n\nFor data visualization, try asking: 'Show me a chart of...' or 'Visualize the...'";
   };
 
   const handleSuggestionClick = (suggestion: string) => {
