@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { X, Bot, TrendingUp, BarChart3, LineChart, PieChart, Minimize2, BookOpen, FileText, Lightbulb } from "lucide-react";
+import { X, Bot, TrendingUp, BarChart3, LineChart, PieChart, Minimize2, BookOpen, FileText, Lightbulb, Sparkles, GraduationCap, Users, Target, Zap } from "lucide-react";
 import { ChatInterface } from "./ChatInterface";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, LineChart as RechartsLineChart, Line, PieChart as RechartsPieChart, Pie, Cell } from 'recharts';
 
@@ -116,72 +116,171 @@ export const InstructorAIAssistant = () => {
 
   if (!isOpen) {
     return (
-      <Button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-4 right-4 w-14 h-14 rounded-full shadow-lg bg-gradient-to-r from-ai-primary to-ai-secondary hover:from-ai-primary/90 hover:to-ai-secondary/90 z-50"
-      >
-        <Bot className="w-6 h-6 text-white" />
-      </Button>
+      <div className="fixed bottom-6 right-6 z-50">
+        <Button
+          onClick={() => setIsOpen(true)}
+          className="group relative w-16 h-16 rounded-full shadow-2xl bg-gradient-to-br from-purple-600 via-blue-600 to-emerald-500 hover:scale-110 transition-all duration-300 border-0 overflow-hidden"
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-400/20 via-blue-400/20 to-emerald-400/20 animate-pulse"></div>
+          <div className="relative flex items-center justify-center">
+            <GraduationCap className="w-7 h-7 text-white drop-shadow-sm" />
+            <div className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-400 rounded-full flex items-center justify-center">
+              <Sparkles className="w-2.5 h-2.5 text-yellow-900" />
+            </div>
+          </div>
+          <div className="absolute inset-0 ring-4 ring-white/20 rounded-full group-hover:ring-white/40 transition-all duration-300"></div>
+        </Button>
+        
+        {/* Floating tooltip */}
+        <div className="absolute bottom-full right-0 mb-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+          <div className="bg-gray-900 text-white text-sm px-3 py-2 rounded-lg shadow-lg whitespace-nowrap">
+            AI Course Assistant
+            <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+          </div>
+        </div>
+      </div>
     );
   }
 
   return (
     <>
-      <Card className={`fixed bottom-4 right-4 w-96 bg-card/95 backdrop-blur-sm border shadow-2xl z-50 transition-all duration-300 ${
-        isMinimized ? 'h-16' : 'h-[600px]'
+      <div className={`fixed bottom-6 right-6 w-[420px] z-50 transition-all duration-500 ease-out ${
+        isMinimized ? 'h-20' : 'h-[680px]'
       }`}>
-        <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-ai-primary to-ai-secondary">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-              <BookOpen className="w-4 h-4 text-white" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-white">Course Content Assistant</h3>
-              <p className="text-xs text-white/70">AI-Powered Content Creation</p>
-            </div>
-          </div>
-          <div className="flex items-center space-x-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="w-8 h-8 p-0 text-white/70 hover:text-white hover:bg-white/20"
-              onClick={() => setIsMinimized(!isMinimized)}
-            >
-              <Minimize2 className="w-4 h-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="w-8 h-8 p-0 text-white/70 hover:text-white hover:bg-white/20"
-              onClick={() => setIsOpen(false)}
-            >
-              <X className="w-4 h-4" />
-            </Button>
-          </div>
-        </div>
-
-        {!isMinimized && (
-          <div className="flex flex-col h-[calc(600px-80px)]">
-            <div className="p-3 border-b bg-muted/50">
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <Lightbulb className="w-4 h-4" />
-                <span>Ask me to create lesson plans, assessments, or visualize course data!</span>
+        <Card className="h-full bg-gradient-to-br from-slate-50/95 via-white/95 to-blue-50/95 dark:from-slate-900/95 dark:via-slate-800/95 dark:to-blue-900/95 backdrop-blur-xl border-0 shadow-2xl ring-1 ring-black/5 dark:ring-white/10 overflow-hidden">
+          {/* Header */}
+          <div className="relative bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-700 p-6 border-b border-white/10">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
+            <div className="relative flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <div className="relative">
+                  <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center ring-2 ring-white/30">
+                    <GraduationCap className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="absolute -top-1 -right-1 w-5 h-5 bg-yellow-400 rounded-full flex items-center justify-center shadow-lg">
+                    <Sparkles className="w-3 h-3 text-yellow-900" />
+                  </div>
+                </div>
+                <div>
+                  <h3 className="font-bold text-xl text-white">AI Course Assistant</h3>
+                  <p className="text-white/80 text-sm font-medium">Smart Content Creation</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-9 h-9 p-0 text-white/80 hover:text-white hover:bg-white/20 rounded-lg transition-all duration-200"
+                  onClick={() => setIsMinimized(!isMinimized)}
+                >
+                  <Minimize2 className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-9 h-9 p-0 text-white/80 hover:text-white hover:bg-white/20 rounded-lg transition-all duration-200"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
               </div>
             </div>
-
-            <ChatInterface
-              placeholder="Ask me to help create course content, lesson plans, assessments, or visualize course data..."
-              suggestions={[
-                "Create a lesson plan for machine learning basics",
-                "Design an assessment for Python programming", 
-                "Show me course engagement analytics",
-                "Help me improve student interaction"
-              ]}
-              onVisualizationRequest={handleVisualizationRequest}
-            />
           </div>
-        )}
-      </Card>
+
+          {!isMinimized && (
+            <div className="flex flex-col h-[calc(680px-100px)]">
+              {/* Quick Actions */}
+              <div className="p-6 border-b border-gray-100 dark:border-gray-800">
+                <div className="grid grid-cols-2 gap-3">
+                  <Button 
+                    variant="outline" 
+                    className="h-12 justify-start space-x-3 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 border-emerald-200 dark:border-emerald-800 hover:shadow-md transition-all duration-200"
+                    onClick={() => {}}
+                  >
+                    <FileText className="w-4 h-4 text-emerald-600" />
+                    <span className="text-sm font-medium">Lesson Plans</span>
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="h-12 justify-start space-x-3 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-800 hover:shadow-md transition-all duration-200"
+                    onClick={() => {}}
+                  >
+                    <Target className="w-4 h-4 text-blue-600" />
+                    <span className="text-sm font-medium">Assessments</span>
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="h-12 justify-start space-x-3 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-purple-200 dark:border-purple-800 hover:shadow-md transition-all duration-200"
+                    onClick={() => {}}
+                  >
+                    <BarChart3 className="w-4 h-4 text-purple-600" />
+                    <span className="text-sm font-medium">Analytics</span>
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="h-12 justify-start space-x-3 bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 border-orange-200 dark:border-orange-800 hover:shadow-md transition-all duration-200"
+                    onClick={() => {}}
+                  >
+                    <Users className="w-4 h-4 text-orange-600" />
+                    <span className="text-sm font-medium">Engagement</span>
+                  </Button>
+                </div>
+              </div>
+
+              {/* AI Features */}
+              <div className="p-6 border-b border-gray-100 dark:border-gray-800">
+                <div className="flex items-center space-x-2 mb-4">
+                  <Zap className="w-5 h-5 text-yellow-500" />
+                  <h4 className="font-semibold text-gray-900 dark:text-gray-100">AI-Powered Features</h4>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-3 p-3 rounded-lg bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 hover:shadow-sm transition-all duration-200">
+                    <div className="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                      <BookOpen className="w-4 h-4 text-green-600" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Smart Content Generation</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Create engaging course materials</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-3 p-3 rounded-lg bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 hover:shadow-sm transition-all duration-200">
+                    <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                      <TrendingUp className="w-4 h-4 text-blue-600" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Performance Analytics</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Visualize student progress data</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-3 p-3 rounded-lg bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 hover:shadow-sm transition-all duration-200">
+                    <div className="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                      <Lightbulb className="w-4 h-4 text-purple-600" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Smart Recommendations</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Get personalized teaching tips</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Chat Interface */}
+              <div className="flex-1 p-6">
+                <ChatInterface
+                  placeholder="Ask me anything about course creation, student analytics, or teaching strategies..."
+                  suggestions={[
+                    "Create engaging lesson plan",
+                    "Design interactive assessment", 
+                    "Show student analytics",
+                    "Improve course engagement"
+                  ]}
+                  onVisualizationRequest={handleVisualizationRequest}
+                />
+              </div>
+            </div>
+          )}
+        </Card>
+      </div>
 
       {/* Chart Visualization Modal */}
       <Dialog open={showVisualization} onOpenChange={setShowVisualization}>
