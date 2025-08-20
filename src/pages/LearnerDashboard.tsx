@@ -26,12 +26,14 @@ import OnboardingFlow, { OnboardingData } from "@/components/OnboardingFlow";
 import AdaptiveLearningEngine from "@/components/AdaptiveLearningEngine";
 import CourseRecommendations from "@/components/CourseRecommendations";
 import LearnerProfile from "@/components/LearnerProfile";
+import { CoursePreview } from "@/components/CoursePreview";
 
 const LearnerDashboard = () => {
   const [showOnboarding, setShowOnboarding] = useState(false); // Set to true for new users
   const [learnerProfile, setLearnerProfile] = useState<OnboardingData | null>(null);
   const [showCourseRecommendations, setShowCourseRecommendations] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [activeCourse, setActiveCourse] = useState<any>(null);
   
   const [currentCourses] = useState([
     {
@@ -41,7 +43,39 @@ const LearnerDashboard = () => {
       nextLesson: "Neural Network Basics",
       timeRemaining: "2h 15m",
       difficulty: "Beginner",
-      instructor: "Dr. Sarah Chen"
+      instructor: "Dr. Sarah Chen",
+      modules: [
+        {
+          title: "Introduction to AI",
+          duration: "45 mins",
+          lessons: [
+            { title: "What is Artificial Intelligence?", duration: "15 mins", type: "video" },
+            { title: "History of AI", duration: "20 mins", type: "interactive" },
+            { title: "AI Applications Today", duration: "10 mins", type: "case_study" }
+          ],
+          quiz: { questions: 5, passingScore: 80 },
+          caseStudy: {
+            title: "AI in Healthcare",
+            scenario: "Explore how AI is revolutionizing medical diagnosis and treatment",
+            deliverables: ["Analysis Report", "Implementation Plan", "ROI Calculation"]
+          }
+        },
+        {
+          title: "Machine Learning Fundamentals",
+          duration: "60 mins",
+          lessons: [
+            { title: "Types of Machine Learning", duration: "20 mins", type: "video" },
+            { title: "Supervised Learning", duration: "25 mins", type: "hands_on" },
+            { title: "Unsupervised Learning", duration: "15 mins", type: "simulation" }
+          ],
+          quiz: { questions: 8, passingScore: 75 },
+          caseStudy: {
+            title: "Customer Segmentation",
+            scenario: "Use ML algorithms to segment customers for targeted marketing",
+            deliverables: ["Segmentation Model", "Marketing Strategy", "Performance Metrics"]
+          }
+        }
+      ]
     },
     {
       id: 2,
@@ -50,7 +84,28 @@ const LearnerDashboard = () => {
       nextLesson: "Pandas DataFrames",
       timeRemaining: "4h 30m",
       difficulty: "Intermediate",
-      instructor: "Prof. Mike Johnson"
+      instructor: "Prof. Mike Johnson",
+      modules: [
+        {
+          title: "Python Basics Review",
+          duration: "30 mins",
+          lessons: [
+            { title: "Variables and Data Types", duration: "10 mins", type: "video" },
+            { title: "Control Structures", duration: "20 mins", type: "hands_on" }
+          ],
+          quiz: { questions: 6, passingScore: 80 }
+        },
+        {
+          title: "Data Manipulation with Pandas",
+          duration: "90 mins",
+          lessons: [
+            { title: "DataFrames Introduction", duration: "30 mins", type: "video" },
+            { title: "Data Cleaning", duration: "45 mins", type: "hands_on" },
+            { title: "Advanced Operations", duration: "15 mins", type: "interactive" }
+          ],
+          quiz: { questions: 10, passingScore: 85 }
+        }
+      ]
     },
     {
       id: 3,
@@ -103,10 +158,15 @@ const LearnerDashboard = () => {
     console.log('Onboarding completed:', data);
   };
 
-  const handleStartCourse = (courseId: string) => {
+  const handleStartCourse = (courseId: string | number) => {
     console.log("Starting course:", courseId);
     setShowCourseRecommendations(false);
-    // Here you would typically navigate to the course or set up course state
+    
+    // Find the course by ID and set it as active
+    const course = currentCourses.find(c => c.id.toString() === courseId.toString());
+    if (course) {
+      setActiveCourse(course);
+    }
   };
 
   const handleProfileSave = (profileData: any) => {
@@ -151,6 +211,16 @@ const LearnerDashboard = () => {
           <LearnerProfile onSave={handleProfileSave} />
         </main>
       </div>
+    );
+  }
+
+  // Show course preview when a course is started
+  if (activeCourse) {
+    return (
+      <CoursePreview 
+        course={activeCourse}
+        onClose={() => setActiveCourse(null)}
+      />
     );
   }
 
@@ -279,7 +349,11 @@ const LearnerDashboard = () => {
                       </div>
                     </div>
                     
-                    <Button variant="ai" className="w-full">
+                    <Button 
+                      variant="ai" 
+                      className="w-full"
+                      onClick={() => handleStartCourse(course.id)}
+                    >
                       <Play className="w-4 h-4 mr-2" />
                       Continue Learning
                     </Button>
