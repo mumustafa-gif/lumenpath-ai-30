@@ -107,11 +107,9 @@ export const ChatInterface = ({
         chartTitle = "Platform Overview Statistics";
       }
       
-      // Trigger visualization
+      // Trigger visualization immediately
       if (onVisualizationRequest) {
-        setTimeout(() => {
-          onVisualizationRequest(chartType, chartData, chartTitle);
-        }, 1000);
+        onVisualizationRequest(chartType, chartData, chartTitle);
       }
       
       return `I'll create a ${chartType} chart showing ${chartTitle.toLowerCase()}. The visualization will open in a separate modal where you can switch between different chart types and export the data.`;

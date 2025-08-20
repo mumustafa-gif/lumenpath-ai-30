@@ -15,12 +15,37 @@ export const LearnerAIAssistant = () => {
   const [chartData, setChartData] = useState<any[]>([]);
   const [chartType, setChartType] = useState<string>("bar");
   const [chartTitle, setChartTitle] = useState("");
+  const [isGeneratingChart, setIsGeneratingChart] = useState(false);
+  const [generationProgress, setGenerationProgress] = useState(0);
 
   const handleVisualizationRequest = (type: string, data: any[], title: string) => {
-    setChartType(type);
-    setChartData(data);
-    setChartTitle(title);
+    setIsGeneratingChart(true);
+    setGenerationProgress(0);
     setShowVisualization(true);
+    
+    // Simulate AI processing with progress
+    const progressInterval = setInterval(() => {
+      setGenerationProgress(prev => {
+        if (prev >= 90) {
+          clearInterval(progressInterval);
+          return 90;
+        }
+        return prev + Math.random() * 15;
+      });
+    }, 200);
+    
+    // Complete the generation
+    setTimeout(() => {
+      clearInterval(progressInterval);
+      setGenerationProgress(100);
+      setTimeout(() => {
+        setChartType(type);
+        setChartData(data);
+        setChartTitle(title);
+        setIsGeneratingChart(false);
+        setGenerationProgress(0);
+      }, 500);
+    }, 2500);
   };
 
   const renderChart = () => {
@@ -136,68 +161,103 @@ export const LearnerAIAssistant = () => {
 
       {/* Chart Visualization Modal */}
       <Dialog open={showVisualization} onOpenChange={setShowVisualization}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="flex items-center space-x-2">
-              <TrendingUp className="h-5 w-5 text-ai-primary" />
-              <span>{chartTitle}</span>
-            </DialogTitle>
-          </DialogHeader>
-          
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div className="flex space-x-2">
-                <Button
-                  variant={chartType === "bar" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setChartType("bar")}
-                  className="flex items-center space-x-1"
-                >
-                  <BarChart3 className="h-4 w-4" />
-                  <span>Bar</span>
-                </Button>
-                <Button
-                  variant={chartType === "line" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setChartType("line")}
-                  className="flex items-center space-x-1"
-                >
-                  <LineChart className="h-4 w-4" />
-                  <span>Line</span>
-                </Button>
-                <Button
-                  variant={chartType === "pie" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setChartType("pie")}
-                  className="flex items-center space-x-1"
-                >
-                  <PieChart className="h-4 w-4" />
-                  <span>Pie</span>
-                </Button>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto z-[9999] backdrop:blur-md">
+          {isGeneratingChart ? (
+            <div className="flex flex-col items-center justify-center py-16 space-y-6">
+              <div className="relative">
+                <div className="w-20 h-20 border-4 border-ai-primary/20 rounded-full animate-spin">
+                  <div className="absolute top-0 left-0 w-20 h-20 border-4 border-transparent border-t-ai-primary rounded-full animate-spin" 
+                       style={{ animationDuration: '0.8s' }}></div>
+                </div>
+                <Bot className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-8 w-8 text-ai-primary animate-pulse" />
               </div>
               
-              <Badge variant="secondary" className="text-xs">
-                {chartData.length} data points
-              </Badge>
+              <div className="text-center space-y-4">
+                <h3 className="text-lg font-semibold text-foreground">AI Agent Processing</h3>
+                <p className="text-sm text-muted-foreground">
+                  Our AI agent is analyzing your data and generating the visualization...
+                </p>
+                
+                <div className="w-80 bg-secondary rounded-full h-2 overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-ai-primary to-ai-primary/70 transition-all duration-300 ease-out"
+                    style={{ width: `${generationProgress}%` }}
+                  ></div>
+                </div>
+                
+                <p className="text-xs text-muted-foreground">
+                  {generationProgress < 30 && "Analyzing data patterns..."}
+                  {generationProgress >= 30 && generationProgress < 60 && "Selecting optimal visualization..."}
+                  {generationProgress >= 60 && generationProgress < 90 && "Generating chart components..."}
+                  {generationProgress >= 90 && "Finalizing visualization..."}
+                </p>
+              </div>
             </div>
+          ) : (
+            <>
+              <DialogHeader>
+                <DialogTitle className="flex items-center space-x-2">
+                  <TrendingUp className="h-5 w-5 text-ai-primary" />
+                  <span>{chartTitle}</span>
+                </DialogTitle>
+              </DialogHeader>
+              
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex space-x-2">
+                    <Button
+                      variant={chartType === "bar" ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setChartType("bar")}
+                      className="flex items-center space-x-1"
+                    >
+                      <BarChart3 className="h-4 w-4" />
+                      <span>Bar</span>
+                    </Button>
+                    <Button
+                      variant={chartType === "line" ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setChartType("line")}
+                      className="flex items-center space-x-1"
+                    >
+                      <LineChart className="h-4 w-4" />
+                      <span>Line</span>
+                    </Button>
+                    <Button
+                      variant={chartType === "pie" ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setChartType("pie")}
+                      className="flex items-center space-x-1"
+                    >
+                      <PieChart className="h-4 w-4" />
+                      <span>Pie</span>
+                    </Button>
+                  </div>
+                  
+                  <Badge variant="secondary" className="text-xs">
+                    {chartData.length} data points
+                  </Badge>
+                </div>
 
-            <Card className="p-6">
-              {renderChart()}
-            </Card>
+                <Card className="p-6">
+                  {renderChart()}
+                </Card>
 
-            <div className="border-t pt-4">
-              <ChatInterface 
-                placeholder="Ask me to modify this chart or analyze the data..."
-                suggestions={[
-                  "Change to line chart",
-                  "Show data table",
-                  "Export as image",
-                  "Add trend analysis"
-                ]}
-                onVisualizationRequest={handleVisualizationRequest}
-              />
-            </div>
-          </div>
+                <div className="border-t pt-4">
+                  <ChatInterface 
+                    placeholder="Ask me to modify this chart or analyze the data..."
+                    suggestions={[
+                      "Change to line chart",
+                      "Show data table",
+                      "Export as image",
+                      "Add trend analysis"
+                    ]}
+                    onVisualizationRequest={handleVisualizationRequest}
+                  />
+                </div>
+              </div>
+            </>
+          )}
         </DialogContent>
       </Dialog>
     </>
