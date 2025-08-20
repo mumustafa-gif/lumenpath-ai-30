@@ -30,7 +30,8 @@ import {
   Shield,
   Activity,
   Calendar,
-  Zap
+  Zap,
+  X
 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart as RechartsLineChart, Line, PieChart as RechartsPieChart, Cell, AreaChart as RechartsAreaChart, Area, Pie } from 'recharts';
 import { AdminHeader } from "@/components/AdminHeader";
@@ -42,6 +43,7 @@ const AdminDashboard = () => {
   const [chartData, setChartData] = useState([]);
   const [chartTitle, setChartTitle] = useState("");
   const [isAssistantExpanded, setIsAssistantExpanded] = useState(false);
+  const [isAssistantMinimized, setIsAssistantMinimized] = useState(false);
   
   const stats = {
     totalLearners: 1247,
@@ -152,7 +154,7 @@ const AdminDashboard = () => {
       <AdminHeader />
       
       {/* Main Dashboard Content */}
-      <main className={`transition-all duration-300 ${isAssistantExpanded ? 'pr-[650px]' : 'pr-[450px]'} p-4 lg:p-8 pt-20`}>
+      <main className={`transition-all duration-300 ${isAssistantMinimized ? 'pr-4' : isAssistantExpanded ? 'pr-[650px]' : 'pr-[450px]'} p-4 lg:p-8 pt-20`}>
         {/* Welcome Section */}
         <div className="mb-8">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
@@ -565,61 +567,88 @@ const AdminDashboard = () => {
       </main>
 
       {/* Enhanced AI Assistant Sidebar */}
-      <div className={`fixed right-0 top-0 h-full bg-gradient-to-b from-card via-card/98 to-card/95 border-l border-border/30 shadow-2xl backdrop-blur-sm z-50 transition-all duration-300 ${
-        isAssistantExpanded ? 'w-[650px]' : 'w-[450px]'
-      }`}>
-        <div className="p-4 lg:p-6 border-b border-border/30 bg-gradient-to-r from-ai-primary/8 to-ai-secondary/8 backdrop-blur-sm">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <div className="p-2.5 bg-gradient-to-br from-ai-primary/10 to-ai-primary/5 rounded-xl mr-3 border border-ai-primary/20">
-                <Brain className="w-5 h-5 lg:w-6 lg:h-6 text-ai-primary" />
+      {!isAssistantMinimized ? (
+        <div className={`fixed right-0 top-0 h-full bg-gradient-to-b from-card via-card/98 to-card/95 border-l border-border/30 shadow-2xl backdrop-blur-sm z-50 transition-all duration-300 ${
+          isAssistantExpanded ? 'w-[650px]' : 'w-[450px]'
+        }`}>
+          <div className="p-4 lg:p-6 border-b border-border/30 bg-gradient-to-r from-ai-primary/8 to-ai-secondary/8 backdrop-blur-sm">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <div className="p-2.5 bg-gradient-to-br from-ai-primary/10 to-ai-primary/5 rounded-xl mr-3 border border-ai-primary/20">
+                  <Brain className="w-5 h-5 lg:w-6 lg:h-6 text-ai-primary" />
+                </div>
+                <div>
+                  <h3 className="text-base lg:text-lg font-semibold text-foreground flex items-center">
+                    AI Assistant
+                    <Badge variant="secondary" className="ml-2 text-xs bg-ai-success/10 text-ai-success border-ai-success/20">
+                      Online
+                    </Badge>
+                  </h3>
+                  <p className="text-xs lg:text-sm text-muted-foreground">
+                    Advanced analytics & insights
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="text-base lg:text-lg font-semibold text-foreground flex items-center">
-                  AI Assistant
-                  <Badge variant="secondary" className="ml-2 text-xs bg-ai-success/10 text-ai-success border-ai-success/20">
-                    Online
-                  </Badge>
-                </h3>
-                <p className="text-xs lg:text-sm text-muted-foreground">
-                  Advanced analytics & insights
-                </p>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsAssistantExpanded(!isAssistantExpanded)}
+                  className="hover:bg-ai-primary/10 rounded-lg transition-all"
+                >
+                  {isAssistantExpanded ? (
+                    <Minimize2 className="w-4 h-4" />
+                  ) : (
+                    <Maximize2 className="w-4 h-4" />
+                  )}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsAssistantMinimized(true)}
+                  className="hover:bg-destructive/10 hover:text-destructive rounded-lg transition-all"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
               </div>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsAssistantExpanded(!isAssistantExpanded)}
-              className="hover:bg-ai-primary/10 rounded-lg transition-all"
-            >
-              {isAssistantExpanded ? (
-                <Minimize2 className="w-4 h-4" />
-              ) : (
-                <Maximize2 className="w-4 h-4" />
-              )}
-            </Button>
           </div>
+          
+          <ScrollArea className="h-[calc(100vh-120px)]">
+            <div className="p-3 lg:p-4 h-full">
+              <ChatInterface 
+                placeholder="Ask about analytics, trends, or request visualizations..."
+                suggestions={[
+                  "Show learner performance trends as a chart",
+                  "Visualize skill gaps data", 
+                  "Create enrollment analytics dashboard",
+                  "Show completion rates over time",
+                  "Compare course demand vs enrollment",
+                  "Display risk factors analysis",
+                  "Generate market insights report",
+                  "Analyze learning behavior patterns"
+                ]}
+                onVisualizationRequest={handleVisualization}
+              />
+            </div>
+          </ScrollArea>
         </div>
-        
-        <ScrollArea className="h-[calc(100vh-120px)]">
-          <div className="p-3 lg:p-4 h-full">
-            <ChatInterface 
-              placeholder="Ask about analytics, trends, or request visualizations..."
-              suggestions={[
-                "Show learner performance trends as a chart",
-                "Visualize skill gaps data", 
-                "Create enrollment analytics dashboard",
-                "Show completion rates over time",
-                "Compare course demand vs enrollment",
-                "Display risk factors analysis",
-                "Generate market insights report",
-                "Analyze learning behavior patterns"
-              ]}
-              onVisualizationRequest={handleVisualization}
-            />
-          </div>
-        </ScrollArea>
-      </div>
+      ) : (
+        /* Minimized AI Assistant Button */
+        <div className="fixed right-4 bottom-4 z-50">
+          <Button
+            onClick={() => setIsAssistantMinimized(false)}
+            className="bg-gradient-to-r from-ai-primary to-ai-secondary hover:from-ai-primary/90 hover:to-ai-secondary/90 text-white shadow-lg hover:shadow-xl transition-all duration-300 rounded-full p-3 h-auto min-w-[140px]"
+          >
+            <div className="flex items-center gap-2">
+              <div className="p-1.5 bg-white/20 rounded-full">
+                <Brain className="w-4 h-4" />
+              </div>
+              <span className="text-sm font-medium">AI Assistant</span>
+            </div>
+          </Button>
+        </div>
+      )}
 
       {/* Chart Visualization Modal */}
       <Dialog open={showChartModal} onOpenChange={setShowChartModal}>
