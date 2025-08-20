@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   Brain, 
   Users, 
@@ -25,7 +26,11 @@ import {
   LineChart,
   AreaChart,
   Maximize2,
-  Minimize2
+  Minimize2,
+  Shield,
+  Activity,
+  Calendar,
+  Zap
 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart as RechartsLineChart, Line, PieChart as RechartsPieChart, Cell, AreaChart as RechartsAreaChart, Area, Pie } from 'recharts';
 import { AdminHeader } from "@/components/AdminHeader";
@@ -45,11 +50,6 @@ const AdminDashboard = () => {
     avgEngagement: 85
   };
 
-  const riskLearners = [
-    { id: 1, name: "Mike Chen", course: "AI Fundamentals", risk: "High", lastActive: "3 days ago" },
-    { id: 2, name: "Sarah Johnson", course: "Data Science", risk: "Medium", lastActive: "1 day ago" },
-    { id: 3, name: "Alex Rivera", course: "Cloud Computing", risk: "High", lastActive: "5 days ago" },
-  ];
 
   const courseAnalytics = [
     { name: "AI Fundamentals", enrolled: 234, completed: 182, avgScore: 87, marketDemand: 95 },
@@ -66,10 +66,10 @@ const AdminDashboard = () => {
   ];
 
   const demandingCourses = [
-    { name: "AI Fundamentals", demand: 95, waitlist: 45 },
-    { name: "Cloud Computing", demand: 92, waitlist: 38 },
-    { name: "Data Science", demand: 89, waitlist: 29 },
-    { name: "Cybersecurity", demand: 87, waitlist: 52 },
+    { name: "AI Fundamentals", demand: 95, trending: "High" },
+    { name: "Cloud Computing", demand: 92, trending: "High" },
+    { name: "Data Science", demand: 89, trending: "Medium" },
+    { name: "Cybersecurity", demand: 87, trending: "Medium" },
   ];
 
   const learningTrends = [
@@ -152,15 +152,29 @@ const AdminDashboard = () => {
       <AdminHeader />
       
       {/* Main Dashboard Content */}
-      <main className={`transition-all duration-300 ${isAssistantExpanded ? 'pr-[600px]' : 'pr-[400px]'} p-8 pt-20`}>
+      <main className={`transition-all duration-300 ${isAssistantExpanded ? 'pr-[650px]' : 'pr-[450px]'} p-4 lg:p-8 pt-20`}>
         {/* Welcome Section */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-2">
-            Admin Dashboard
-          </h1>
-          <p className="text-muted-foreground text-lg">
-            Comprehensive analytics and insights for your learning platform
-          </p>
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
+            <div>
+              <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-2">
+                Admin Dashboard
+              </h1>
+              <p className="text-muted-foreground text-base lg:text-lg">
+                Comprehensive analytics and insights for your learning platform
+              </p>
+            </div>
+            <div className="flex items-center gap-2 mt-4 lg:mt-0">
+              <Badge variant="secondary" className="bg-ai-success/10 text-ai-success border-ai-success/20">
+                <Activity className="w-3 h-3 mr-1" />
+                System Online
+              </Badge>
+              <Badge variant="outline" className="border-ai-primary/20 text-ai-primary">
+                <Calendar className="w-3 h-3 mr-1" />
+                Last Updated: Now
+              </Badge>
+            </div>
+          </div>
         </div>
 
         {/* Stats Overview */}
@@ -270,18 +284,23 @@ const AdminDashboard = () => {
             <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
               <CardHeader className="pb-6">
                 <CardTitle className="text-xl font-semibold">Most Demanding Courses</CardTitle>
-                <CardDescription>High-demand courses with active waitlists</CardDescription>
+                <CardDescription>High-demand courses driving market growth</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 {demandingCourses.map((course) => (
                   <div key={course.name} className="flex items-center justify-between p-4 border rounded-lg bg-gradient-to-r from-muted/20 to-muted/5 hover:from-muted/30 hover:to-muted/10 transition-all">
-                    <div>
+                    <div className="flex-1">
                       <div className="font-medium text-lg">{course.name}</div>
-                      <div className="text-sm text-muted-foreground">Demand Score: {course.demand}%</div>
+                      <div className="text-sm text-muted-foreground">Market Demand: {course.demand}%</div>
+                      <Progress value={course.demand} className="h-2 mt-2" />
                     </div>
-                    <Badge variant="secondary" className="bg-ai-warning/10 text-ai-warning border-ai-warning/20">
-                      {course.waitlist} on waitlist
-                    </Badge>
+                    <div className="ml-4 flex flex-col items-end gap-2">
+                      <Badge variant={course.trending === "High" ? "default" : "secondary"} 
+                             className={course.trending === "High" ? "bg-ai-primary text-primary-foreground" : "bg-ai-secondary/10 text-ai-secondary border-ai-secondary/20"}>
+                        <TrendingUp className="w-3 h-3 mr-1" />
+                        {course.trending} Trend
+                      </Badge>
+                    </div>
                   </div>
                 ))}
               </CardContent>
@@ -409,79 +428,161 @@ const AdminDashboard = () => {
             </Card>
           </div>
 
-          {/* Risk Management & Alerts */}
-          <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
-            <CardHeader className="pb-6">
-              <CardTitle className="flex items-center text-xl font-semibold">
-                <AlertTriangle className="w-6 h-6 mr-3 text-destructive" />
-                Risk Management & Alerts
-              </CardTitle>
-              <CardDescription>Potential risks and immediate intervention requirements</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div className="p-6 border border-destructive/20 rounded-lg bg-gradient-to-br from-destructive/5 to-destructive/10 hover:shadow-lg transition-all">
-                  <h4 className="font-semibold text-destructive text-lg mb-2">High Dropout Risk</h4>
-                  <p className="text-sm text-muted-foreground mb-4">15 learners inactive 5+ days</p>
-                  <Button size="sm" variant="destructive" className="w-full">Take Action</Button>
-                </div>
-                
-                <div className="p-6 border border-ai-warning/20 rounded-lg bg-gradient-to-br from-ai-warning/5 to-ai-warning/10 hover:shadow-lg transition-all">
-                  <h4 className="font-semibold text-ai-warning text-lg mb-2">Low Engagement</h4>
-                  <p className="text-sm text-muted-foreground mb-4">Cloud course: 40% engagement</p>
-                  <Button size="sm" variant="outline" className="w-full border-ai-warning text-ai-warning">Review</Button>
-                </div>
-                
-                <div className="p-6 border border-ai-info/20 rounded-lg bg-gradient-to-br from-ai-info/5 to-ai-info/10 hover:shadow-lg transition-all">
-                  <h4 className="font-semibold text-ai-info text-lg mb-2">Cert Expiry</h4>
-                  <p className="text-sm text-muted-foreground mb-4">47 expire this month</p>
-                  <Button size="sm" variant="outline" className="w-full border-ai-info text-ai-info">Remind</Button>
-                </div>
-
-                <div className="p-6 border border-ai-accent/20 rounded-lg bg-gradient-to-br from-ai-accent/5 to-ai-accent/10 hover:shadow-lg transition-all">
-                  <h4 className="font-semibold text-ai-accent text-lg mb-2">Skill Gap Alert</h4>
-                  <p className="text-sm text-muted-foreground mb-4">Cloud skills critical shortage</p>
-                  <Button size="sm" variant="outline" className="w-full border-ai-accent text-ai-accent">Address</Button>
-                </div>
-              </div>
-
-              {/* At-Risk Learners */}
-              <div className="mt-8">
-                <h3 className="text-lg font-semibold mb-6">At-Risk Learners</h3>
-                <div className="space-y-4">
-                  {riskLearners.map((learner) => (
-                    <div key={learner.id} className="flex items-center justify-between p-4 border rounded-lg bg-gradient-to-r from-muted/20 to-muted/5 hover:from-muted/30 hover:to-muted/10 transition-all">
-                      <div>
-                        <div className="font-medium text-lg">{learner.name}</div>
-                        <div className="text-sm text-muted-foreground">{learner.course}</div>
-                        <div className="text-xs text-muted-foreground">Last active: {learner.lastActive}</div>
+          {/* Enhanced Risk Management & Alerts */}
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+            <Card className="xl:col-span-2 border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+              <CardHeader className="pb-6">
+                <CardTitle className="flex items-center text-xl font-semibold">
+                  <Shield className="w-6 h-6 mr-3 text-ai-primary" />
+                  Risk Management Center
+                </CardTitle>
+                <CardDescription>Proactive monitoring and intervention system</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="p-6 border border-destructive/20 rounded-xl bg-gradient-to-br from-destructive/5 to-destructive/10 hover:shadow-lg transition-all group">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="p-3 bg-destructive/10 rounded-lg">
+                        <AlertTriangle className="w-6 h-6 text-destructive" />
                       </div>
-                      <Badge variant={learner.risk === "High" ? "destructive" : "secondary"} className="text-sm px-3 py-1">
-                        {learner.risk} Risk
-                      </Badge>
+                      <Badge variant="destructive" className="text-xs">Critical</Badge>
                     </div>
-                  ))}
+                    <h4 className="font-semibold text-destructive text-lg mb-2">Engagement Drop</h4>
+                    <p className="text-sm text-muted-foreground mb-4">15 learners showing decreased activity patterns</p>
+                    <div className="flex gap-2">
+                      <Button size="sm" variant="destructive" className="flex-1">Intervene</Button>
+                      <Button size="sm" variant="outline" className="border-destructive/20 text-destructive hover:bg-destructive/10">
+                        <MessageSquare className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <div className="p-6 border border-ai-warning/20 rounded-xl bg-gradient-to-br from-ai-warning/5 to-ai-warning/10 hover:shadow-lg transition-all group">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="p-3 bg-ai-warning/10 rounded-lg">
+                        <TrendingUp className="w-6 h-6 text-ai-warning" />
+                      </div>
+                      <Badge variant="secondary" className="bg-ai-warning/10 text-ai-warning border-ai-warning/20 text-xs">Medium</Badge>
+                    </div>
+                    <h4 className="font-semibold text-ai-warning text-lg mb-2">Performance Variance</h4>
+                    <p className="text-sm text-muted-foreground mb-4">Cloud Computing course showing 60% completion</p>
+                    <div className="flex gap-2">
+                      <Button size="sm" variant="outline" className="border-ai-warning text-ai-warning flex-1">Optimize</Button>
+                      <Button size="sm" variant="outline" className="border-ai-warning/20 text-ai-warning hover:bg-ai-warning/10">
+                        <BarChart3 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <div className="p-6 border border-ai-info/20 rounded-xl bg-gradient-to-br from-ai-info/5 to-ai-info/10 hover:shadow-lg transition-all group">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="p-3 bg-ai-info/10 rounded-lg">
+                        <Calendar className="w-6 h-6 text-ai-info" />
+                      </div>
+                      <Badge variant="outline" className="border-ai-info/20 text-ai-info text-xs">Scheduled</Badge>
+                    </div>
+                    <h4 className="font-semibold text-ai-info text-lg mb-2">Certification Renewal</h4>
+                    <p className="text-sm text-muted-foreground mb-4">47 certifications expire within 30 days</p>
+                    <div className="flex gap-2">
+                      <Button size="sm" variant="outline" className="border-ai-info text-ai-info flex-1">Notify</Button>
+                      <Button size="sm" variant="outline" className="border-ai-info/20 text-ai-info hover:bg-ai-info/10">
+                        <Send className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="p-6 border border-ai-accent/20 rounded-xl bg-gradient-to-br from-ai-accent/5 to-ai-accent/10 hover:shadow-lg transition-all group">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="p-3 bg-ai-accent/10 rounded-lg">
+                        <Zap className="w-6 h-6 text-ai-accent" />
+                      </div>
+                      <Badge variant="outline" className="border-ai-accent/20 text-ai-accent text-xs">Action Required</Badge>
+                    </div>
+                    <h4 className="font-semibold text-ai-accent text-lg mb-2">Skills Gap Critical</h4>
+                    <p className="text-sm text-muted-foreground mb-4">Cloud Computing expertise shortage detected</p>
+                    <div className="flex gap-2">
+                      <Button size="sm" variant="outline" className="border-ai-accent text-ai-accent flex-1">Plan</Button>
+                      <Button size="sm" variant="outline" className="border-ai-accent/20 text-ai-accent hover:bg-ai-accent/10">
+                        <Target className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+              <CardHeader className="pb-6">
+                <CardTitle className="flex items-center text-xl font-semibold">
+                  <Activity className="w-6 h-6 mr-3 text-ai-secondary" />
+                  System Health
+                </CardTitle>
+                <CardDescription>Real-time platform monitoring</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="flex items-center justify-between p-4 rounded-lg bg-ai-success/5 border border-ai-success/20">
+                  <div>
+                    <div className="font-medium text-ai-success">Platform Status</div>
+                    <div className="text-sm text-muted-foreground">All systems operational</div>
+                  </div>
+                  <div className="w-3 h-3 bg-ai-success rounded-full animate-pulse"></div>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex justify-between text-sm">
+                    <span>Server Response</span>
+                    <span className="font-medium text-ai-success">98.7%</span>
+                  </div>
+                  <Progress value={98.7} className="h-2" />
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex justify-between text-sm">
+                    <span>User Satisfaction</span>
+                    <span className="font-medium text-ai-primary">94.2%</span>
+                  </div>
+                  <Progress value={94.2} className="h-2" />
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex justify-between text-sm">
+                    <span>Content Delivery</span>
+                    <span className="font-medium text-ai-accent">99.1%</span>
+                  </div>
+                  <Progress value={99.1} className="h-2" />
+                </div>
+
+                <div className="pt-4 border-t border-border/50">
+                  <Button variant="outline" className="w-full" size="sm">
+                    <BarChart3 className="w-4 h-4 mr-2" />
+                    View Full Report
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </main>
 
       {/* Enhanced AI Assistant Sidebar */}
-      <div className={`fixed right-0 top-0 h-full bg-gradient-to-b from-card via-card/95 to-card/90 border-l border-border/50 shadow-elevated z-50 transition-all duration-300 ${
-        isAssistantExpanded ? 'w-[600px]' : 'w-[400px]'
+      <div className={`fixed right-0 top-0 h-full bg-gradient-to-b from-card via-card/98 to-card/95 border-l border-border/30 shadow-2xl backdrop-blur-sm z-50 transition-all duration-300 ${
+        isAssistantExpanded ? 'w-[650px]' : 'w-[450px]'
       }`}>
-        <div className="p-6 border-b border-border/50 bg-gradient-to-r from-ai-primary/5 to-ai-secondary/5">
+        <div className="p-4 lg:p-6 border-b border-border/30 bg-gradient-to-r from-ai-primary/8 to-ai-secondary/8 backdrop-blur-sm">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <div className="p-2 bg-ai-primary/10 rounded-lg mr-3">
-                <Brain className="w-6 h-6 text-ai-primary" />
+              <div className="p-2.5 bg-gradient-to-br from-ai-primary/10 to-ai-primary/5 rounded-xl mr-3 border border-ai-primary/20">
+                <Brain className="w-5 h-5 lg:w-6 lg:h-6 text-ai-primary" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-foreground">AI Assistant</h3>
-                <p className="text-sm text-muted-foreground">
-                  Analytics insights & visualization
+                <h3 className="text-base lg:text-lg font-semibold text-foreground flex items-center">
+                  AI Assistant
+                  <Badge variant="secondary" className="ml-2 text-xs bg-ai-success/10 text-ai-success border-ai-success/20">
+                    Online
+                  </Badge>
+                </h3>
+                <p className="text-xs lg:text-sm text-muted-foreground">
+                  Advanced analytics & insights
                 </p>
               </div>
             </div>
@@ -489,27 +590,35 @@ const AdminDashboard = () => {
               variant="ghost"
               size="sm"
               onClick={() => setIsAssistantExpanded(!isAssistantExpanded)}
-              className="hover:bg-ai-primary/10"
+              className="hover:bg-ai-primary/10 rounded-lg transition-all"
             >
-              {isAssistantExpanded ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+              {isAssistantExpanded ? (
+                <Minimize2 className="w-4 h-4" />
+              ) : (
+                <Maximize2 className="w-4 h-4" />
+              )}
             </Button>
           </div>
         </div>
         
-        <div className="h-[calc(100vh-100px)] p-4">
-          <ChatInterface 
-            placeholder="Ask about analytics, trends, or request visualizations..."
-            suggestions={[
-              "Show learner performance trends as a chart",
-              "Visualize skill gaps data",
-              "Create a bar chart of course enrollments",
-              "Show completion rates over time",
-              "Compare course demand vs enrollment",
-              "Display risk factors analysis"
-            ]}
-            onVisualizationRequest={handleVisualization}
-          />
-        </div>
+        <ScrollArea className="h-[calc(100vh-120px)]">
+          <div className="p-3 lg:p-4 h-full">
+            <ChatInterface 
+              placeholder="Ask about analytics, trends, or request visualizations..."
+              suggestions={[
+                "Show learner performance trends as a chart",
+                "Visualize skill gaps data", 
+                "Create enrollment analytics dashboard",
+                "Show completion rates over time",
+                "Compare course demand vs enrollment",
+                "Display risk factors analysis",
+                "Generate market insights report",
+                "Analyze learning behavior patterns"
+              ]}
+              onVisualizationRequest={handleVisualization}
+            />
+          </div>
+        </ScrollArea>
       </div>
 
       {/* Chart Visualization Modal */}
