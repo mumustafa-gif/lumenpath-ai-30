@@ -44,6 +44,8 @@ const AdminDashboard = () => {
   const [chartTitle, setChartTitle] = useState("");
   const [isAssistantExpanded, setIsAssistantExpanded] = useState(false);
   const [isAssistantMinimized, setIsAssistantMinimized] = useState(false);
+  const [isGeneratingChart, setIsGeneratingChart] = useState(false);
+  const [generationProgress, setGenerationProgress] = useState(0);
   
   const stats = {
     totalLearners: 1247,
@@ -95,10 +97,33 @@ const AdminDashboard = () => {
   const COLORS = ['hsl(var(--primary))', 'hsl(var(--secondary))', 'hsl(var(--accent))', 'hsl(var(--muted))'];
 
   const handleVisualization = (type: string, data: any[], title: string) => {
-    setSelectedChartType(type);
-    setChartData(data);
-    setChartTitle(title);
+    setIsGeneratingChart(true);
+    setGenerationProgress(0);
     setShowChartModal(true);
+    
+    // Simulate AI processing with progress
+    const progressInterval = setInterval(() => {
+      setGenerationProgress(prev => {
+        if (prev >= 90) {
+          clearInterval(progressInterval);
+          return 90;
+        }
+        return prev + Math.random() * 15;
+      });
+    }, 200);
+    
+    // Complete the generation
+    setTimeout(() => {
+      clearInterval(progressInterval);
+      setGenerationProgress(100);
+      setTimeout(() => {
+        setSelectedChartType(type);
+        setChartData(data);
+        setChartTitle(title);
+        setIsGeneratingChart(false);
+        setGenerationProgress(0);
+      }, 500);
+    }, 2500);
   };
 
   const exportChart = (format: string) => {
@@ -811,117 +836,152 @@ const AdminDashboard = () => {
 
       {/* Chart Visualization Modal */}
       <Dialog open={showChartModal} onOpenChange={setShowChartModal}>
-        <DialogContent className="max-w-6xl max-h-[90vh] bg-gradient-to-br from-card to-card/90">
-          <DialogHeader>
-            <DialogTitle className="flex items-center justify-between text-xl">
-              <span className="flex items-center">
-                <BarChart3 className="w-6 h-6 mr-3 text-ai-primary" />
-                {chartTitle}
-              </span>
-              <div className="flex items-center gap-3">
-                <Select value={selectedChartType} onValueChange={setSelectedChartType}>
-                  <SelectTrigger className="w-40">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="bar">
-                      <div className="flex items-center">
-                        <BarChart3 className="w-4 h-4 mr-2" />
-                        Bar Chart
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="line">
-                      <div className="flex items-center">
-                        <LineChart className="w-4 h-4 mr-2" />
-                        Line Chart
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="pie">
-                      <div className="flex items-center">
-                        <PieChart className="w-4 h-4 mr-2" />
-                        Pie Chart
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="area">
-                      <div className="flex items-center">
-                        <AreaChart className="w-4 h-4 mr-2" />
-                        Area Chart
-                      </div>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-                
-                <Button size="sm" variant="outline" onClick={() => exportChart('pdf')} className="border-ai-primary/20 text-ai-primary hover:bg-ai-primary/10">
-                  <FileText className="w-4 h-4 mr-2" />
-                  PDF
-                </Button>
-                
-                <Button size="sm" variant="outline" onClick={() => exportChart('image')} className="border-ai-secondary/20 text-ai-secondary hover:bg-ai-secondary/10">
-                  <ImageIcon className="w-4 h-4 mr-2" />
-                  Image
-                </Button>
-              </div>
-            </DialogTitle>
-          </DialogHeader>
-          
-          <div className="mt-6 p-4 bg-muted/20 rounded-lg">
-            {renderChart()}
-          </div>
-          
-          <div className="space-y-4 mt-6 p-6 bg-gradient-to-br from-ai-primary/5 via-muted/20 to-ai-secondary/5 rounded-xl border border-ai-primary/10">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-ai-primary/10 rounded-lg">
-                <Brain className="w-5 h-5 text-ai-primary" />
-              </div>
-              <div>
-                <h4 className="font-semibold text-foreground">AI Chart Assistant</h4>
-                <p className="text-xs text-muted-foreground">Modify, enhance, or analyze this visualization</p>
-              </div>
-            </div>
-            
-            <div className="space-y-3">
-              <div className="flex flex-wrap gap-2">
-                <Badge variant="outline" className="text-xs cursor-pointer hover:bg-ai-primary/10 hover:border-ai-primary/30 transition-colors">
-                  Change time period
-                </Badge>
-                <Badge variant="outline" className="text-xs cursor-pointer hover:bg-ai-primary/10 hover:border-ai-primary/30 transition-colors">
-                  Add trend analysis
-                </Badge>
-                <Badge variant="outline" className="text-xs cursor-pointer hover:bg-ai-primary/10 hover:border-ai-primary/30 transition-colors">
-                  Compare with benchmarks
-                </Badge>
-                <Badge variant="outline" className="text-xs cursor-pointer hover:bg-ai-primary/10 hover:border-ai-primary/30 transition-colors">
-                  Export detailed report
-                </Badge>
-              </div>
-              
+        <DialogContent className="max-w-6xl max-h-[90vh] bg-gradient-to-br from-card to-card/90 z-[9999] backdrop:blur-md">
+          {isGeneratingChart ? (
+            <div className="flex flex-col items-center justify-center py-16 space-y-6">
               <div className="relative">
-                <Input 
-                  placeholder="e.g., 'Show this data by quarter instead', 'Add completion rates overlay', 'Highlight top performers'" 
-                  className="bg-background/80 backdrop-blur-sm border-ai-primary/20 focus:border-ai-primary/40 pr-12"
-                />
-                <Button size="sm" className="absolute right-1 top-1 h-8 w-8 p-0 bg-ai-primary hover:bg-ai-primary/90">
-                  <Send className="w-3 h-3" />
-                </Button>
+                <div className="w-20 h-20 border-4 border-ai-primary/20 rounded-full animate-spin">
+                  <div className="absolute top-0 left-0 w-20 h-20 border-4 border-transparent border-t-ai-primary rounded-full animate-spin" 
+                       style={{ animationDuration: '0.8s' }}></div>
+                </div>
+                <Brain className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-8 w-8 text-ai-primary animate-pulse" />
               </div>
               
-              <div className="flex justify-between items-center pt-2 border-t border-border/30">
-                <div className="flex gap-2">
-                  <Button size="sm" variant="outline" className="text-xs border-ai-secondary/20 text-ai-secondary hover:bg-ai-secondary/10">
-                    <Download className="w-3 h-3 mr-1" />
-                    Save Analysis
-                  </Button>
-                  <Button size="sm" variant="outline" className="text-xs border-ai-accent/20 text-ai-accent hover:bg-ai-accent/10">
-                    <MessageSquare className="w-3 h-3 mr-1" />
-                    Share Insights
-                  </Button>
+              <div className="text-center space-y-4">
+                <h3 className="text-lg font-semibold text-foreground">AI Agent Processing</h3>
+                <p className="text-sm text-muted-foreground">
+                  Our AI agent is analyzing your data and generating the visualization...
+                </p>
+                
+                <div className="w-80 bg-secondary rounded-full h-2 overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-ai-primary to-ai-primary/70 transition-all duration-300 ease-out"
+                    style={{ width: `${generationProgress}%` }}
+                  ></div>
                 </div>
-                <div className="text-xs text-muted-foreground">
-                  Powered by AI Analytics
-                </div>
+                
+                <p className="text-xs text-muted-foreground">
+                  {generationProgress < 30 && "Analyzing data patterns..."}
+                  {generationProgress >= 30 && generationProgress < 60 && "Selecting optimal visualization..."}
+                  {generationProgress >= 60 && generationProgress < 90 && "Generating chart components..."}
+                  {generationProgress >= 90 && "Finalizing visualization..."}
+                </p>
               </div>
             </div>
-          </div>
+          ) : (
+            <>
+              <DialogHeader>
+                <DialogTitle className="flex items-center justify-between text-xl">
+                  <span className="flex items-center">
+                    <BarChart3 className="w-6 h-6 mr-3 text-ai-primary" />
+                    {chartTitle}
+                  </span>
+                  <div className="flex items-center gap-3">
+                    <Select value={selectedChartType} onValueChange={setSelectedChartType}>
+                      <SelectTrigger className="w-40">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="bar">
+                          <div className="flex items-center">
+                            <BarChart3 className="w-4 h-4 mr-2" />
+                            Bar Chart
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="line">
+                          <div className="flex items-center">
+                            <LineChart className="w-4 h-4 mr-2" />
+                            Line Chart
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="pie">
+                          <div className="flex items-center">
+                            <PieChart className="w-4 h-4 mr-2" />
+                            Pie Chart
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="area">
+                          <div className="flex items-center">
+                            <AreaChart className="w-4 h-4 mr-2" />
+                            Area Chart
+                          </div>
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                    
+                    <Button size="sm" variant="outline" onClick={() => exportChart('pdf')} className="border-ai-primary/20 text-ai-primary hover:bg-ai-primary/10">
+                      <FileText className="w-4 h-4 mr-2" />
+                      PDF
+                    </Button>
+                    
+                    <Button size="sm" variant="outline" onClick={() => exportChart('image')} className="border-ai-secondary/20 text-ai-secondary hover:bg-ai-secondary/10">
+                      <ImageIcon className="w-4 h-4 mr-2" />
+                      Image
+                    </Button>
+                  </div>
+                </DialogTitle>
+              </DialogHeader>
+              
+              <div className="mt-6 p-4 bg-muted/20 rounded-lg">
+                {renderChart()}
+              </div>
+              
+              <div className="space-y-4 mt-6 p-6 bg-gradient-to-br from-ai-primary/5 via-muted/20 to-ai-secondary/5 rounded-xl border border-ai-primary/10">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 bg-ai-primary/10 rounded-lg">
+                    <Brain className="w-5 h-5 text-ai-primary" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-foreground">AI Chart Assistant</h4>
+                    <p className="text-xs text-muted-foreground">Modify, enhance, or analyze this visualization</p>
+                  </div>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="outline" className="text-xs cursor-pointer hover:bg-ai-primary/10 hover:border-ai-primary/30 transition-colors">
+                      Change time period
+                    </Badge>
+                    <Badge variant="outline" className="text-xs cursor-pointer hover:bg-ai-primary/10 hover:border-ai-primary/30 transition-colors">
+                      Add trend analysis
+                    </Badge>
+                    <Badge variant="outline" className="text-xs cursor-pointer hover:bg-ai-primary/10 hover:border-ai-primary/30 transition-colors">
+                      Compare with benchmarks
+                    </Badge>
+                    <Badge variant="outline" className="text-xs cursor-pointer hover:bg-ai-primary/10 hover:border-ai-primary/30 transition-colors">
+                      Export detailed report
+                    </Badge>
+                  </div>
+                  
+                  <div className="relative">
+                    <Input 
+                      placeholder="e.g., 'Show this data by quarter instead', 'Add completion rates overlay', 'Highlight top performers'" 
+                      className="bg-background/80 backdrop-blur-sm border-ai-primary/20 focus:border-ai-primary/40 pr-12"
+                    />
+                    <Button size="sm" className="absolute right-1 top-1 h-8 w-8 p-0 bg-ai-primary hover:bg-ai-primary/90">
+                      <Send className="w-3 h-3" />
+                    </Button>
+                  </div>
+                  
+                  <div className="flex justify-between items-center pt-2 border-t border-border/30">
+                    <div className="flex gap-2">
+                      <Button size="sm" variant="outline" className="text-xs border-ai-secondary/20 text-ai-secondary hover:bg-ai-secondary/10">
+                        <Download className="w-3 h-3 mr-1" />
+                        Save Analysis
+                      </Button>
+                      <Button size="sm" variant="outline" className="text-xs border-ai-accent/20 text-ai-accent hover:bg-ai-accent/10">
+                        <MessageSquare className="w-3 h-3 mr-1" />
+                        Share Insights
+                      </Button>
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      Powered by AI Analytics
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
         </DialogContent>
       </Dialog>
     </div>
