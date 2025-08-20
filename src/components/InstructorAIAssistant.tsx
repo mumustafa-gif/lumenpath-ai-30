@@ -412,7 +412,7 @@ What is the purpose of the \`__init__\` method in Python classes? Write a simple
           </div>
 
           {!isMinimized && (
-            <div className="flex flex-col h-[calc(680px-100px)]">
+            <div className="flex flex-col h-[calc(680px-100px)] overflow-hidden">
               {/* Quick Actions */}
               <div className="p-6 border-b border-gray-100 dark:border-gray-800">
                 <div className="grid grid-cols-2 gap-3">
@@ -509,20 +509,22 @@ What is the purpose of the \`__init__\` method in Python classes? Write a simple
               </div>
 
               {/* Chat Interface */}
-              <ScrollArea className="flex-1">
-                <div className="p-6">
-                  <ChatInterface
-                    placeholder="Ask me anything about course creation, student analytics, or teaching strategies..."
-                    suggestions={[
-                      "Create engaging lesson plan",
-                      "Design interactive assessment", 
-                      "Show student analytics",
-                      "Improve course engagement"
-                    ]}
-                    onVisualizationRequest={handleVisualizationRequest}
-                  />
-                </div>
-              </ScrollArea>
+              <div className="flex-1 flex flex-col min-h-0">
+                <ScrollArea className="flex-1 px-6">
+                  <div className="py-6">
+                    <ChatInterface
+                      placeholder="Ask me anything about course creation, student analytics, or teaching strategies..."
+                      suggestions={[
+                        "Create engaging lesson plan",
+                        "Design interactive assessment", 
+                        "Show student analytics",
+                        "Improve course engagement"
+                      ]}
+                      onVisualizationRequest={handleVisualizationRequest}
+                    />
+                  </div>
+                </ScrollArea>
+              </div>
             </div>
           )}
         </Card>

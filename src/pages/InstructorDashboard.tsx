@@ -119,7 +119,6 @@ const InstructorDashboard = () => {
           <TabsList>
             <TabsTrigger value="courses">My Courses</TabsTrigger>
             <TabsTrigger value="create">AI Course Creator</TabsTrigger>
-            <TabsTrigger value="videos">Video Library</TabsTrigger>
             <TabsTrigger value="analytics">Student Analytics</TabsTrigger>
           </TabsList>
 
@@ -181,65 +180,6 @@ const InstructorDashboard = () => {
             <CourseGenerator />
           </TabsContent>
 
-          <TabsContent value="videos" className="space-y-6">
-            <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold">Video Library & AI Tagging</h2>
-              <Button variant="ai">
-                <Video className="w-4 h-4 mr-2" />
-                Upload Video
-              </Button>
-            </div>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Brain className="w-5 h-5 mr-2 text-ai-primary" />
-                  Recent Uploads & AI Analysis
-                </CardTitle>
-                <CardDescription>
-                  AI automatically transcribes and tags your videos for better searchability
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {recentUploads.map((upload) => (
-                    <div key={upload.id} className="flex items-center justify-between p-4 border rounded-lg">
-                      <div className="flex items-center space-x-4">
-                        <div className="w-12 h-12 bg-ai-primary/10 rounded-lg flex items-center justify-center">
-                          <Video className="w-6 h-6 text-ai-primary" />
-                        </div>
-                        <div>
-                          <h4 className="font-medium">{upload.name}</h4>
-                          <p className="text-sm text-muted-foreground">{upload.size}</p>
-                          <div className="flex space-x-1 mt-2">
-                            {upload.tags.map((tag, index) => (
-                              <Badge key={index} variant="secondary" className="text-xs">
-                                {tag}
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <Badge 
-                          variant={upload.status === "Complete" ? "default" : "secondary"}
-                          className={upload.status === "Processing" ? "bg-ai-warning text-white" : ""}
-                        >
-                          {upload.status}
-                        </Badge>
-                        <div className="mt-2">
-                          <Button size="sm" variant="outline">
-                            <Play className="w-4 h-4 mr-1" />
-                            Preview
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
 
           <TabsContent value="analytics" className="space-y-6">
             <h2 className="text-2xl font-bold">Student Analytics</h2>
