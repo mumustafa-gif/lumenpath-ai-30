@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { InstructorHeader } from "@/components/InstructorHeader";
 import { CourseGenerator } from "@/components/CourseGenerator";
+import { InstructorAIAssistant } from "@/components/InstructorAIAssistant";
 
 const InstructorDashboard = () => {
   const [courses] = useState([
@@ -312,6 +313,8 @@ const InstructorDashboard = () => {
           </TabsContent>
         </Tabs>
       </main>
+      
+      <InstructorAIAssistant />
     </div>
   );
 };
