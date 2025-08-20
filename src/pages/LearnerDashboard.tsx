@@ -24,10 +24,14 @@ import { ChatInterface } from "@/components/ChatInterface";
 import { StudyBuddyCard } from "@/components/StudyBuddyCard";
 import OnboardingFlow, { OnboardingData } from "@/components/OnboardingFlow";
 import AdaptiveLearningEngine from "@/components/AdaptiveLearningEngine";
+import CourseRecommendations from "@/components/CourseRecommendations";
+import LearnerProfile from "@/components/LearnerProfile";
 
 const LearnerDashboard = () => {
   const [showOnboarding, setShowOnboarding] = useState(false); // Set to true for new users
   const [learnerProfile, setLearnerProfile] = useState<OnboardingData | null>(null);
+  const [showCourseRecommendations, setShowCourseRecommendations] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
   
   const [currentCourses] = useState([
     {
@@ -94,8 +98,20 @@ const LearnerDashboard = () => {
   const handleOnboardingComplete = (data: OnboardingData) => {
     setLearnerProfile(data);
     setShowOnboarding(false);
+    setShowCourseRecommendations(true);
     // Here you would typically save to backend/Supabase
     console.log('Onboarding completed:', data);
+  };
+
+  const handleStartCourse = (courseId: string) => {
+    console.log("Starting course:", courseId);
+    setShowCourseRecommendations(false);
+    // Here you would typically navigate to the course or set up course state
+  };
+
+  const handleProfileSave = (profileData: any) => {
+    console.log('Profile saved:', profileData);
+    // Here you would typically save to backend/Supabase
   };
 
   // Show onboarding flow for new users
@@ -103,12 +119,38 @@ const LearnerDashboard = () => {
     return (
       <OnboardingFlow 
         onComplete={handleOnboardingComplete}
-        onStartCourse={(courseId) => {
-          console.log("Starting course:", courseId);
-          setShowOnboarding(false);
-          // Here you would typically navigate to the course or set up course state
-        }}
+        onStartCourse={handleStartCourse}
       />
+    );
+  }
+
+  // Show course recommendations after onboarding
+  if (showCourseRecommendations && learnerProfile) {
+    return (
+      <div className="min-h-screen bg-background">
+        <LearnerHeader />
+        <main className="p-6">
+          <CourseRecommendations 
+            onboardingData={learnerProfile}
+            onStartCourse={handleStartCourse}
+            onCreateCustomCourse={() => {
+              // Custom course creation is handled within CourseRecommendations
+            }}
+          />
+        </main>
+      </div>
+    );
+  }
+
+  // Show learner profile
+  if (showProfile) {
+    return (
+      <div className="min-h-screen bg-background">
+        <LearnerHeader />
+        <main className="p-6">
+          <LearnerProfile onSave={handleProfileSave} />
+        </main>
+      </div>
     );
   }
 
@@ -203,6 +245,7 @@ const LearnerDashboard = () => {
             <TabsTrigger value="adaptive-engine">Adaptive Learning</TabsTrigger>
             <TabsTrigger value="study-buddies">Study Buddies</TabsTrigger>
             <TabsTrigger value="progress">Progress & Analytics</TabsTrigger>
+            <TabsTrigger value="profile">My Profile</TabsTrigger>
           </TabsList>
 
           <TabsContent value="courses" className="space-y-6">
@@ -253,7 +296,12 @@ const LearnerDashboard = () => {
                     <h3 className="font-semibold">Discover New Courses</h3>
                     <p className="text-sm text-muted-foreground">Explore AI-recommended courses based on your goals</p>
                   </div>
-                  <Button variant="outline">Browse Catalog</Button>
+                  <Button 
+                    variant="outline"
+                    onClick={() => setShowCourseRecommendations(true)}
+                  >
+                    Browse Catalog
+                  </Button>
                 </div>
               </Card>
             </div>
@@ -390,6 +438,10 @@ const LearnerDashboard = () => {
                 </CardContent>
               </Card>
             </div>
+          </TabsContent>
+
+          <TabsContent value="profile">
+            <LearnerProfile onSave={handleProfileSave} />
           </TabsContent>
         </Tabs>
       </main>
