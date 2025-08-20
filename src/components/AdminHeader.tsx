@@ -25,9 +25,11 @@ export const AdminHeader = () => {
       <div className="flex items-center justify-between px-6 py-4">
         <div className="flex items-center space-x-4">
           <img src={inceptionIcon} alt="Inception Icon" className="w-8 h-8" />
+          <div className="relative">
+            <h1 className="text-xl font-bold text-ai-primary">INCEPTION</h1>
+            <p className="text-[10px] text-muted-foreground absolute -bottom-1 right-0">A G42 COMPANY</p>
+          </div>
           <div>
-            <h1 className="text-xl font-bold">INCEPTION</h1>
-            <p className="text-[10px] text-muted-foreground -mt-1">A G42 COMPANY</p>
             <p className="text-sm text-muted-foreground">Admin Dashboard</p>
           </div>
         </div>
