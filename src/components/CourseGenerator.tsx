@@ -8,6 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
+import { AssessmentGenerator } from "./AssessmentGenerator";
+import { CoursePreview } from "./CoursePreview";
 import { 
   Brain, 
   Sparkles, 
@@ -28,7 +30,9 @@ import {
   Lightbulb,
   PenTool,
   Camera,
-  Headphones
+  Headphones,
+  Eye,
+  Zap
 } from "lucide-react";
 
 export const CourseGenerator = () => {
@@ -43,6 +47,9 @@ export const CourseGenerator = () => {
   const [currentStep, setCurrentStep] = useState("input");
   const [researchProgress, setResearchProgress] = useState(0);
   const [generationPhase, setGenerationPhase] = useState("");
+  const [showAssessmentGenerator, setShowAssessmentGenerator] = useState(false);
+  const [showCoursePreview, setShowCoursePreview] = useState(false);
+  const [isGeneratingContent, setIsGeneratingContent] = useState(false);
 
   const handleGenerateCourse = async () => {
     setIsGenerating(true);
@@ -183,6 +190,42 @@ export const CourseGenerator = () => {
     setGeneratedCourse(mockCourse);
     setCurrentStep("completed");
     setIsGenerating(false);
+  };
+
+  const handleGenerateFullContent = async () => {
+    setIsGeneratingContent(true);
+    
+    // Simulate AI content generation
+    const phases = [
+      "Generating lesson content...",
+      "Creating video scripts...", 
+      "Developing interactive elements...",
+      "Building assessments...",
+      "Finalizing course materials..."
+    ];
+    
+    for (const phase of phases) {
+      setGenerationPhase(phase);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+    
+    // Add full content to existing course
+    const enrichedCourse = {
+      ...generatedCourse,
+      fullContent: true,
+      modules: generatedCourse.modules.map((module: any) => ({
+        ...module,
+        content: {
+          textContent: `This is comprehensive AI-generated content for ${module.title}. The content includes detailed explanations, practical examples, interactive exercises, and real-world applications. Each lesson is designed to build upon previous knowledge while providing hands-on experience with the concepts.`,
+          videoScript: `Welcome to ${module.title}. In this module, we'll explore advanced concepts and practical applications. We'll start with the fundamentals and gradually progress to more complex scenarios...`,
+          resources: ["Downloadable guides", "Code samples", "Interactive simulations", "Additional reading materials"],
+          interactiveElements: ["Virtual labs", "Simulations", "Quizzes", "Discussion forums"]
+        }
+      }))
+    };
+    
+    setGeneratedCourse(enrichedCourse);
+    setIsGeneratingContent(false);
   };
 
   return (
@@ -391,6 +434,10 @@ export const CourseGenerator = () => {
                     <Settings className="w-4 h-4 mr-1" />
                     Modify
                   </Button>
+                  <Button size="sm" variant="outline" onClick={() => setShowCoursePreview(true)}>
+                    <Eye className="w-4 h-4 mr-1" />
+                    Preview Course
+                  </Button>
                   <Button size="sm" variant="ai">
                     <Plus className="w-4 h-4 mr-1" />
                     Create Course
@@ -527,9 +574,15 @@ export const CourseGenerator = () => {
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <h4 className="font-semibold">AI-Generated Assessment System</h4>
-                      <Badge variant="ai">
-                        {generatedCourse.quizBank.totalQuestions} Total Questions
-                      </Badge>
+                      <div className="flex items-center space-x-2">
+                        <Button size="sm" variant="ai" onClick={() => setShowAssessmentGenerator(true)}>
+                          <Brain className="w-4 h-4 mr-1" />
+                          Generate with AI
+                        </Button>
+                        <Badge variant="ai">
+                          {generatedCourse.quizBank.totalQuestions} Total Questions
+                        </Badge>
+                      </div>
                     </div>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -575,9 +628,24 @@ export const CourseGenerator = () => {
                           <p className="text-sm text-muted-foreground mb-3">
                             Generate comprehensive text content, scripts, and materials using AI
                           </p>
-                          <Button size="sm" variant="ai" className="w-full">
-                            <Sparkles className="w-4 h-4 mr-1" />
-                            Generate Content
+                          <Button 
+                            size="sm" 
+                            variant="ai" 
+                            className="w-full"
+                            onClick={handleGenerateFullContent}
+                            disabled={isGeneratingContent}
+                          >
+                            {isGeneratingContent ? (
+                              <>
+                                <Sparkles className="w-4 h-4 mr-1 animate-spin" />
+                                Generating...
+                              </>
+                            ) : (
+                              <>
+                                <Sparkles className="w-4 h-4 mr-1" />
+                                Generate Full Content
+                              </>
+                            )}
                           </Button>
                         </Card>
                         
@@ -659,7 +727,67 @@ export const CourseGenerator = () => {
               </Tabs>
             </CardContent>
           </Card>
+          
+          {generatedCourse?.fullContent && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Zap className="w-5 h-5 mr-2 text-ai-success" />
+                  Complete Course Content Generated
+                </CardTitle>
+                <CardDescription>
+                  Your course now includes full AI-generated content ready for learners
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                  <div className="text-center p-3 bg-ai-primary/10 rounded">
+                    <FileText className="w-6 h-6 mx-auto mb-2 text-ai-primary" />
+                    <p className="font-semibold">Text Content</p>
+                    <p className="text-xs text-muted-foreground">Complete lesson materials</p>
+                  </div>
+                  <div className="text-center p-3 bg-ai-secondary/10 rounded">
+                    <Video className="w-6 h-6 mx-auto mb-2 text-ai-secondary" />
+                    <p className="font-semibold">Video Scripts</p>
+                    <p className="text-xs text-muted-foreground">Narration & presentations</p>
+                  </div>
+                  <div className="text-center p-3 bg-ai-accent/10 rounded">
+                    <Brain className="w-6 h-6 mx-auto mb-2 text-ai-accent" />
+                    <p className="font-semibold">Assessments</p>
+                    <p className="text-xs text-muted-foreground">Quizzes & evaluations</p>
+                  </div>
+                  <div className="text-center p-3 bg-ai-info/10 rounded">
+                    <Lightbulb className="w-6 h-6 mx-auto mb-2 text-ai-info" />
+                    <p className="font-semibold">Interactive Elements</p>
+                    <p className="text-xs text-muted-foreground">Simulations & labs</p>
+                  </div>
+                </div>
+                
+                <div className="flex space-x-2">
+                  <Button variant="outline" onClick={() => setShowCoursePreview(true)}>
+                    <Eye className="w-4 h-4 mr-1" />
+                    Preview Full Course
+                  </Button>
+                  <Button variant="ai">
+                    <Plus className="w-4 h-4 mr-1" />
+                    Publish Course
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
+      )}
+
+      {showAssessmentGenerator && (
+        <AssessmentGenerator onClose={() => setShowAssessmentGenerator(false)} />
+      )}
+
+      {showCoursePreview && generatedCourse && (
+        <CoursePreview 
+          course={generatedCourse} 
+          onClose={() => setShowCoursePreview(false)} 
+        />
       )}
     </div>
   );
