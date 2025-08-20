@@ -304,7 +304,7 @@ const LearnerDashboard = () => {
             onClick={() => setShowOnboarding(true)}
           >
             <Settings className="w-4 h-4 mr-2" />
-            Retake Assessment
+            AI Career Path
           </Button>
         </div>
 
