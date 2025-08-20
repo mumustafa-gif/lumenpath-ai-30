@@ -23,7 +23,9 @@ import {
   FileText,
   PieChart,
   LineChart,
-  AreaChart
+  AreaChart,
+  Maximize2,
+  Minimize2
 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart as RechartsLineChart, Line, PieChart as RechartsPieChart, Cell, AreaChart as RechartsAreaChart, Area, Pie } from 'recharts';
 import { AdminHeader } from "@/components/AdminHeader";
@@ -34,8 +36,8 @@ const AdminDashboard = () => {
   const [selectedChartType, setSelectedChartType] = useState("bar");
   const [chartData, setChartData] = useState([]);
   const [chartTitle, setChartTitle] = useState("");
+  const [isAssistantExpanded, setIsAssistantExpanded] = useState(false);
   
-  // Mock data
   const stats = {
     totalLearners: 1247,
     activeCourses: 24,
@@ -146,100 +148,140 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-accent/5">
       <AdminHeader />
       
       {/* Main Dashboard Content */}
-      <main className="flex-1 p-6 pr-80">
+      <main className={`transition-all duration-300 ${isAssistantExpanded ? 'pr-[600px]' : 'pr-[400px]'} p-8 pt-20`}>
+        {/* Welcome Section */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-2">
+            Admin Dashboard
+          </h1>
+          <p className="text-muted-foreground text-lg">
+            Comprehensive analytics and insights for your learning platform
+          </p>
+        </div>
+
         {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Learners</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+          <Card className="relative overflow-hidden border-0 shadow-ai bg-gradient-to-br from-card to-card/80 hover:shadow-elevated transition-all duration-300">
+            <div className="absolute inset-0 bg-gradient-to-br from-ai-primary/5 to-transparent" />
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Total Learners</CardTitle>
+              <div className="p-2 bg-ai-primary/10 rounded-lg">
+                <Users className="h-5 w-5 text-ai-primary" />
+              </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.totalLearners}</div>
-              <p className="text-xs text-muted-foreground">+12% from last month</p>
+            <CardContent className="relative">
+              <div className="text-3xl font-bold text-foreground">{stats.totalLearners.toLocaleString()}</div>
+              <p className="text-xs text-ai-success flex items-center mt-1">
+                <TrendingUp className="w-3 h-3 mr-1" />
+                +12% from last month
+              </p>
             </CardContent>
           </Card>
           
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Courses</CardTitle>
-              <GraduationCap className="h-4 w-4 text-muted-foreground" />
+          <Card className="relative overflow-hidden border-0 shadow-ai bg-gradient-to-br from-card to-card/80 hover:shadow-elevated transition-all duration-300">
+            <div className="absolute inset-0 bg-gradient-to-br from-ai-secondary/5 to-transparent" />
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Active Courses</CardTitle>
+              <div className="p-2 bg-ai-secondary/10 rounded-lg">
+                <GraduationCap className="h-5 w-5 text-ai-secondary" />
+              </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.activeCourses}</div>
-              <p className="text-xs text-muted-foreground">+3 new this month</p>
+            <CardContent className="relative">
+              <div className="text-3xl font-bold text-foreground">{stats.activeCourses}</div>
+              <p className="text-xs text-ai-success flex items-center mt-1">
+                <TrendingUp className="w-3 h-3 mr-1" />
+                +3 new this month
+              </p>
             </CardContent>
           </Card>
           
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Completion Rate</CardTitle>
-              <Target className="h-4 w-4 text-muted-foreground" />
+          <Card className="relative overflow-hidden border-0 shadow-ai bg-gradient-to-br from-card to-card/80 hover:shadow-elevated transition-all duration-300">
+            <div className="absolute inset-0 bg-gradient-to-br from-ai-accent/5 to-transparent" />
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Completion Rate</CardTitle>
+              <div className="p-2 bg-ai-accent/10 rounded-lg">
+                <Target className="h-5 w-5 text-ai-accent" />
+              </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.completionRate}%</div>
-              <p className="text-xs text-muted-foreground">+5% improvement</p>
+            <CardContent className="relative">
+              <div className="text-3xl font-bold text-foreground">{stats.completionRate}%</div>
+              <p className="text-xs text-ai-success flex items-center mt-1">
+                <TrendingUp className="w-3 h-3 mr-1" />
+                +5% improvement
+              </p>
             </CardContent>
           </Card>
           
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Avg Engagement</CardTitle>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          <Card className="relative overflow-hidden border-0 shadow-ai bg-gradient-to-br from-card to-card/80 hover:shadow-elevated transition-all duration-300">
+            <div className="absolute inset-0 bg-gradient-to-br from-ai-warning/5 to-transparent" />
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Avg Engagement</CardTitle>
+              <div className="p-2 bg-ai-warning/10 rounded-lg">
+                <TrendingUp className="h-5 w-5 text-ai-warning" />
+              </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.avgEngagement}%</div>
-              <p className="text-xs text-muted-foreground">+2% this week</p>
+            <CardContent className="relative">
+              <div className="text-3xl font-bold text-foreground">{stats.avgEngagement}%</div>
+              <p className="text-xs text-ai-success flex items-center mt-1">
+                <TrendingUp className="w-3 h-3 mr-1" />
+                +2% this week
+              </p>
             </CardContent>
           </Card>
         </div>
 
         {/* Comprehensive Dashboard */}
-        <div className="space-y-8">
+        <div className="space-y-10">
           {/* Course Performance & Analytics */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Overall Course Performance</CardTitle>
-                <CardDescription>Enrollment vs completion rates</CardDescription>
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+            <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+              <CardHeader className="pb-6">
+                <CardTitle className="text-xl font-semibold">Overall Course Performance</CardTitle>
+                <CardDescription>Enrollment vs completion rates with market demand analysis</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-6">
                 {courseAnalytics.map((course) => (
-                  <div key={course.name} className="space-y-2">
+                  <div key={course.name} className="space-y-3 p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
                     <div className="flex justify-between items-center">
-                      <span className="font-medium">{course.name}</span>
+                      <span className="font-medium text-lg">{course.name}</span>
                       <div className="flex gap-2">
-                        <Badge variant="secondary">{course.avgScore}% avg</Badge>
-                        <Badge variant="outline">Demand: {course.marketDemand}%</Badge>
+                        <Badge variant="secondary" className="bg-ai-primary/10 text-ai-primary border-ai-primary/20">
+                          {course.avgScore}% avg
+                        </Badge>
+                        <Badge variant="outline" className="border-ai-secondary/20 text-ai-secondary">
+                          Demand: {course.marketDemand}%
+                        </Badge>
                       </div>
                     </div>
-                    <Progress value={(course.completed / course.enrolled) * 100} />
+                    <Progress value={(course.completed / course.enrolled) * 100} className="h-3" />
                     <div className="text-sm text-muted-foreground flex justify-between">
-                      <span>{course.completed}/{course.enrolled} completed</span>
-                      <span>Market demand vs enrollment gap: {Math.abs(course.marketDemand - (course.enrolled / 300 * 100)).toFixed(1)}%</span>
+                      <span className="font-medium">{course.completed}/{course.enrolled} completed</span>
+                      <span>Gap: {Math.abs(course.marketDemand - (course.enrolled / 300 * 100)).toFixed(1)}%</span>
                     </div>
                   </div>
                 ))}
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Most Demanding Courses</CardTitle>
-                <CardDescription>High-demand courses with waitlists</CardDescription>
+            <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+              <CardHeader className="pb-6">
+                <CardTitle className="text-xl font-semibold">Most Demanding Courses</CardTitle>
+                <CardDescription>High-demand courses with active waitlists</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 {demandingCourses.map((course) => (
-                  <div key={course.name} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div key={course.name} className="flex items-center justify-between p-4 border rounded-lg bg-gradient-to-r from-muted/20 to-muted/5 hover:from-muted/30 hover:to-muted/10 transition-all">
                     <div>
-                      <div className="font-medium">{course.name}</div>
+                      <div className="font-medium text-lg">{course.name}</div>
                       <div className="text-sm text-muted-foreground">Demand Score: {course.demand}%</div>
                     </div>
-                    <Badge variant="secondary">{course.waitlist} on waitlist</Badge>
+                    <Badge variant="secondary" className="bg-ai-warning/10 text-ai-warning border-ai-warning/20">
+                      {course.waitlist} on waitlist
+                    </Badge>
                   </div>
                 ))}
               </CardContent>
@@ -247,41 +289,45 @@ const AdminDashboard = () => {
           </div>
 
           {/* Skill Gaps Analysis */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Skill Gaps Analysis</CardTitle>
-                <CardDescription>Critical skill shortages in organization</CardDescription>
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+            <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+              <CardHeader className="pb-6">
+                <CardTitle className="text-xl font-semibold">Skill Gaps Analysis</CardTitle>
+                <CardDescription>Critical skill shortages across the organization</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-6">
                 {skillGapsData.map((skill) => (
-                  <div key={skill.skill} className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="font-medium">{skill.skill}</span>
-                      <span className={`text-sm ${skill.gap > 60 ? 'text-red-500' : skill.gap > 30 ? 'text-yellow-500' : 'text-green-500'}`}>
+                  <div key={skill.skill} className="space-y-3 p-4 rounded-lg bg-muted/30">
+                    <div className="flex justify-between items-center">
+                      <span className="font-medium text-lg">{skill.skill}</span>
+                      <span className={`text-sm font-semibold px-3 py-1 rounded-full ${
+                        skill.gap > 60 ? 'bg-destructive/10 text-destructive' : 
+                        skill.gap > 30 ? 'bg-ai-warning/10 text-ai-warning' : 
+                        'bg-ai-success/10 text-ai-success'
+                      }`}>
                         {skill.gap}% gap
                       </span>
                     </div>
-                    <Progress value={100 - skill.gap} className="h-2" />
+                    <Progress value={100 - skill.gap} className="h-3" />
                   </div>
                 ))}
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Skill Gaps vs Job Roles</CardTitle>
-                <CardDescription>Impact on specific positions</CardDescription>
+            <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+              <CardHeader className="pb-6">
+                <CardTitle className="text-xl font-semibold">Skill Gaps vs Job Roles</CardTitle>
+                <CardDescription>Impact analysis on specific positions</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 {skillGapsData.map((skill) => (
-                  <div key={skill.skill} className="p-3 border rounded-lg">
-                    <div className="font-medium mb-2">{skill.skill}</div>
-                    <div className="text-sm text-muted-foreground">
-                      Affected roles: {skill.jobRoles.join(", ")}
+                  <div key={skill.skill} className="p-4 border rounded-lg bg-gradient-to-r from-muted/20 to-muted/5">
+                    <div className="font-medium text-lg mb-3">{skill.skill}</div>
+                    <div className="text-sm text-muted-foreground mb-3">
+                      <strong>Affected roles:</strong> {skill.jobRoles.join(", ")}
                     </div>
-                    <Badge variant={skill.gap > 60 ? "destructive" : skill.gap > 30 ? "secondary" : "default"} className="mt-2">
-                      {skill.gap > 60 ? "Critical" : skill.gap > 30 ? "Moderate" : "Good"}
+                    <Badge variant={skill.gap > 60 ? "destructive" : skill.gap > 30 ? "secondary" : "default"}>
+                      {skill.gap > 60 ? "Critical Priority" : skill.gap > 30 ? "Moderate Risk" : "Well Covered"}
                     </Badge>
                   </div>
                 ))}
@@ -290,72 +336,72 @@ const AdminDashboard = () => {
           </div>
 
           {/* Learning Trends & Course Status */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Learning Trends</CardTitle>
-                <CardDescription>Monthly engagement patterns</CardDescription>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+              <CardHeader className="pb-6">
+                <CardTitle className="text-xl font-semibold">Learning Trends</CardTitle>
+                <CardDescription>Monthly engagement growth patterns</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <div className="flex justify-between">
-                    <span>Mobile Learning</span>
-                    <span className="font-bold text-green-600">+23%</span>
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-ai-success/5">
+                    <span className="font-medium">Mobile Learning</span>
+                    <span className="font-bold text-ai-success text-lg">+23%</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span>Video Engagement</span>
-                    <span className="font-bold text-green-600">+18%</span>
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-ai-success/5">
+                    <span className="font-medium">Video Engagement</span>
+                    <span className="font-bold text-ai-success text-lg">+18%</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span>Quiz Completion</span>
-                    <span className="font-bold text-green-600">+12%</span>
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-ai-success/5">
+                    <span className="font-medium">Quiz Completion</span>
+                    <span className="font-bold text-ai-success text-lg">+12%</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span>Interactive Labs</span>
-                    <span className="font-bold text-green-600">+8%</span>
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-ai-success/5">
+                    <span className="font-medium">Interactive Labs</span>
+                    <span className="font-bold text-ai-success text-lg">+8%</span>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Course Status Overview</CardTitle>
-                <CardDescription>Current course states</CardDescription>
+            <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+              <CardHeader className="pb-6">
+                <CardTitle className="text-xl font-semibold">Course Status Overview</CardTitle>
+                <CardDescription>Current course lifecycle states</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span>Active Courses</span>
-                    <Badge variant="default">24</Badge>
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-muted/20">
+                    <span className="font-medium">Active Courses</span>
+                    <Badge variant="default" className="bg-ai-primary text-primary-foreground">24</Badge>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span>In Development</span>
-                    <Badge variant="secondary">8</Badge>
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-muted/20">
+                    <span className="font-medium">In Development</span>
+                    <Badge variant="secondary" className="bg-ai-warning/10 text-ai-warning">8</Badge>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span>Under Review</span>
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-muted/20">
+                    <span className="font-medium">Under Review</span>
                     <Badge variant="outline">3</Badge>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span>Archived</span>
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-muted/20">
+                    <span className="font-medium">Archived</span>
                     <Badge variant="secondary">12</Badge>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Candidates per Course</CardTitle>
-                <CardDescription>Enrollment distribution</CardDescription>
+            <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+              <CardHeader className="pb-6">
+                <CardTitle className="text-xl font-semibold">Enrollment Distribution</CardTitle>
+                <CardDescription>Candidates per active course</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {courseAnalytics.map((course) => (
-                    <div key={course.name} className="flex justify-between items-center">
-                      <span className="text-sm">{course.name}</span>
-                      <Badge variant="outline">{course.enrolled}</Badge>
+                    <div key={course.name} className="flex justify-between items-center p-3 rounded-lg bg-muted/20">
+                      <span className="text-sm font-medium">{course.name}</span>
+                      <Badge variant="outline" className="font-semibold">{course.enrolled}</Badge>
                     </div>
                   ))}
                 </div>
@@ -364,53 +410,53 @@ const AdminDashboard = () => {
           </div>
 
           {/* Risk Management & Alerts */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <AlertTriangle className="w-5 h-5 mr-2 text-red-500" />
+          <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+            <CardHeader className="pb-6">
+              <CardTitle className="flex items-center text-xl font-semibold">
+                <AlertTriangle className="w-6 h-6 mr-3 text-destructive" />
                 Risk Management & Alerts
               </CardTitle>
-              <CardDescription>Potential risks and immediate alerts</CardDescription>
+              <CardDescription>Potential risks and immediate intervention requirements</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                <div className="p-4 border border-red-200 rounded-lg bg-red-50">
-                  <h4 className="font-semibold text-red-800">High Dropout Risk</h4>
-                  <p className="text-sm text-red-600 mt-1">15 learners inactive 5+ days</p>
-                  <Button size="sm" variant="destructive" className="mt-2">Take Action</Button>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div className="p-6 border border-destructive/20 rounded-lg bg-gradient-to-br from-destructive/5 to-destructive/10 hover:shadow-lg transition-all">
+                  <h4 className="font-semibold text-destructive text-lg mb-2">High Dropout Risk</h4>
+                  <p className="text-sm text-muted-foreground mb-4">15 learners inactive 5+ days</p>
+                  <Button size="sm" variant="destructive" className="w-full">Take Action</Button>
                 </div>
                 
-                <div className="p-4 border border-yellow-200 rounded-lg bg-yellow-50">
-                  <h4 className="font-semibold text-yellow-800">Low Engagement</h4>
-                  <p className="text-sm text-yellow-600 mt-1">Cloud course: 40% engagement</p>
-                  <Button size="sm" variant="outline" className="mt-2">Review</Button>
+                <div className="p-6 border border-ai-warning/20 rounded-lg bg-gradient-to-br from-ai-warning/5 to-ai-warning/10 hover:shadow-lg transition-all">
+                  <h4 className="font-semibold text-ai-warning text-lg mb-2">Low Engagement</h4>
+                  <p className="text-sm text-muted-foreground mb-4">Cloud course: 40% engagement</p>
+                  <Button size="sm" variant="outline" className="w-full border-ai-warning text-ai-warning">Review</Button>
                 </div>
                 
-                <div className="p-4 border border-blue-200 rounded-lg bg-blue-50">
-                  <h4 className="font-semibold text-blue-800">Cert Expiry</h4>
-                  <p className="text-sm text-blue-600 mt-1">47 expire this month</p>
-                  <Button size="sm" variant="outline" className="mt-2">Remind</Button>
+                <div className="p-6 border border-ai-info/20 rounded-lg bg-gradient-to-br from-ai-info/5 to-ai-info/10 hover:shadow-lg transition-all">
+                  <h4 className="font-semibold text-ai-info text-lg mb-2">Cert Expiry</h4>
+                  <p className="text-sm text-muted-foreground mb-4">47 expire this month</p>
+                  <Button size="sm" variant="outline" className="w-full border-ai-info text-ai-info">Remind</Button>
                 </div>
 
-                <div className="p-4 border border-purple-200 rounded-lg bg-purple-50">
-                  <h4 className="font-semibold text-purple-800">Skill Gap Alert</h4>
-                  <p className="text-sm text-purple-600 mt-1">Cloud skills critical shortage</p>
-                  <Button size="sm" variant="outline" className="mt-2">Address</Button>
+                <div className="p-6 border border-ai-accent/20 rounded-lg bg-gradient-to-br from-ai-accent/5 to-ai-accent/10 hover:shadow-lg transition-all">
+                  <h4 className="font-semibold text-ai-accent text-lg mb-2">Skill Gap Alert</h4>
+                  <p className="text-sm text-muted-foreground mb-4">Cloud skills critical shortage</p>
+                  <Button size="sm" variant="outline" className="w-full border-ai-accent text-ai-accent">Address</Button>
                 </div>
               </div>
 
               {/* At-Risk Learners */}
-              <div className="mt-6">
-                <h3 className="text-lg font-semibold mb-4">At-Risk Learners</h3>
-                <div className="space-y-3">
+              <div className="mt-8">
+                <h3 className="text-lg font-semibold mb-6">At-Risk Learners</h3>
+                <div className="space-y-4">
                   {riskLearners.map((learner) => (
-                    <div key={learner.id} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div key={learner.id} className="flex items-center justify-between p-4 border rounded-lg bg-gradient-to-r from-muted/20 to-muted/5 hover:from-muted/30 hover:to-muted/10 transition-all">
                       <div>
-                        <div className="font-medium">{learner.name}</div>
+                        <div className="font-medium text-lg">{learner.name}</div>
                         <div className="text-sm text-muted-foreground">{learner.course}</div>
                         <div className="text-xs text-muted-foreground">Last active: {learner.lastActive}</div>
                       </div>
-                      <Badge variant={learner.risk === "High" ? "destructive" : "secondary"}>
+                      <Badge variant={learner.risk === "High" ? "destructive" : "secondary"} className="text-sm px-3 py-1">
                         {learner.risk} Risk
                       </Badge>
                     </div>
@@ -422,26 +468,44 @@ const AdminDashboard = () => {
         </div>
       </main>
 
-      {/* AI Assistant Sidebar */}
-      <div className="fixed right-0 top-0 h-full w-80 bg-background border-l border-border shadow-lg z-50">
-        <div className="p-4 border-b">
-          <h3 className="text-lg font-semibold flex items-center">
-            <Brain className="w-5 h-5 mr-2 text-primary" />
-            AI Assistant
-          </h3>
-          <p className="text-sm text-muted-foreground mt-1">
-            Ask about analytics or request data visualization
-          </p>
+      {/* Enhanced AI Assistant Sidebar */}
+      <div className={`fixed right-0 top-0 h-full bg-gradient-to-b from-card via-card/95 to-card/90 border-l border-border/50 shadow-elevated z-50 transition-all duration-300 ${
+        isAssistantExpanded ? 'w-[600px]' : 'w-[400px]'
+      }`}>
+        <div className="p-6 border-b border-border/50 bg-gradient-to-r from-ai-primary/5 to-ai-secondary/5">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <div className="p-2 bg-ai-primary/10 rounded-lg mr-3">
+                <Brain className="w-6 h-6 text-ai-primary" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-foreground">AI Assistant</h3>
+                <p className="text-sm text-muted-foreground">
+                  Analytics insights & visualization
+                </p>
+              </div>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsAssistantExpanded(!isAssistantExpanded)}
+              className="hover:bg-ai-primary/10"
+            >
+              {isAssistantExpanded ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+            </Button>
+          </div>
         </div>
         
-        <div className="h-[calc(100vh-80px)]">
+        <div className="h-[calc(100vh-100px)] p-4">
           <ChatInterface 
-            placeholder="Ask about analytics or request charts..."
+            placeholder="Ask about analytics, trends, or request visualizations..."
             suggestions={[
               "Show learner performance trends as a chart",
               "Visualize skill gaps data",
               "Create a bar chart of course enrollments",
-              "Show completion rates over time"
+              "Show completion rates over time",
+              "Compare course demand vs enrollment",
+              "Display risk factors analysis"
             ]}
             onVisualizationRequest={handleVisualization}
           />
@@ -450,13 +514,16 @@ const AdminDashboard = () => {
 
       {/* Chart Visualization Modal */}
       <Dialog open={showChartModal} onOpenChange={setShowChartModal}>
-        <DialogContent className="max-w-4xl max-h-[90vh]">
+        <DialogContent className="max-w-6xl max-h-[90vh] bg-gradient-to-br from-card to-card/90">
           <DialogHeader>
-            <DialogTitle className="flex items-center justify-between">
-              <span>{chartTitle}</span>
-              <div className="flex items-center gap-2">
+            <DialogTitle className="flex items-center justify-between text-xl">
+              <span className="flex items-center">
+                <BarChart3 className="w-6 h-6 mr-3 text-ai-primary" />
+                {chartTitle}
+              </span>
+              <div className="flex items-center gap-3">
                 <Select value={selectedChartType} onValueChange={setSelectedChartType}>
-                  <SelectTrigger className="w-32">
+                  <SelectTrigger className="w-40">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -487,12 +554,12 @@ const AdminDashboard = () => {
                   </SelectContent>
                 </Select>
                 
-                <Button size="sm" variant="outline" onClick={() => exportChart('pdf')}>
+                <Button size="sm" variant="outline" onClick={() => exportChart('pdf')} className="border-ai-primary/20 text-ai-primary hover:bg-ai-primary/10">
                   <FileText className="w-4 h-4 mr-2" />
                   PDF
                 </Button>
                 
-                <Button size="sm" variant="outline" onClick={() => exportChart('image')}>
+                <Button size="sm" variant="outline" onClick={() => exportChart('image')} className="border-ai-secondary/20 text-ai-secondary hover:bg-ai-secondary/10">
                   <ImageIcon className="w-4 h-4 mr-2" />
                   Image
                 </Button>
@@ -500,13 +567,16 @@ const AdminDashboard = () => {
             </DialogTitle>
           </DialogHeader>
           
-          <div className="mt-4">
+          <div className="mt-6 p-4 bg-muted/20 rounded-lg">
             {renderChart()}
           </div>
           
-          <div className="mt-4 p-4 bg-muted rounded-lg">
-            <p className="text-sm text-muted-foreground mb-2">Want to modify this chart? Ask the AI assistant:</p>
-            <Input placeholder="e.g., 'Show this data by month instead' or 'Add completion rates to this chart'" />
+          <div className="mt-6 p-4 bg-gradient-to-r from-muted/30 to-muted/10 rounded-lg">
+            <p className="text-sm text-muted-foreground mb-3">Want to modify this chart? Ask the AI assistant:</p>
+            <Input 
+              placeholder="e.g., 'Show this data by month instead' or 'Add completion rates to this chart'" 
+              className="bg-background/50"
+            />
           </div>
         </DialogContent>
       </Dialog>
