@@ -37,7 +37,7 @@ export const LearnerHeader = () => {
           <div className="flex items-center space-x-4">
             <Badge variant="secondary" className="flex items-center space-x-1">
               <BookOpen className="w-3 h-3" />
-              <span>Alex Johnson</span>
+              <span>Ahmad Al-Rashid</span>
             </Badge>
             
             <Button variant="outline" size="icon" className="relative">

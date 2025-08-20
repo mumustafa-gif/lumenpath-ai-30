@@ -35,7 +35,7 @@ export const InstructorHeader = () => {
         <div className="flex items-center space-x-4">
           <Badge variant="secondary" className="flex items-center space-x-1">
             <GraduationCap className="w-3 h-3" />
-            <span>Dr. Sarah Chen</span>
+            <span>Dr. Aisha Al-Maktoum</span>
           </Badge>
           
           <Button variant="outline" size="icon" className="relative">

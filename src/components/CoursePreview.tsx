@@ -41,7 +41,7 @@ export const CoursePreview = ({ course, onClose }: CoursePreviewProps) => {
   const [aiTutorOpen, setAiTutorOpen] = useState(false);
 
   const mockLearnerData = {
-    name: "Alex Johnson",
+    name: "Ahmad Al-Rashid",
     progress: 45,
     completedModules: 2,
     currentStreak: 7,
@@ -49,7 +49,7 @@ export const CoursePreview = ({ course, onClose }: CoursePreviewProps) => {
     badges: ["Quick Learner", "Problem Solver", "Theory Master"],
     timeSpent: "12h 30m",
     averageScore: 87,
-    studyBuddies: ["Sarah Chen", "Mike Rodriguez"]
+    studyBuddies: ["Fatima Al-Zahra", "Omar Al-Hashmi"]
   };
 
   const mockFullContent = {

@@ -44,7 +44,7 @@ const LearnerDashboard = () => {
       nextLesson: "Neural Network Basics",
       timeRemaining: "2h 15m",
       difficulty: "Beginner",
-      instructor: "Dr. Sarah Chen",
+      instructor: "Dr. Aisha Al-Maktoum",
       modules: [
         {
           title: "Introduction to AI",
@@ -85,7 +85,7 @@ const LearnerDashboard = () => {
       nextLesson: "Pandas DataFrames",
       timeRemaining: "4h 30m",
       difficulty: "Intermediate",
-      instructor: "Prof. Mike Johnson",
+      instructor: "Prof. Omar Al-Hashmi",
       modules: [
         {
           title: "Python Basics Review",
@@ -115,14 +115,14 @@ const LearnerDashboard = () => {
       nextLesson: "AWS Introduction",
       timeRemaining: "6h 45m",
       difficulty: "Beginner",
-      instructor: "Dr. Lisa Wang"
+      instructor: "Dr. Layla Al-Maktoum"
     }
   ]);
 
   const [studyBuddies] = useState([
     {
       id: 1,
-      name: "Emma Rodriguez",
+      name: "Amina Al-Zahra",
       course: "AI Fundamentals",
       progress: 72,
       status: "online" as const,
@@ -130,7 +130,7 @@ const LearnerDashboard = () => {
     },
     {
       id: 2,
-      name: "David Kim",
+      name: "Omar Al-Rashid",
       course: "Python for Data Science",
       progress: 51,
       status: "offline" as const,
@@ -235,7 +235,7 @@ const LearnerDashboard = () => {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl font-bold mb-2">Welcome back, Alex! 🚀</h1>
+                <h1 className="text-2xl font-bold mb-2">Welcome, Ahmad!</h1>
                 <p className="text-muted-foreground">
                   Your AI learning journey continues. You're {learningPath.overallProgress}% closer to becoming an {learningPath.currentGoal}.
                 </p>

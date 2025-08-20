@@ -22,7 +22,7 @@ const LoginPage = () => {
     localStorage.setItem("user", JSON.stringify({ 
       email, 
       role,
-      name: role === "admin" ? "Admin User" : role === "instructor" ? "Dr. Sarah Chen" : "Alex Johnson"
+      name: role === "admin" ? "Khalid Al-Mansouri" : role === "instructor" ? "Dr. Aisha Al-Maktoum" : "Ahmad Al-Rashid"
     }));
     
     // Navigate based on role
@@ -101,7 +101,7 @@ const LoginPage = () => {
                 <p className="text-[10px] text-muted-foreground -mt-1 text-center">A G42 COMPANY</p>
               </div>
             </div>
-            <CardTitle className="text-2xl">Welcome Back</CardTitle>
+            <CardTitle className="text-2xl">Welcome</CardTitle>
             <CardDescription>
               Sign in to your AI-powered learning platform
             </CardDescription>

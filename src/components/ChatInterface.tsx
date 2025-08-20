@@ -118,11 +118,11 @@ export const ChatInterface = ({
     }
     
     if (lowerQuery.includes("dropout") || lowerQuery.includes("risk")) {
-      return "I've analyzed the current dropout risk data. Here are 3 learners with >50% dropout risk:\n\n• Mike Chen (AI Fundamentals) - Last active 3 days ago\n• Alex Rivera (Cloud Computing) - Last active 5 days ago\n• Emma Thompson (Data Science) - Last active 4 days ago\n\nWould you like me to generate automatic intervention recommendations?";
+      return "I've analyzed the current dropout risk data. Here are 3 learners with >50% dropout risk:\n\n• Mohammed Al-Hashmi (AI Fundamentals) - Last active 3 days ago\n• Nour Al-Sharif (Cloud Computing) - Last active 5 days ago\n• Amina Al-Zahra (Data Science) - Last active 4 days ago\n\nWould you like me to generate automatic intervention recommendations?";
     }
     
     if (lowerQuery.includes("engagement") || lowerQuery.includes("instructor")) {
-      return "Based on engagement metrics, here are the instructors with engagement rates below 70%:\n\n• Prof. Davis (Cloud Computing) - 65% engagement\n• Dr. Wilson (Advanced ML) - 68% engagement\n\nThe main factors affecting engagement appear to be:\n- Video length (>45 min videos have 23% lower engagement)\n- Quiz difficulty (courses with >85% quiz failure rate)\n\nShould I prepare improvement recommendations?";
+      return "Based on engagement metrics, here are the instructors with engagement rates below 70%:\n\n• Prof. Khalid Al-Sabah (Cloud Computing) - 65% engagement\n• Dr. Fatima Al-Qasemi (Advanced ML) - 68% engagement\n\nThe main factors affecting engagement appear to be:\n- Video length (>45 min videos have 23% lower engagement)\n- Quiz difficulty (courses with >85% quiz failure rate)\n\nShould I prepare improvement recommendations?";
     }
     
     if (lowerQuery.includes("quiz") || lowerQuery.includes("failure")) {
