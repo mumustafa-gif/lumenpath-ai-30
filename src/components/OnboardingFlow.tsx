@@ -19,10 +19,12 @@ import {
   CheckCircle,
   Sparkles
 } from "lucide-react";
-import { ChatInterface } from "./ChatInterface";
+import CourseRecommendations from "./CourseRecommendations";
+import CustomCourseCreator from "./CustomCourseCreator";
 
 interface OnboardingFlowProps {
   onComplete: (data: OnboardingData) => void;
+  onStartCourse?: (courseId: string) => void;
 }
 
 export interface OnboardingData {
@@ -34,11 +36,14 @@ export interface OnboardingData {
   preferredPace: string;
 }
 
-const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
+const OnboardingFlow = ({ onComplete, onStartCourse }: OnboardingFlowProps) => {
   const [step, setStep] = useState(1);
   const [data, setData] = useState<Partial<OnboardingData>>({
     experience: []
   });
+  const [showRecommendations, setShowRecommendations] = useState(false);
+  const [showCustomCreator, setShowCustomCreator] = useState(false);
+  const [completedData, setCompletedData] = useState<OnboardingData | null>(null);
 
   const totalSteps = 5;
   const progress = (step / totalSteps) * 100;
@@ -77,8 +82,27 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
     if (step < totalSteps) {
       setStep(step + 1);
     } else {
-      onComplete(data as OnboardingData);
+      const completeData = data as OnboardingData;
+      setCompletedData(completeData);
+      setShowRecommendations(true);
+      onComplete(completeData);
     }
+  };
+
+  const handleStartCourse = (courseId: string) => {
+    if (onStartCourse) {
+      onStartCourse(courseId);
+    }
+  };
+
+  const handleCreateCustomCourse = () => {
+    setShowCustomCreator(true);
+    setShowRecommendations(false);
+  };
+
+  const handleBackToRecommendations = () => {
+    setShowCustomCreator(false);
+    setShowRecommendations(true);
   };
 
   const handleBack = () => {
@@ -97,6 +121,30 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
       default: return false;
     }
   };
+
+  if (showCustomCreator && completedData) {
+    return (
+      <div className="min-h-screen bg-background p-6">
+        <CustomCourseCreator 
+          onboardingData={completedData}
+          onBack={handleBackToRecommendations}
+          onStartCourse={handleStartCourse}
+        />
+      </div>
+    );
+  }
+
+  if (showRecommendations && completedData) {
+    return (
+      <div className="min-h-screen bg-background p-6">
+        <CourseRecommendations 
+          onboardingData={completedData}
+          onStartCourse={handleStartCourse}
+          onCreateCustomCourse={handleCreateCustomCourse}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background p-6 flex items-center justify-center">

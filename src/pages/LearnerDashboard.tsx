@@ -100,7 +100,16 @@ const LearnerDashboard = () => {
 
   // Show onboarding flow for new users
   if (showOnboarding) {
-    return <OnboardingFlow onComplete={handleOnboardingComplete} />;
+    return (
+      <OnboardingFlow 
+        onComplete={handleOnboardingComplete}
+        onStartCourse={(courseId) => {
+          console.log("Starting course:", courseId);
+          setShowOnboarding(false);
+          // Here you would typically navigate to the course or set up course state
+        }}
+      />
+    );
   }
 
   return (
