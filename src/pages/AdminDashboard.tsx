@@ -1,41 +1,39 @@
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Brain, 
   Users, 
   GraduationCap, 
   TrendingUp, 
   AlertTriangle, 
-  MessageSquare, 
-  Send,
   BarChart3,
-  UserCheck,
   Clock,
   Target,
   Download,
-  Image as ImageIcon,
-  FileText,
   PieChart,
   LineChart,
   AreaChart,
-  Maximize2,
-  Minimize2,
   Shield,
   Activity,
   Calendar,
   Zap,
   X,
-  Sparkles
+  Sparkles,
+  Eye,
+  Globe,
+  Building,
+  Lightbulb
 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart as RechartsLineChart, Line, PieChart as RechartsPieChart, Cell, AreaChart as RechartsAreaChart, Area, Pie } from 'recharts';
 import { ChatInterface } from "@/components/ChatInterface";
+import { AISkillsObservatory } from "@/components/AISkillsObservatory";
+import { WorkforceTrends } from "@/components/WorkforceTrends";
 
 const AdminDashboard = () => {
   const [showChartModal, setShowChartModal] = useState(false);
@@ -45,6 +43,7 @@ const AdminDashboard = () => {
   const [isGeneratingChart, setIsGeneratingChart] = useState(false);
   const [generationProgress, setGenerationProgress] = useState(0);
   const [showAIAssistant, setShowAIAssistant] = useState(false);
+  const [activeTab, setActiveTab] = useState("overview");
   
   const stats = {
     totalLearners: 1247,
@@ -109,7 +108,6 @@ const AdminDashboard = () => {
     setGenerationProgress(0);
     setShowChartModal(true);
     
-    // Simulate AI processing with progress
     const progressInterval = setInterval(() => {
       setGenerationProgress(prev => {
         if (prev >= 90) {
@@ -120,7 +118,6 @@ const AdminDashboard = () => {
       });
     }, 200);
     
-    // Complete the generation
     setTimeout(() => {
       clearInterval(progressInterval);
       setGenerationProgress(100);
@@ -198,344 +195,156 @@ const AdminDashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-accent/5 p-4 lg:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-accent/5">
       {/* Header Section */}
-      <div className="mb-8">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
-          <div>
-            <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-2">
-              Admin Dashboard
-            </h1>
-            <p className="text-muted-foreground text-base lg:text-lg">
-              Comprehensive analytics and insights for your learning platform
-            </p>
-          </div>
-          <div className="flex items-center gap-4 mt-4 lg:mt-0">
-            <Button
-              onClick={() => setShowAIAssistant(true)}
-              className="bg-ai-primary hover:bg-ai-primary/90 text-white"
-            >
-              <Brain className="w-4 h-4 mr-2" />
-              AI Assistant
-            </Button>
-            <Button
-              onClick={() => {
-                localStorage.clear();
-                sessionStorage.clear();
-                window.location.href = '/';
-              }}
-              variant="outline"
-            >
-              Logout
-            </Button>
-            <div className="flex items-center gap-2">
-              <Badge variant="secondary" className="bg-ai-success/10 text-ai-success border-ai-success/20">
-                <Activity className="w-3 h-3 mr-1" />
-                System Online
-              </Badge>
-              <Badge variant="outline" className="border-ai-primary/20 text-ai-primary">
-                <Calendar className="w-3 h-3 mr-1" />
-                Last Updated: Now
-              </Badge>
+      <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b">
+        <div className="p-4 lg:p-6">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <h1 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-ai-primary via-ai-secondary to-ai-accent bg-clip-text text-transparent mb-1">
+                Admin Command Center
+              </h1>
+              <p className="text-muted-foreground text-sm lg:text-base">
+                Advanced analytics and insights for strategic decision making
+              </p>
+            </div>
+            <div className="flex items-center gap-3 mt-3 lg:mt-0">
+              <Button
+                onClick={() => setShowAIAssistant(true)}
+                className="bg-gradient-to-r from-ai-primary to-ai-secondary hover:from-ai-primary/90 hover:to-ai-secondary/90 text-white shadow-lg"
+              >
+                <Brain className="w-4 h-4 mr-2" />
+                AI Assistant
+              </Button>
+              <Button
+                onClick={() => {
+                  localStorage.clear();
+                  sessionStorage.clear();
+                  window.location.href = '/';
+                }}
+                variant="outline"
+                className="border-destructive/20 text-destructive hover:bg-destructive/10"
+              >
+                Logout
+              </Button>
+              <div className="flex items-center gap-2">
+                <Badge variant="secondary" className="bg-ai-success/10 text-ai-success border-ai-success/20 shadow-sm">
+                  <Activity className="w-3 h-3 mr-1" />
+                  Live
+                </Badge>
+                <Badge variant="outline" className="border-ai-primary/20 text-ai-primary shadow-sm">
+                  <Calendar className="w-3 h-3 mr-1" />
+                  Real-time
+                </Badge>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Key Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Learners</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalLearners}</div>
-            <p className="text-xs text-muted-foreground">+12% from last month</p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Courses</CardTitle>
-            <GraduationCap className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.activeCourses}</div>
-            <p className="text-xs text-muted-foreground">Across all instructors</p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Completion Rate</CardTitle>
-            <Target className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.completionRate}%</div>
-            <p className="text-xs text-muted-foreground">+5% improvement</p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg Engagement</CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.avgEngagement}%</div>
-            <p className="text-xs text-muted-foreground">Excellent performance</p>
-          </CardContent>
-        </Card>
-      </div>
+      {/* Navigation Tabs */}
+      <div className="px-4 lg:px-6 py-2 bg-muted/5">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:grid-cols-4 bg-background/50 backdrop-blur-sm border">
+            <TabsTrigger value="overview" className="flex items-center gap-2">
+              <BarChart3 className="w-4 h-4" />
+              <span className="hidden sm:inline">Overview</span>
+            </TabsTrigger>
+            <TabsTrigger value="skills-observatory" className="flex items-center gap-2">
+              <Eye className="w-4 h-4" />
+              <span className="hidden sm:inline">Skills Observatory</span>
+            </TabsTrigger>
+            <TabsTrigger value="workforce-trends" className="flex items-center gap-2">
+              <TrendingUp className="w-4 h-4" />
+              <span className="hidden sm:inline">Workforce Trends</span>
+            </TabsTrigger>
+            <TabsTrigger value="analytics" className="flex items-center gap-2">
+              <Target className="w-4 h-4" />
+              <span className="hidden sm:inline">Deep Analytics</span>
+            </TabsTrigger>
+          </TabsList>
 
-      {/* Talent Demographics */}
-      <div className="mb-10">
-        <h2 className="text-2xl font-bold bg-gradient-to-r from-ai-primary via-ai-secondary to-ai-accent bg-clip-text text-transparent mb-6">
-          Talent Demographics & Insights
-        </h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-sm font-medium flex items-center">
-                <Users className="w-4 h-4 mr-2 text-ai-primary" />
-                Age Distribution
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {talentDemographics.ageGroups.map((group) => (
-                  <div key={group.group} className="flex justify-between items-center">
-                    <span className="text-xs text-muted-foreground">{group.group}</span>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold">{group.percentage}%</span>
-                      <Badge variant="outline" className="text-xs bg-ai-success/10 text-ai-success border-ai-success/20">
-                        {group.growth}
-                      </Badge>
+          {/* Main Content */}
+          <div className="p-4 lg:p-6">
+            <TabsContent value="overview" className="space-y-8 mt-0">
+              {/* Key Stats Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90 hover:shadow-lg transition-all duration-200">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Total Learners</CardTitle>
+                    <div className="p-2 bg-gradient-to-br from-ai-primary/10 to-ai-primary/5 rounded-lg">
+                      <Users className="h-4 w-4 text-ai-primary" />
                     </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-sm font-medium flex items-center">
-                <GraduationCap className="w-4 h-4 mr-2 text-ai-secondary" />
-                Talent Types
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {talentDemographics.talentTypes.slice(0, 4).map((type) => (
-                  <div key={type.type} className="flex justify-between items-center">
-                    <span className="text-xs text-muted-foreground">{type.type.split(' ')[0]}</span>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold">{type.count}</span>
-                      <Badge variant="outline" className="text-xs bg-ai-accent/10 text-ai-accent border-ai-accent/20">
-                        {type.trend.split(' ')[0]}
-                      </Badge>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-sm font-medium flex items-center">
-                <Activity className="w-4 h-4 mr-2 text-ai-accent" />
-                Engagement
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-xs text-muted-foreground">Daily Active</span>
-                  <span className="text-sm font-semibold text-ai-primary">{talentDemographics.systemEngagement.dailyActiveUsers}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-xs text-muted-foreground">Session Time</span>
-                  <span className="text-sm font-semibold text-ai-secondary">{talentDemographics.systemEngagement.avgSessionDuration}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-xs text-muted-foreground">Completion</span>
-                  <span className="text-sm font-semibold text-ai-success">{talentDemographics.systemEngagement.completionRate}%</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-xs text-muted-foreground">Assessments</span>
-                  <span className="text-sm font-semibold text-ai-accent">{talentDemographics.systemEngagement.skillAssessmentsTaken}</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-sm font-medium flex items-center">
-                <TrendingUp className="w-4 h-4 mr-2 text-ai-success" />
-                Upskilling Success
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-xs text-muted-foreground">Total Upskilled</span>
-                  <span className="text-sm font-semibold text-ai-primary">{talentDemographics.upskillSuccess.totalUpskilled}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-xs text-muted-foreground">Career Growth</span>
-                  <span className="text-sm font-semibold text-ai-secondary">{talentDemographics.upskillSuccess.careerAdvancement}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-xs text-muted-foreground">Salary Increase</span>
-                  <span className="text-sm font-semibold text-ai-success">{talentDemographics.upskillSuccess.salaryIncrease}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-xs text-muted-foreground">Certifications</span>
-                  <span className="text-sm font-semibold text-ai-accent">{talentDemographics.upskillSuccess.certificationEarned}</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-
-      {/* Course Analytics */}
-      <div className="mb-10">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-ai-primary via-ai-secondary to-ai-accent bg-clip-text text-transparent">
-            Course Performance Analytics
-          </h2>
-          <div className="flex gap-2 mt-4 lg:mt-0">
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => handleVisualization("bar", courseAnalytics.map(c => ({name: c.name, value: c.enrolled})), "Course Enrollment")}
-            >
-              <BarChart3 className="w-4 h-4 mr-2" />
-              Chart View
-            </Button>
-            <Button variant="outline" size="sm">
-              <Download className="w-4 h-4 mr-2" />
-              Export
-            </Button>
-          </div>
-        </div>
-        
-        <div className="overflow-x-auto">
-          <div className="min-w-full">
-            <div className="grid gap-4">
-              {courseAnalytics.map((course, index) => (
-                <Card key={index} className="transition-all duration-200 hover:shadow-lg">
-                  <CardContent className="p-6">
-                    <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
-                      <div className="md:col-span-2">
-                        <h3 className="font-semibold text-lg mb-1">{course.name}</h3>
-                        <div className="flex flex-wrap gap-2">
-                          <Badge variant={course.marketDemand > 90 ? "default" : "secondary"} className="text-xs">
-                            {course.marketDemand}% Market Demand
-                          </Badge>
-                          <Badge variant="outline" className="text-xs">
-                            ⭐ {course.satisfaction}/5.0
-                          </Badge>
-                        </div>
-                      </div>
-                      
-                      <div className="text-center">
-                        <div className="text-2xl font-bold text-ai-primary">{course.enrolled}</div>
-                        <div className="text-xs text-muted-foreground">Enrolled</div>
-                      </div>
-                      
-                      <div className="text-center">
-                        <div className="text-2xl font-bold text-ai-success">{course.completed}</div>
-                        <div className="text-xs text-muted-foreground">Completed</div>
-                        <div className="text-xs text-ai-success">
-                          {Math.round((course.completed / course.enrolled) * 100)}% Rate
-                        </div>
-                      </div>
-                      
-                      <div className="text-center">
-                        <div className="text-2xl font-bold text-ai-secondary">{course.avgScore}</div>
-                        <div className="text-xs text-muted-foreground">Avg Score</div>
-                        <div className="text-xs text-ai-secondary">
-                          {course.dropoutRate}% Dropout
-                        </div>
-                      </div>
-                      
-                      <div className="text-center">
-                        <div className="text-2xl font-bold text-ai-accent">${(course.revenue / 1000).toFixed(0)}k</div>
-                        <div className="text-xs text-muted-foreground">Revenue</div>
-                        <div className="text-xs text-ai-accent">
-                          {course.timeToComplete}h Duration
-                        </div>
-                      </div>
-                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold bg-gradient-to-r from-ai-primary to-ai-secondary bg-clip-text text-transparent">{stats.totalLearners}</div>
+                    <p className="text-xs text-ai-success flex items-center mt-1">
+                      <TrendingUp className="w-3 h-3 mr-1" />
+                      +12% from last month
+                    </p>
                   </CardContent>
                 </Card>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+                
+                <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90 hover:shadow-lg transition-all duration-200">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Active Courses</CardTitle>
+                    <div className="p-2 bg-gradient-to-br from-ai-secondary/10 to-ai-secondary/5 rounded-lg">
+                      <GraduationCap className="h-4 w-4 text-ai-secondary" />
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold bg-gradient-to-r from-ai-secondary to-ai-accent bg-clip-text text-transparent">{stats.activeCourses}</div>
+                    <p className="text-xs text-muted-foreground mt-1">Across all instructors</p>
+                  </CardContent>
+                </Card>
+                
+                <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90 hover:shadow-lg transition-all duration-200">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Completion Rate</CardTitle>
+                    <div className="p-2 bg-gradient-to-br from-ai-accent/10 to-ai-accent/5 rounded-lg">
+                      <Target className="h-4 w-4 text-ai-accent" />
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold bg-gradient-to-r from-ai-accent to-ai-success bg-clip-text text-transparent">{stats.completionRate}%</div>
+                    <p className="text-xs text-ai-success flex items-center mt-1">
+                      <TrendingUp className="w-3 h-3 mr-1" />
+                      +5% improvement
+                    </p>
+                  </CardContent>
+                </Card>
+                
+                <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90 hover:shadow-lg transition-all duration-200">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Avg Engagement</CardTitle>
+                    <div className="p-2 bg-gradient-to-br from-ai-success/10 to-ai-success/5 rounded-lg">
+                      <Activity className="h-4 w-4 text-ai-success" />
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold bg-gradient-to-r from-ai-success to-ai-primary bg-clip-text text-transparent">{stats.avgEngagement}%</div>
+                    <p className="text-xs text-ai-success mt-1">Excellent performance</p>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
 
-      {/* Regional Analysis */}
-      <div className="mb-10">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-ai-primary via-ai-secondary to-ai-accent bg-clip-text text-transparent">
-            Regional Talent Analysis
-          </h2>
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => handleVisualization("line", regionWiseData.map(r => ({name: r.region.split(',')[0], value: r.demand})), "Regional Demand Trends")}
-          >
-            <LineChart className="w-4 h-4 mr-2" />
-            Trend Analysis
-          </Button>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {regionWiseData.map((region, index) => (
-            <Card key={index} className="transition-all duration-200 hover:shadow-lg">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base flex items-center justify-between">
-                  {region.region.split(',')[0]}
-                  <Badge variant={region.demand > 90 ? "default" : region.demand > 80 ? "secondary" : "outline"}>
-                    {region.demand}%
-                  </Badge>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Professionals</span>
-                  <span className="font-semibold">{(region.professionals / 1000).toFixed(1)}k</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Skill Gap</span>
-                  <span className="font-semibold text-ai-warning">{region.skillGap}%</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Avg Salary</span>
-                  <span className="font-semibold text-ai-success">${(region.avgSalary / 1000).toFixed(0)}k</span>
-                </div>
-                <div>
-                  <span className="text-sm text-muted-foreground">Top Skills:</span>
-                  <div className="flex flex-wrap gap-1 mt-1">
-                    {region.topSkills.slice(0, 2).map((skill, idx) => (
-                      <Badge key={idx} variant="outline" className="text-xs">
-                        {skill}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+            <TabsContent value="skills-observatory" className="mt-0">
+              <AISkillsObservatory />
+            </TabsContent>
+
+            <TabsContent value="workforce-trends" className="mt-0">
+              <WorkforceTrends />
+            </TabsContent>
+
+            <TabsContent value="analytics" className="space-y-8 mt-0">
+              <div className="text-center py-12">
+                <h3 className="text-lg font-semibold mb-2">Deep Analytics Coming Soon</h3>
+                <p className="text-muted-foreground">Advanced course and regional analysis features</p>
+              </div>
+            </TabsContent>
+          </div>
+        </Tabs>
       </div>
 
       {/* Chart Modal */}
@@ -585,14 +394,26 @@ const AdminDashboard = () => {
 
       {/* AI Assistant */}
       {showAIAssistant && (
-        <div className="fixed inset-y-0 right-0 w-96 bg-background border-l shadow-lg z-50">
-          <div className="flex items-center justify-between p-4 border-b">
-            <h3 className="font-semibold">AI Assistant</h3>
-            <Button variant="ghost" size="sm" onClick={() => setShowAIAssistant(false)}>
+        <div className="fixed inset-y-0 right-0 w-96 bg-background/95 backdrop-blur-xl border-l shadow-2xl z-50 animate-in slide-in-from-right duration-300">
+          <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-ai-primary/5 to-ai-secondary/5">
+            <div className="flex items-center space-x-2">
+              <div className="p-2 bg-gradient-to-br from-ai-primary/10 to-ai-primary/5 rounded-lg">
+                <Brain className="w-4 h-4 text-ai-primary" />
+              </div>
+              <h3 className="font-semibold bg-gradient-to-r from-ai-primary to-ai-secondary bg-clip-text text-transparent">
+                AI Assistant
+              </h3>
+            </div>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => setShowAIAssistant(false)}
+              className="hover:bg-destructive/10 hover:text-destructive"
+            >
               <X className="w-4 h-4" />
             </Button>
           </div>
-          <div className="h-full">
+          <div className="h-[calc(100vh-64px)]">
             <ChatInterface 
               suggestions={aiSuggestions}
             />
