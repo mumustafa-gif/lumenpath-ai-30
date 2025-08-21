@@ -15,150 +15,184 @@ import {
   Building,
   Users,
   Star,
-  Filter
+  Filter,
+  CheckCircle,
+  ChevronRight,
+  Lightbulb
 } from "lucide-react";
 
 const JobRecommendations = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [sortBy, setSortBy] = useState("match");
 
-  const jobRecommendations = [
+  const careerPaths = [
     {
       id: 1,
       title: "AI/ML Engineer",
-      company: "Microsoft MENA",
-      location: "Dubai, UAE",
-      salary: "$95,000 - $130,000",
-      type: "Full-time",
-      matchPercentage: 85,
-      requiredSkills: ["Python", "Machine Learning", "TensorFlow", "Deep Learning", "Data Analysis"],
-      yourSkills: ["Python", "Machine Learning", "Data Analysis"],
-      missingSkills: ["TensorFlow", "Deep Learning"],
-      description: "Join our AI team to develop cutting-edge machine learning solutions for enterprise clients across the MENA region.",
-      companySize: "10,000+",
+      category: "AI",
       experience: "3-5 years",
-      rating: 4.8,
-      category: "AI"
+      matchPercentage: 85,
+      growth: "High Demand",
+      region: "MENA",
+      requiredSkills: ["Python", "Machine Learning", "TensorFlow", "Deep Learning", "Data Analysis", "Statistics"],
+      yourSkills: ["Python", "Machine Learning", "Data Analysis"],
+      missingSkills: ["TensorFlow", "Deep Learning", "Statistics"],
+      description: "Design and implement AI systems, develop machine learning models, and create intelligent solutions for complex business problems.",
+      careerProgression: ["Junior ML Engineer", "ML Engineer", "Senior ML Engineer", "AI Architect"],
+      industries: ["Technology", "Healthcare", "Finance", "E-commerce"],
+      skillImportance: {
+        "Python": 95,
+        "Machine Learning": 90,
+        "TensorFlow": 80,
+        "Deep Learning": 85,
+        "Data Analysis": 88,
+        "Statistics": 75
+      }
     },
     {
       id: 2,
       title: "Data Scientist",
-      company: "Careem",
-      location: "Riyadh, Saudi Arabia",
-      salary: "$75,000 - $105,000",
-      type: "Full-time",
-      matchPercentage: 78,
-      requiredSkills: ["Python", "SQL", "Statistics", "Machine Learning", "Data Visualization"],
-      yourSkills: ["Python", "Statistics", "Data Visualization"],
-      missingSkills: ["SQL", "Machine Learning"],
-      description: "Analyze data to drive business decisions and improve user experience for millions of customers.",
-      companySize: "1,000-5,000",
+      category: "Data Science",
       experience: "2-4 years",
-      rating: 4.6,
-      category: "Data Science"
+      matchPercentage: 78,
+      growth: "Very High Demand",
+      region: "MENA",
+      requiredSkills: ["Python", "SQL", "Statistics", "Machine Learning", "Data Visualization", "R"],
+      yourSkills: ["Python", "Statistics", "Data Visualization"],
+      missingSkills: ["SQL", "Machine Learning", "R"],
+      description: "Extract insights from complex datasets, build predictive models, and drive data-driven decision making across organizations.",
+      careerProgression: ["Data Analyst", "Data Scientist", "Senior Data Scientist", "Chief Data Officer"],
+      industries: ["Technology", "Banking", "Retail", "Healthcare"],
+      skillImportance: {
+        "Python": 92,
+        "SQL": 88,
+        "Statistics": 95,
+        "Machine Learning": 85,
+        "Data Visualization": 80,
+        "R": 75
+      }
     },
     {
       id: 3,
       title: "Cloud Solutions Architect",
-      company: "AWS",
-      location: "Abu Dhabi, UAE",
-      salary: "$110,000 - $150,000",
-      type: "Full-time",
-      matchPercentage: 65,
-      requiredSkills: ["AWS", "Docker", "Kubernetes", "DevOps", "System Design"],
-      yourSkills: ["System Design"],
-      missingSkills: ["AWS", "Docker", "Kubernetes", "DevOps"],
-      description: "Design and implement cloud architecture solutions for enterprise customers in the region.",
-      companySize: "50,000+",
+      category: "Cloud",
       experience: "5-7 years",
-      rating: 4.9,
-      category: "Cloud"
+      matchPercentage: 65,
+      growth: "Rapidly Growing",
+      region: "MENA",
+      requiredSkills: ["AWS", "Azure", "Docker", "Kubernetes", "DevOps", "System Design"],
+      yourSkills: ["System Design"],
+      missingSkills: ["AWS", "Azure", "Docker", "Kubernetes", "DevOps"],
+      description: "Design scalable cloud infrastructure, lead digital transformation initiatives, and optimize cloud operations for enterprise clients.",
+      careerProgression: ["Cloud Engineer", "Solutions Architect", "Senior Architect", "Cloud Practice Lead"],
+      industries: ["Technology", "Government", "Oil & Gas", "Banking"],
+      skillImportance: {
+        "AWS": 90,
+        "Azure": 85,
+        "Docker": 78,
+        "Kubernetes": 75,
+        "DevOps": 82,
+        "System Design": 88
+      }
     },
     {
       id: 4,
-      title: "Product Manager - AI",
-      company: "Noon",
-      location: "Dubai, UAE",
-      salary: "$85,000 - $120,000",
-      type: "Full-time",
-      matchPercentage: 72,
-      requiredSkills: ["Product Management", "AI Knowledge", "Data Analysis", "Strategy", "Communication"],
-      yourSkills: ["Data Analysis", "Communication", "AI Knowledge"],
-      missingSkills: ["Product Management", "Strategy"],
-      description: "Lead AI product initiatives to enhance customer experience on our e-commerce platform.",
-      companySize: "5,000-10,000",
+      title: "Product Manager - Tech",
+      category: "Product",
       experience: "4-6 years",
-      rating: 4.5,
-      category: "Product"
+      matchPercentage: 72,
+      growth: "High Demand",
+      region: "MENA",
+      requiredSkills: ["Product Strategy", "Data Analysis", "User Research", "Agile", "Communication", "Business Analysis"],
+      yourSkills: ["Data Analysis", "Communication", "Business Analysis"],
+      missingSkills: ["Product Strategy", "User Research", "Agile"],
+      description: "Drive product vision and strategy, coordinate cross-functional teams, and deliver innovative solutions that meet market needs.",
+      careerProgression: ["Associate PM", "Product Manager", "Senior PM", "VP of Product"],
+      industries: ["Technology", "E-commerce", "Fintech", "Startups"],
+      skillImportance: {
+        "Product Strategy": 95,
+        "Data Analysis": 85,
+        "User Research": 80,
+        "Agile": 75,
+        "Communication": 90,
+        "Business Analysis": 70
+      }
     },
     {
       id: 5,
-      title: "Software Engineer",
-      company: "Talabat",
-      location: "Kuwait City, Kuwait",
-      salary: "$60,000 - $85,000",
-      type: "Full-time",
-      matchPercentage: 82,
-      requiredSkills: ["Python", "JavaScript", "React", "Node.js", "Database Design"],
-      yourSkills: ["Python", "JavaScript", "Database Design"],
-      missingSkills: ["React", "Node.js"],
-      description: "Develop and maintain web applications serving millions of food delivery customers.",
-      companySize: "1,000-5,000",
+      title: "Full Stack Developer",
+      category: "Software",
       experience: "2-4 years",
-      rating: 4.4,
-      category: "Software"
+      matchPercentage: 82,
+      growth: "Steady Demand",
+      region: "MENA",
+      requiredSkills: ["JavaScript", "React", "Node.js", "Python", "SQL", "API Design"],
+      yourSkills: ["JavaScript", "Python", "SQL"],
+      missingSkills: ["React", "Node.js", "API Design"],
+      description: "Develop end-to-end web applications, create responsive user interfaces, and build robust backend systems for diverse clients.",
+      careerProgression: ["Junior Developer", "Full Stack Developer", "Senior Developer", "Tech Lead"],
+      industries: ["Technology", "Startups", "E-commerce", "Digital Agencies"],
+      skillImportance: {
+        "JavaScript": 95,
+        "React": 85,
+        "Node.js": 80,
+        "Python": 75,
+        "SQL": 70,
+        "API Design": 78
+      }
     }
   ];
 
   const categories = ["All", "AI", "Data Science", "Cloud", "Product", "Software"];
   const sortOptions = [
     { value: "match", label: "Best Match" },
-    { value: "salary", label: "Highest Salary" },
-    { value: "rating", label: "Company Rating" }
+    { value: "growth", label: "Market Growth" },
+    { value: "experience", label: "Experience Level" }
   ];
 
-  const filteredJobs = jobRecommendations
-    .filter(job => selectedCategory === "All" || job.category === selectedCategory)
+  const filteredPaths = careerPaths
+    .filter(path => selectedCategory === "All" || path.category === selectedCategory)
     .sort((a, b) => {
       if (sortBy === "match") return b.matchPercentage - a.matchPercentage;
-      if (sortBy === "salary") return b.id - a.id; // Simplified
-      if (sortBy === "rating") return b.rating - a.rating;
+      if (sortBy === "growth") return a.growth.localeCompare(b.growth);
       return 0;
     });
 
-  const courseSuggestions = [
-    {
-      platform: "Coursera",
-      course: "Deep Learning Specialization",
-      provider: "DeepLearning.AI",
-      rating: 4.9,
-      duration: "4 months",
-      skills: ["Deep Learning", "Neural Networks", "TensorFlow"]
-    },
-    {
-      platform: "Udacity",
-      course: "AWS Cloud Architect Nanodegree",
-      provider: "Udacity",
-      rating: 4.7,
-      duration: "3 months",
-      skills: ["AWS", "Cloud Architecture", "DevOps"]
-    },
-    {
-      platform: "edX",
-      course: "Introduction to Product Management",
-      provider: "University of Virginia",
-      rating: 4.6,
-      duration: "6 weeks",
-      skills: ["Product Management", "Strategy", "Leadership"]
-    }
-  ];
+  const learningResources = {
+    "TensorFlow": [
+      { platform: "Coursera", course: "Deep Learning Specialization", provider: "DeepLearning.AI", duration: "4 months" },
+      { platform: "Google", course: "TensorFlow Developer Certificate", provider: "Google", duration: "3 months" }
+    ],
+    "AWS": [
+      { platform: "AWS", course: "AWS Solutions Architect", provider: "Amazon", duration: "3 months" },
+      { platform: "Udacity", course: "AWS Cloud Architect Nanodegree", provider: "Udacity", duration: "4 months" }
+    ],
+    "React": [
+      { platform: "Coursera", course: "React Specialization", provider: "Meta", duration: "2 months" },
+      { platform: "Udemy", course: "Complete React Developer", provider: "Udemy", duration: "6 weeks" }
+    ],
+    "Product Strategy": [
+      { platform: "Coursera", course: "Product Management", provider: "University of Virginia", duration: "6 weeks" },
+      { platform: "edX", course: "Product Strategy", provider: "Boston University", duration: "8 weeks" }
+    ],
+    "SQL": [
+      { platform: "Coursera", course: "SQL for Data Science", provider: "UC Davis", duration: "4 weeks" },
+      { platform: "edX", course: "Introduction to SQL", provider: "IBM", duration: "5 weeks" }
+    ]
+  };
 
   return (
     <div className="space-y-6">
-      <div className="text-center space-y-2">
-        <h2 className="text-2xl font-bold">Job Recommendations</h2>
-        <p className="text-muted-foreground">
-          AI-powered job matching based on your skills and career goals
+      <div className="text-center space-y-4">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-ai-primary/10 to-ai-accent/10 rounded-full border border-ai-primary/20">
+          <Briefcase className="w-5 h-5 text-ai-primary" />
+          <span className="font-semibold text-ai-primary">Career Path Intelligence</span>
+        </div>
+        <h2 className="text-3xl font-bold bg-gradient-to-r from-ai-primary to-ai-accent bg-clip-text text-transparent">
+          Future Career Opportunities
+        </h2>
+        <p className="text-muted-foreground max-w-2xl mx-auto">
+          Discover career paths aligned with your skills, market trends, and growth potential in the MENA region
         </p>
       </div>
 
@@ -193,69 +227,73 @@ const JobRecommendations = () => {
         </div>
       </div>
 
-      {/* Job Cards */}
+      {/* Career Path Cards */}
       <div className="space-y-6">
-        {filteredJobs.map((job) => (
-          <Card key={job.id} className="hover:shadow-lg transition-shadow">
+        {filteredPaths.map((path) => (
+          <Card key={path.id} className="hover:shadow-lg transition-all duration-300 border-l-4 border-l-ai-primary/30">
             <CardHeader>
               <div className="flex justify-between items-start">
-                <div className="space-y-2">
-                  <CardTitle className="flex items-center gap-2">
-                    {job.title}
-                    <Badge variant="secondary">{job.matchPercentage}% match</Badge>
-                  </CardTitle>
-                  <CardDescription className="flex items-center gap-4">
-                    <span className="flex items-center gap-1">
-                      <Building className="w-4 h-4" />
-                      {job.company}
-                    </span>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <CardTitle className="text-xl">{path.title}</CardTitle>
+                    <Badge 
+                      variant="secondary" 
+                      className="bg-gradient-to-r from-green-100 to-green-200 text-green-700 border-green-300"
+                    >
+                      {path.matchPercentage}% match
+                    </Badge>
+                    <Badge variant="outline" className="text-ai-primary border-ai-primary/30">
+                      {path.growth}
+                    </Badge>
+                  </div>
+                  <CardDescription className="flex items-center gap-4 text-base">
                     <span className="flex items-center gap-1">
                       <MapPin className="w-4 h-4" />
-                      {job.location}
+                      {path.region} Region
                     </span>
                     <span className="flex items-center gap-1">
-                      <Star className="w-4 h-4 text-yellow-500" />
-                      {job.rating}
+                      <Clock className="w-4 h-4" />
+                      {path.experience} experience
                     </span>
                   </CardDescription>
-                </div>
-                <div className="text-right">
-                  <div className="font-semibold text-green-600">{job.salary}</div>
-                  <div className="text-sm text-muted-foreground">{job.type}</div>
                 </div>
               </div>
             </CardHeader>
             
-            <CardContent className="space-y-4">
-              <p className="text-sm">{job.description}</p>
+            <CardContent className="space-y-6">
+              <p className="text-muted-foreground leading-relaxed">{path.description}</p>
               
-              {/* Match Analysis */}
-              <div className="space-y-3">
-                <div>
-                  <div className="flex justify-between mb-2">
-                    <span className="font-medium">Skill Match</span>
-                    <span>{job.matchPercentage}%</span>
-                  </div>
-                  <Progress value={job.matchPercentage} />
+              {/* Skill Match Analysis */}
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="font-semibold">Career Readiness</span>
+                  <span className="font-bold text-ai-primary">{path.matchPercentage}%</span>
                 </div>
+                <Progress value={path.matchPercentage} className="h-3" />
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <h4 className="font-medium mb-2 text-green-700">Your Matching Skills</h4>
-                    <div className="flex flex-wrap gap-1">
-                      {job.yourSkills.map((skill, index) => (
-                        <Badge key={index} variant="default" className="text-xs bg-green-100 text-green-800">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div className="space-y-3">
+                    <h4 className="font-semibold text-green-700 flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4" />
+                      Your Strengths ({path.yourSkills.length} skills)
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {path.yourSkills.map((skill, index) => (
+                        <Badge key={index} className="bg-green-100 text-green-800 hover:bg-green-100 border-green-300">
                           {skill}
                         </Badge>
                       ))}
                     </div>
                   </div>
                   
-                  <div>
-                    <h4 className="font-medium mb-2 text-red-700">Skills to Develop</h4>
-                    <div className="flex flex-wrap gap-1">
-                      {job.missingSkills.map((skill, index) => (
-                        <Badge key={index} variant="destructive" className="text-xs">
+                  <div className="space-y-3">
+                    <h4 className="font-semibold text-red-700 flex items-center gap-2">
+                      <Target className="w-4 h-4" />
+                      Skills to Develop ({path.missingSkills.length} skills)
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {path.missingSkills.map((skill, index) => (
+                        <Badge key={index} variant="destructive" className="bg-red-100 text-red-700 hover:bg-red-100 border-red-300">
                           {skill}
                         </Badge>
                       ))}
@@ -264,27 +302,50 @@ const JobRecommendations = () => {
                 </div>
               </div>
               
-              {/* Company Info */}
-              <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                <span className="flex items-center gap-1">
-                  <Users className="w-4 h-4" />
-                  {job.companySize} employees
-                </span>
-                <span className="flex items-center gap-1">
-                  <Clock className="w-4 h-4" />
-                  {job.experience} experience
-                </span>
+              {/* Career Progression */}
+              <div className="space-y-3">
+                <h4 className="font-semibold flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4 text-ai-primary" />
+                  Career Progression Path
+                </h4>
+                <div className="flex items-center gap-2 overflow-x-auto pb-2">
+                  {path.careerProgression.map((role, index) => (
+                    <div key={index} className="flex items-center gap-2 whitespace-nowrap">
+                      <Badge variant="outline" className="px-3 py-1">
+                        {role}
+                      </Badge>
+                      {index < path.careerProgression.length - 1 && (
+                        <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Industries */}
+              <div className="space-y-3">
+                <h4 className="font-semibold flex items-center gap-2">
+                  <Building className="w-4 h-4 text-ai-primary" />
+                  Target Industries
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {path.industries.map((industry, index) => (
+                    <Badge key={index} variant="secondary" className="bg-ai-primary/10 text-ai-primary">
+                      {industry}
+                    </Badge>
+                  ))}
+                </div>
               </div>
               
               {/* Actions */}
-              <div className="flex gap-2 pt-2">
-                <Button className="flex-1">
-                  <ExternalLink className="w-4 h-4 mr-2" />
-                  Apply Now
+              <div className="flex gap-3 pt-4">
+                <Button className="flex-1 bg-gradient-to-r from-ai-primary to-ai-accent">
+                  <Target className="w-4 h-4 mr-2" />
+                  Set as Career Goal
                 </Button>
-                <Button variant="outline">
+                <Button variant="outline" className="flex-1">
                   <BookOpen className="w-4 h-4 mr-2" />
-                  Upskill for Role
+                  View Learning Path
                 </Button>
               </div>
             </CardContent>
@@ -292,52 +353,47 @@ const JobRecommendations = () => {
         ))}
       </div>
 
-      {/* Course Suggestions */}
-      <Card>
+      {/* Learning Resources */}
+      <Card className="border-ai-primary/20 bg-gradient-to-br from-ai-primary/5 to-ai-accent/5">
         <CardHeader>
-          <CardTitle className="flex items-center">
-            <BookOpen className="w-5 h-5 mr-2" />
-            Recommended Courses to Bridge Skill Gaps
+          <CardTitle className="flex items-center gap-2">
+            <BookOpen className="w-5 h-5 text-ai-primary" />
+            Recommended Learning Resources
           </CardTitle>
           <CardDescription>
-            Third-party courses to help you qualify for more opportunities
+            Curated courses from top platforms to accelerate your career transition
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {courseSuggestions.map((course, index) => (
-              <Card key={index} className="border-dashed">
-                <CardContent className="p-4 space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Object.entries(learningResources).slice(0, 6).map(([skill, courses]) => (
+              <Card key={skill} className="border-dashed border-ai-primary/30 hover:border-ai-primary/50 transition-colors">
+                <CardContent className="p-4 space-y-4">
                   <div className="flex items-center justify-between">
-                    <Badge variant="outline">{course.platform}</Badge>
-                    <div className="flex items-center gap-1">
-                      <Star className="w-3 h-3 text-yellow-500" />
-                      <span className="text-xs">{course.rating}</span>
-                    </div>
+                    <Badge className="bg-ai-primary/20 text-ai-primary hover:bg-ai-primary/20">
+                      {skill}
+                    </Badge>
+                    <Lightbulb className="w-4 h-4 text-ai-accent" />
                   </div>
                   
-                  <div>
-                    <h4 className="font-medium text-sm">{course.course}</h4>
-                    <p className="text-xs text-muted-foreground">{course.provider}</p>
-                  </div>
-                  
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <Clock className="w-3 h-3" />
-                    {course.duration}
-                  </div>
-                  
-                  <div className="flex flex-wrap gap-1">
-                    {course.skills.map((skill, idx) => (
-                      <Badge key={idx} variant="secondary" className="text-xs">
-                        {skill}
-                      </Badge>
+                  <div className="space-y-3">
+                    {courses.map((course, idx) => (
+                      <div key={idx} className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <Badge variant="outline" className="text-xs">
+                            {course.platform}
+                          </Badge>
+                          <span className="text-xs text-muted-foreground">{course.duration}</span>
+                        </div>
+                        <h5 className="font-medium text-sm">{course.course}</h5>
+                        <p className="text-xs text-muted-foreground">{course.provider}</p>
+                        <Button size="sm" variant="outline" className="w-full h-8">
+                          <ExternalLink className="w-3 h-3 mr-1" />
+                          View Course
+                        </Button>
+                      </div>
                     ))}
                   </div>
-                  
-                  <Button size="sm" variant="outline" className="w-full">
-                    <ExternalLink className="w-3 h-3 mr-1" />
-                    View Course
-                  </Button>
                 </CardContent>
               </Card>
             ))}

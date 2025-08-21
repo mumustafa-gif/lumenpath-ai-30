@@ -15,12 +15,18 @@ import {
   BookOpen,
   ChevronRight,
   Star,
-  BarChart3
+  BarChart3,
+  CheckCircle,
+  Lightbulb
 } from "lucide-react";
 
 const MockInterviews = () => {
   const [activeInterview, setActiveInterview] = useState<string | null>(null);
   const [interviewStarted, setInterviewStarted] = useState(false);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [timeElapsed, setTimeElapsed] = useState(0);
+  const [interviewCompleted, setInterviewCompleted] = useState(false);
+  const [interviewScore, setInterviewScore] = useState(0);
 
   const interviewTypes = [
     {
@@ -89,51 +95,278 @@ const MockInterviews = () => {
     { skill: "Confidence", score: 80, improvement: "+7%" }
   ];
 
+  const mockQuestions = {
+    technical: [
+      "Explain the difference between supervised and unsupervised learning.",
+      "How would you optimize a slow database query?",
+      "Describe the time complexity of different sorting algorithms.",
+      "What is the difference between React hooks and class components?",
+      "How would you design a scalable system for 1 million users?",
+      "Explain the concept of overfitting in machine learning.",
+      "What are the benefits and drawbacks of microservices architecture?",
+      "How would you implement a recommendation system?"
+    ],
+    behavioral: [
+      "Tell me about a challenging project you worked on recently.",
+      "Describe a time when you had to work with a difficult team member.",
+      "How do you handle tight deadlines and pressure?",
+      "Give an example of when you had to learn a new technology quickly.",
+      "Describe a situation where you had to make a difficult decision.",
+      "Tell me about a time you received constructive criticism.",
+      "How do you stay updated with the latest technologies?",
+      "Describe your approach to problem-solving."
+    ],
+    "case-study": [
+      "A client's revenue has dropped 20% over the last quarter. How would you investigate?",
+      "Design a strategy to increase user engagement for a social media app.",
+      "How would you prioritize features for a new product launch?",
+      "A competitor just launched a similar product. What's your response strategy?",
+      "How would you approach market entry in a new geographical region?",
+      "Design a cost reduction strategy without affecting product quality.",
+      "How would you handle a PR crisis for your company?",
+      "Develop a go-to-market strategy for an AI-powered product."
+    ]
+  };
+
   const startInterview = (interviewId: string) => {
     setActiveInterview(interviewId);
     setInterviewStarted(true);
+    setCurrentQuestion(0);
+    setTimeElapsed(0);
+    setInterviewCompleted(false);
+    setInterviewScore(0);
+    
+    // Start timer
+    const timer = setInterval(() => {
+      setTimeElapsed(prev => prev + 1);
+    }, 1000);
+    
+    // Auto-complete after 45 minutes for demo
+    setTimeout(() => {
+      completeInterview();
+      clearInterval(timer);
+    }, 2700000); // 45 minutes
   };
 
+  const completeInterview = () => {
+    setInterviewCompleted(true);
+    setInterviewScore(Math.floor(Math.random() * 30) + 70); // Random score between 70-100
+  };
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // Interview completion screen with AI feedback
+  if (interviewCompleted && activeInterview) {
+    const interview = interviewTypes.find(i => i.id === activeInterview);
+    const feedback = {
+      strengths: [
+        "Clear and articulate communication",
+        "Strong technical knowledge demonstrated",
+        "Good problem-solving approach",
+        "Confident delivery of responses"
+      ],
+      improvements: [
+        "Could provide more specific examples",
+        "Consider structuring answers using STAR method",
+        "Practice explaining complex concepts more simply",
+        "Work on maintaining eye contact"
+      ],
+      recommendations: [
+        "Practice more system design questions",
+        "Review behavioral interview frameworks",
+        "Work on presentation skills",
+        "Study industry-specific case studies"
+      ]
+    };
+
+    return (
+      <div className="space-y-6">
+        <Card className="border-ai-primary/20 bg-gradient-to-r from-ai-primary/5 to-ai-accent/5">
+          <CardHeader className="text-center">
+            <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+              <CheckCircle className="w-8 h-8 text-green-600" />
+            </div>
+            <CardTitle className="text-2xl">Interview Completed!</CardTitle>
+            <CardDescription>
+              Your AI-powered {interview?.title} session has been analyzed
+            </CardDescription>
+          </CardHeader>
+        </Card>
+
+        {/* Score Summary */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Card>
+            <CardContent className="p-6 text-center">
+              <div className="text-3xl font-bold text-ai-primary">{interviewScore}%</div>
+              <p className="text-sm text-muted-foreground">Overall Score</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6 text-center">
+              <div className="text-2xl font-bold">{formatTime(timeElapsed)}</div>
+              <p className="text-sm text-muted-foreground">Duration</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6 text-center">
+              <div className="text-2xl font-bold">{currentQuestion + 1}</div>
+              <p className="text-sm text-muted-foreground">Questions Answered</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6 text-center">
+              <div className="text-2xl font-bold text-green-600">B+</div>
+              <p className="text-sm text-muted-foreground">Performance Grade</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Detailed Feedback */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card className="border-green-200 bg-green-50/30">
+            <CardHeader>
+              <CardTitle className="text-green-700 flex items-center gap-2">
+                <CheckCircle className="w-5 h-5" />
+                Your Strengths
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {feedback.strengths.map((strength, index) => (
+                <div key={index} className="flex items-center gap-3">
+                  <div className="w-2 h-2 bg-green-500 rounded-full" />
+                  <span className="text-sm">{strength}</span>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+
+          <Card className="border-yellow-200 bg-yellow-50/30">
+            <CardHeader>
+              <CardTitle className="text-yellow-700 flex items-center gap-2">
+                <TrendingUp className="w-5 h-5" />
+                Areas for Improvement
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {feedback.improvements.map((improvement, index) => (
+                <div key={index} className="flex items-center gap-3">
+                  <div className="w-2 h-2 bg-yellow-500 rounded-full" />
+                  <span className="text-sm">{improvement}</span>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* AI Recommendations */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Lightbulb className="w-5 h-5 text-ai-primary" />
+              AI-Powered Recommendations
+            </CardTitle>
+            <CardDescription>
+              Personalized suggestions to improve your interview performance
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {feedback.recommendations.map((recommendation, index) => (
+              <div key={index} className="flex items-start gap-3 p-3 border rounded-lg">
+                <div className="w-6 h-6 bg-ai-primary/20 rounded-full flex items-center justify-center mt-0.5">
+                  <span className="text-xs font-bold text-ai-primary">{index + 1}</span>
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm">{recommendation}</p>
+                </div>
+                <Button size="sm" variant="outline">
+                  <BookOpen className="w-3 h-3 mr-1" />
+                  Learn More
+                </Button>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        <div className="flex justify-center gap-4">
+          <Button onClick={() => {
+            setInterviewCompleted(false);
+            setInterviewStarted(false);
+            setActiveInterview(null);
+          }}>
+            Return to Dashboard
+          </Button>
+          <Button variant="outline" onClick={() => startInterview(activeInterview)}>
+            Practice Again
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Active interview screen
   if (interviewStarted && activeInterview) {
     const interview = interviewTypes.find(i => i.id === activeInterview);
+    const questions = mockQuestions[activeInterview as keyof typeof mockQuestions] || [];
+    const currentQ = questions[currentQuestion] || "Loading next question...";
+
     return (
       <div className="space-y-6">
         <Card className="border-ai-primary/20 bg-gradient-to-r from-ai-primary/5 to-ai-accent/5">
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
               <span>{interview?.title} - In Progress</span>
-              <Badge variant="secondary">Live Session</Badge>
+              <Badge variant="secondary" className="animate-pulse">Live Session</Badge>
             </CardTitle>
             <CardDescription>
               AI-powered interview simulation with real-time feedback
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="flex items-center justify-center bg-black/90 rounded-lg aspect-video">
-              <div className="text-center text-white space-y-4">
-                <Video className="w-16 h-16 mx-auto" />
-                <p>Interview Session Active</p>
-                <div className="flex items-center justify-center gap-4">
-                  <Button size="sm" variant="destructive">
-                    <Mic className="w-4 h-4 mr-2" />
-                    Mute
-                  </Button>
-                  <Button size="sm" variant="secondary">
-                    <Video className="w-4 h-4 mr-2" />
-                    Camera
-                  </Button>
+            {/* Video Interface */}
+            <div className="relative bg-gradient-to-br from-gray-900 to-gray-800 rounded-lg aspect-video overflow-hidden">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-center text-white space-y-4">
+                  <div className="relative">
+                    <Video className="w-16 h-16 mx-auto" />
+                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full animate-pulse" />
+                  </div>
+                  <p className="text-lg font-medium">Interview Session Active</p>
+                  <div className="flex items-center justify-center gap-4">
+                    <Button size="sm" variant="destructive">
+                      <Mic className="w-4 h-4 mr-2" />
+                      Mute
+                    </Button>
+                    <Button size="sm" variant="secondary">
+                      <Video className="w-4 h-4 mr-2" />
+                      Camera
+                    </Button>
+                  </div>
                 </div>
+              </div>
+              
+              {/* Current Question Overlay */}
+              <div className="absolute bottom-4 left-4 right-4 bg-black/80 backdrop-blur rounded-lg p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                  <span className="text-white text-sm font-medium">Current Question:</span>
+                </div>
+                <p className="text-white text-sm">{currentQ}</p>
               </div>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Live Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <Card>
                 <CardContent className="p-4">
                   <div className="flex items-center gap-2">
                     <Clock className="w-4 h-4 text-muted-foreground" />
                     <span className="text-sm">Time Elapsed</span>
                   </div>
-                  <div className="text-2xl font-bold">15:30</div>
+                  <div className="text-2xl font-bold">{formatTime(timeElapsed)}</div>
                 </CardContent>
               </Card>
               
@@ -143,7 +376,7 @@ const MockInterviews = () => {
                     <Target className="w-4 h-4 text-muted-foreground" />
                     <span className="text-sm">Questions</span>
                   </div>
-                  <div className="text-2xl font-bold">3/8</div>
+                  <div className="text-2xl font-bold">{currentQuestion + 1}/{questions.length}</div>
                 </CardContent>
               </Card>
               
@@ -151,22 +384,40 @@ const MockInterviews = () => {
                 <CardContent className="p-4">
                   <div className="flex items-center gap-2">
                     <BarChart3 className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-sm">Current Score</span>
+                    <span className="text-sm">Live Score</span>
                   </div>
-                  <div className="text-2xl font-bold">82%</div>
+                  <div className="text-2xl font-bold text-ai-primary">{Math.floor(Math.random() * 15) + 75}%</div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-2">
+                    <Trophy className="w-4 h-4 text-muted-foreground" />
+                    <span className="text-sm">Confidence</span>
+                  </div>
+                  <div className="text-2xl font-bold text-green-600">{Math.floor(Math.random() * 20) + 70}%</div>
                 </CardContent>
               </Card>
             </div>
 
+            {/* Controls */}
             <div className="flex justify-center gap-4">
+              <Button 
+                variant="outline"
+                onClick={() => setCurrentQuestion(prev => Math.min(prev + 1, questions.length - 1))}
+                disabled={currentQuestion >= questions.length - 1}
+              >
+                Next Question
+              </Button>
               <Button variant="outline" onClick={() => setInterviewStarted(false)}>
                 Pause Interview
               </Button>
-              <Button variant="destructive" onClick={() => {
-                setInterviewStarted(false);
-                setActiveInterview(null);
-              }}>
-                End Interview
+              <Button 
+                onClick={completeInterview}
+                className="bg-gradient-to-r from-ai-primary to-ai-accent"
+              >
+                Complete Interview
               </Button>
             </div>
           </CardContent>

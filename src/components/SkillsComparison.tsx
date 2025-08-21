@@ -14,8 +14,27 @@ import {
   BarChart3,
   Users,
   Star,
-  Award
+  Award,
+  Lightbulb,
+  ChevronRight
 } from "lucide-react";
+import { 
+  ResponsiveContainer, 
+  RadarChart, 
+  PolarGrid, 
+  PolarAngleAxis, 
+  PolarRadiusAxis, 
+  Radar, 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  Legend,
+  LineChart,
+  Line
+} from 'recharts';
 
 const SkillsComparison = () => {
   const [selectedJob, setSelectedJob] = useState("AI Engineer");
@@ -99,12 +118,41 @@ const SkillsComparison = () => {
     ]
   };
 
+  // Prepare chart data
+  const radarData = currentJob?.requiredSkills.map(skill => ({
+    skill: skill.skill,
+    "Market Requirement": skill.importance,
+    "Your Level": skill.yourLevel,
+    "Market Average": skill.marketAverage,
+  })) || [];
+
+  const barData = currentJob?.requiredSkills.map(skill => ({
+    skill: skill.skill,
+    gap: skill.importance - skill.yourLevel,
+    yourLevel: skill.yourLevel,
+    marketAvg: skill.marketAverage,
+    required: skill.importance
+  })) || [];
+
+  const trendData = currentJob?.requiredSkills.map((skill, index) => ({
+    skill: skill.skill,
+    currentLevel: skill.yourLevel,
+    targetLevel: skill.importance,
+    month: index + 1
+  })) || [];
+
   return (
-    <div className="space-y-6">
-      <div className="text-center space-y-2">
-        <h2 className="text-2xl font-bold">Skills Comparison</h2>
-        <p className="text-muted-foreground">
-          Compare your skills with market requirements for different career paths
+    <div className="space-y-8">
+      <div className="text-center space-y-4">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-ai-primary/10 to-ai-accent/10 rounded-full border border-ai-primary/20">
+          <BarChart3 className="w-5 h-5 text-ai-primary" />
+          <span className="font-semibold text-ai-primary">Professional Skills Benchmark</span>
+        </div>
+        <h2 className="text-3xl font-bold bg-gradient-to-r from-ai-primary to-ai-accent bg-clip-text text-transparent">
+          Market Skills Comparison
+        </h2>
+        <p className="text-muted-foreground max-w-2xl mx-auto">
+          Advanced comparison of your skillset against market requirements and industry benchmarks across different career paths
         </p>
       </div>
 
@@ -169,177 +217,420 @@ const SkillsComparison = () => {
         </CardHeader>
       </Card>
 
-      <Tabs defaultValue="detailed" className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="detailed">Detailed Comparison</TabsTrigger>
-          <TabsTrigger value="recommendations">Learning Path</TabsTrigger>
-          <TabsTrigger value="benchmarks">Market Benchmarks</TabsTrigger>
+      <Tabs defaultValue="overview" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="radar">Skill Radar</TabsTrigger>
+          <TabsTrigger value="detailed">Gap Analysis</TabsTrigger>
+          <TabsTrigger value="benchmarks">Benchmarks</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="detailed" className="space-y-6">
-          <div className="space-y-6">
-            {currentJob?.requiredSkills.map((skill, index) => (
-              <Card key={index}>
-                <CardContent className="p-6">
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <h3 className="font-semibold text-lg">{skill.skill}</h3>
-                      <div className="flex items-center gap-2">
-                        <Badge variant="outline">
-                          Importance: {skill.importance}%
-                        </Badge>
-                        {skill.yourLevel >= skill.marketAverage ? (
-                          <CheckCircle className="w-5 h-5 text-green-500" />
-                        ) : (
-                          <AlertCircle className="w-5 h-5 text-red-500" />
-                        )}
-                      </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div>
-                        <div className="flex justify-between mb-2">
-                          <span className="text-sm font-medium">Your Level</span>
-                          <span className="text-sm">{skill.yourLevel}%</span>
-                        </div>
-                        <Progress value={skill.yourLevel} className="h-2" />
-                      </div>
-                      
-                      <div>
-                        <div className="flex justify-between mb-2">
-                          <span className="text-sm font-medium">Market Average</span>
-                          <span className="text-sm">{skill.marketAverage}%</span>
-                        </div>
-                        <Progress value={skill.marketAverage} className="h-2" />
-                      </div>
-                      
-                      <div>
-                        <div className="flex justify-between mb-2">
-                          <span className="text-sm font-medium">Required Level</span>
-                          <span className="text-sm">{skill.importance}%</span>
-                        </div>
-                        <Progress value={skill.importance} className="h-2" />
-                      </div>
-                    </div>
-                    
-                    {skill.yourLevel < skill.importance && (
-                      <div className="bg-muted/50 p-4 rounded-lg">
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="font-medium">Gap to Close:</span>
-                          <Badge variant="destructive">
-                            {skill.importance - skill.yourLevel}% behind
-                          </Badge>
-                        </div>
-                        
-                        {courseSuggestions[skill.skill as keyof typeof courseSuggestions] && (
-                          <div className="space-y-2">
-                            <p className="text-sm font-medium">Recommended Courses:</p>
-                            <div className="flex flex-wrap gap-2">
-                              {courseSuggestions[skill.skill as keyof typeof courseSuggestions].map((course, idx) => (
-                                <Button key={idx} size="sm" variant="outline" className="h-8">
-                                  <ExternalLink className="w-3 h-3 mr-1" />
-                                  {course.platform} - {course.course}
-                                </Button>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="recommendations" className="space-y-6">
+        <TabsContent value="overview" className="space-y-6">
+          {/* Skill Distribution Chart */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle className="text-green-700">Priority Skills to Develop</CardTitle>
-                <CardDescription>Focus on these high-impact skills first</CardDescription>
+                <CardTitle className="flex items-center gap-2">
+                  <BarChart3 className="w-5 h-5" />
+                  Skills Gap Overview
+                </CardTitle>
+                <CardDescription>Visual representation of skill gaps vs requirements</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                {criticalSkills
-                  .sort((a, b) => b.importance - a.importance)
-                  .slice(0, 3)
-                  .map((skill, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
-                      <div>
-                        <h4 className="font-medium">{skill.skill}</h4>
-                        <p className="text-sm text-muted-foreground">
-                          {skill.importance - skill.yourLevel}% gap to close
-                        </p>
-                      </div>
-                      <Button size="sm" variant="outline">
-                        <BookOpen className="w-4 h-4 mr-1" />
-                        Learn
-                      </Button>
-                    </div>
-                  ))}
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={barData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis 
+                      dataKey="skill" 
+                      angle={-45} 
+                      textAnchor="end" 
+                      height={100}
+                      fontSize={12}
+                    />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="yourLevel" fill="hsl(245, 82%, 67%)" name="Your Level" />
+                    <Bar dataKey="required" fill="hsl(15, 85%, 65%)" name="Required Level" />
+                    <Bar dataKey="marketAvg" fill="hsl(142, 76%, 36%)" name="Market Average" />
+                  </BarChart>
+                </ResponsiveContainer>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-blue-700">Leverage Your Strengths</CardTitle>
-                <CardDescription>You're already competitive in these areas</CardDescription>
+                <CardTitle className="flex items-center gap-2">
+                  <Target className="w-5 h-5" />
+                  Growth Trajectory
+                </CardTitle>
+                <CardDescription>Your potential skill development path</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                {strongSkills.map((skill, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 border rounded-lg bg-green-50/50">
-                    <div>
-                      <h4 className="font-medium">{skill.skill}</h4>
-                      <p className="text-sm text-green-600">
-                        {skill.yourLevel - skill.marketAverage}% above market average
-                      </p>
-                    </div>
-                    <CheckCircle className="w-5 h-5 text-green-500" />
-                  </div>
-                ))}
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart data={trendData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip />
+                    <Line 
+                      type="monotone" 
+                      dataKey="currentLevel" 
+                      stroke="hsl(245, 82%, 67%)" 
+                      strokeWidth={3} 
+                      name="Current Level"
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="targetLevel" 
+                      stroke="hsl(15, 85%, 65%)" 
+                      strokeWidth={3} 
+                      strokeDasharray="5 5" 
+                      name="Target Level"
+                    />
+                    <Legend />
+                  </LineChart>
+                </ResponsiveContainer>
               </CardContent>
             </Card>
           </div>
         </TabsContent>
 
-        <TabsContent value="benchmarks" className="space-y-6">
+        <TabsContent value="radar" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>MENA Region Market Benchmarks</CardTitle>
-              <CardDescription>How you compare to professionals in the region</CardDescription>
+              <CardTitle className="flex items-center gap-2">
+                <Target className="w-5 h-5" />
+                {currentJob?.title} - Comprehensive Skill Radar
+              </CardTitle>
+              <CardDescription>
+                360-degree view of your skills vs market requirements and industry averages
+              </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h4 className="font-medium mb-4">Top Performing Skills</h4>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={500}>
+                <RadarChart data={radarData}>
+                  <PolarGrid />
+                  <PolarAngleAxis dataKey="skill" />
+                  <PolarRadiusAxis angle={90} domain={[0, 100]} />
+                  <Radar
+                    name="Market Requirement"
+                    dataKey="Market Requirement"
+                    stroke="hsl(15, 85%, 65%)"
+                    fill="hsl(15, 85%, 65%)"
+                    fillOpacity={0.1}
+                    strokeWidth={3}
+                  />
+                  <Radar
+                    name="Market Average"
+                    dataKey="Market Average"
+                    stroke="hsl(142, 76%, 36%)"
+                    fill="hsl(142, 76%, 36%)"
+                    fillOpacity={0.1}
+                    strokeWidth={2}
+                  />
+                  <Radar
+                    name="Your Level"
+                    dataKey="Your Level"
+                    stroke="hsl(245, 82%, 67%)"
+                    fill="hsl(245, 82%, 67%)"
+                    fillOpacity={0.2}
+                    strokeWidth={3}
+                  />
+                  <Legend />
+                  <Tooltip />
+                </RadarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="detailed" className="space-y-6">
+          <div className="space-y-6">
+            {currentJob?.requiredSkills.map((skill, index) => {
+              const gapPercentage = skill.importance - skill.yourLevel;
+              const performanceLevel = skill.yourLevel >= skill.importance ? 'excellent' : 
+                                     skill.yourLevel >= skill.marketAverage ? 'good' : 'needs-improvement';
+              
+              return (
+                <Card key={index} className={`transition-all duration-300 hover:shadow-lg ${
+                  performanceLevel === 'excellent' ? 'border-l-4 border-l-green-500' :
+                  performanceLevel === 'good' ? 'border-l-4 border-l-yellow-500' :
+                  'border-l-4 border-l-red-500'
+                }`}>
+                  <CardContent className="p-6">
+                    <div className="space-y-6">
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-3">
+                          <h3 className="font-bold text-xl">{skill.skill}</h3>
+                          {performanceLevel === 'excellent' ? (
+                            <CheckCircle className="w-6 h-6 text-green-500" />
+                          ) : performanceLevel === 'good' ? (
+                            <TrendingUp className="w-6 h-6 text-yellow-500" />
+                          ) : (
+                            <AlertCircle className="w-6 h-6 text-red-500" />
+                          )}
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <Badge variant="outline" className="text-sm px-3 py-1">
+                            Priority: {skill.importance}%
+                          </Badge>
+                          {gapPercentage > 0 && (
+                            <Badge variant="destructive" className="text-sm px-3 py-1">
+                              {gapPercentage}% gap
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div className="space-y-4">
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-center">
+                              <span className="font-semibold text-sm">Your Current Level</span>
+                              <span className="font-bold text-ai-primary">{skill.yourLevel}%</span>
+                            </div>
+                            <Progress value={skill.yourLevel} className="h-3" />
+                          </div>
+                          
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-center">
+                              <span className="font-semibold text-sm">Market Average</span>
+                              <span className="font-bold text-yellow-600">{skill.marketAverage}%</span>
+                            </div>
+                            <Progress value={skill.marketAverage} className="h-3" />
+                          </div>
+                          
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-center">
+                              <span className="font-semibold text-sm">Required Level</span>
+                              <span className="font-bold text-red-600">{skill.importance}%</span>
+                            </div>
+                            <Progress value={skill.importance} className="h-3" />
+                          </div>
+                        </div>
+
+                        <div className="lg:col-span-2">
+                          {gapPercentage > 0 ? (
+                            <div className="bg-gradient-to-br from-red-50 to-orange-50 p-6 rounded-lg border border-red-200">
+                              <div className="flex items-center gap-2 mb-4">
+                                <AlertCircle className="w-5 h-5 text-red-600" />
+                                <span className="font-semibold text-red-700">Skill Development Required</span>
+                              </div>
+                              
+                              <div className="space-y-4">
+                                <div className="flex justify-between items-center">
+                                  <span className="text-sm font-medium">Gap to Close:</span>
+                                  <Badge variant="destructive" className="text-sm">
+                                    {gapPercentage}% improvement needed
+                                  </Badge>
+                                </div>
+                                
+                                <div className="space-y-3">
+                                  <div className="flex items-center gap-2">
+                                    <Lightbulb className="w-4 h-4 text-orange-600" />
+                                    <span className="font-medium text-sm">Recommended Learning Path:</span>
+                                  </div>
+                                  
+                                  {courseSuggestions[skill.skill as keyof typeof courseSuggestions] ? (
+                                    <div className="grid grid-cols-1 gap-2">
+                                      {courseSuggestions[skill.skill as keyof typeof courseSuggestions].map((course, idx) => (
+                                        <Button key={idx} size="sm" variant="outline" className="justify-start h-10">
+                                          <ExternalLink className="w-3 h-3 mr-2" />
+                                          <div className="text-left">
+                                            <div className="font-medium">{course.course}</div>
+                                            <div className="text-xs text-muted-foreground">{course.platform}</div>
+                                          </div>
+                                        </Button>
+                                      ))}
+                                    </div>
+                                  ) : (
+                                    <div className="text-sm text-muted-foreground">
+                                      Seek online courses, certifications, or hands-on projects to develop this skill.
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-lg border border-green-200">
+                              <div className="flex items-center gap-2 mb-3">
+                                <CheckCircle className="w-5 h-5 text-green-600" />
+                                <span className="font-semibold text-green-700">Skill Mastered</span>
+                              </div>
+                              <p className="text-sm text-green-600 mb-4">
+                                You've exceeded the market requirement for this skill. Consider mentoring others or exploring advanced applications.
+                              </p>
+                              <div className="flex items-center gap-2">
+                                <Award className="w-4 h-4 text-green-600" />
+                                <span className="text-sm font-medium text-green-700">
+                                  {skill.yourLevel - skill.importance}% above requirement
+                                </span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </TabsContent>
+
+
+        <TabsContent value="benchmarks" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card className="border-green-200 bg-gradient-to-br from-green-50 to-emerald-50">
+              <CardHeader>
+                <CardTitle className="text-green-700 flex items-center gap-2">
+                  <Award className="w-5 h-5" />
+                  Your Competitive Advantages
+                </CardTitle>
+                <CardDescription>Skills where you outperform the market</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {strongSkills.length > 0 ? (
                   <div className="space-y-3">
                     {strongSkills.slice(0, 4).map((skill, index) => (
-                      <div key={index} className="flex items-center justify-between">
-                        <span className="text-sm">{skill.skill}</span>
+                      <div key={index} className="flex items-center justify-between p-3 bg-white/60 rounded-lg border border-green-200">
+                        <div>
+                          <h4 className="font-semibold">{skill.skill}</h4>
+                          <p className="text-sm text-green-600">
+                            {skill.yourLevel - skill.marketAverage}% above market average
+                          </p>
+                        </div>
                         <div className="flex items-center gap-2">
-                          <Badge variant="default">Top 25%</Badge>
-                          <span className="text-sm text-green-600">{skill.yourLevel}%</span>
+                          <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
+                            Top {Math.max(5, 30 - skill.yourLevel + skill.marketAverage)}%
+                          </Badge>
+                          <CheckCircle className="w-5 h-5 text-green-500" />
                         </div>
                       </div>
                     ))}
                   </div>
+                ) : (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <AlertCircle className="w-12 h-12 mx-auto mb-3 text-yellow-500" />
+                    <p>Focus on developing skills to reach market-competitive levels</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            <Card className="border-red-200 bg-gradient-to-br from-red-50 to-pink-50">
+              <CardHeader>
+                <CardTitle className="text-red-700 flex items-center gap-2">
+                  <Target className="w-5 h-5" />
+                  Priority Development Areas
+                </CardTitle>
+                <CardDescription>Critical skills requiring immediate attention</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  {criticalSkills
+                    .sort((a, b) => b.importance - a.importance)
+                    .slice(0, 4)
+                    .map((skill, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 bg-white/60 rounded-lg border border-red-200">
+                        <div>
+                          <h4 className="font-semibold">{skill.skill}</h4>
+                          <p className="text-sm text-red-600">
+                            {skill.importance - skill.yourLevel}% gap to market standard
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Badge variant="destructive" className="bg-red-100 text-red-700 hover:bg-red-100">
+                            High Priority
+                          </Badge>
+                          <AlertCircle className="w-5 h-5 text-red-500" />
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card className="border-ai-primary/20 bg-gradient-to-br from-ai-primary/5 to-ai-accent/5">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BarChart3 className="w-5 h-5 text-ai-primary" />
+                MENA Region Market Intelligence
+              </CardTitle>
+              <CardDescription>
+                Comprehensive market analysis and career progression insights
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="space-y-4">
+                  <h4 className="font-semibold flex items-center gap-2">
+                    <TrendingUp className="w-4 h-4 text-green-600" />
+                    Market Performance
+                  </h4>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Your Market Position</span>
+                      <Badge variant="outline" className="text-ai-primary border-ai-primary/30">
+                        {Math.round((strongSkills.length / (currentJob?.requiredSkills.length || 1)) * 100)}th percentile
+                      </Badge>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Skills Competitiveness</span>
+                      <span className="text-sm font-semibold text-ai-primary">
+                        {strongSkills.length}/{currentJob?.requiredSkills.length || 0} skills
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Market Readiness</span>
+                      <span className="text-sm font-semibold text-green-600">
+                        {overallReadiness}%
+                      </span>
+                    </div>
+                  </div>
                 </div>
                 
-                <div>
-                  <h4 className="font-medium mb-4">Industry Salary Impact</h4>
+                <div className="space-y-4">
+                  <h4 className="font-semibold flex items-center gap-2">
+                    <Star className="w-4 h-4 text-yellow-500" />
+                    Career Impact
+                  </h4>
                   <div className="space-y-3">
-                    <div className="flex justify-between">
-                      <span className="text-sm">Current Skill Level</span>
-                      <span className="text-sm font-medium">$75,000 - $95,000</span>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Current Level Range</span>
+                      <span className="text-sm font-medium">Mid-Level</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm">Target Skill Level</span>
-                      <span className="text-sm font-medium text-green-600">$95,000 - $130,000</span>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Target Level Range</span>
+                      <span className="text-sm font-medium text-green-600">Senior Level</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm">Potential Increase</span>
-                      <span className="text-sm font-bold text-ai-primary">+$35,000</span>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Advancement Timeline</span>
+                      <span className="text-sm font-bold text-ai-primary">6-12 months</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <h4 className="font-semibold flex items-center gap-2">
+                    <Users className="w-4 h-4 text-blue-500" />
+                    Regional Insights
+                  </h4>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Job Market Growth</span>
+                      <span className="text-sm font-medium text-green-600">+{currentJob?.growth || "30%"}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Demand Level</span>
+                      <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
+                        {currentJob?.demandLevel || "High"}
+                      </Badge>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Competition Level</span>
+                      <span className="text-sm font-medium text-yellow-600">Moderate</span>
                     </div>
                   </div>
                 </div>
