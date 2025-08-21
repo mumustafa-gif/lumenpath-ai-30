@@ -362,17 +362,54 @@ export const DeepAnalytics = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
-                {/* UAE Map Placeholder */}
-                <div className="relative h-96 bg-gradient-to-br from-ai-primary/5 to-ai-secondary/5 rounded-xl border-2 border-dashed border-ai-primary/20 flex items-center justify-center">
-                  <div className="text-center space-y-4">
-                    <div className="w-24 h-24 mx-auto bg-ai-primary/10 rounded-full flex items-center justify-center">
-                      <Globe className="w-12 h-12 text-ai-primary" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-ai-primary">Interactive UAE Map</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Talent distribution across Dubai, Abu Dhabi, Sharjah, and other Emirates
-                      </p>
+                {/* UAE Map Dummy Implementation */}
+                <div className="relative h-96 bg-muted rounded-xl border border-border overflow-hidden">
+                  {/* Map SVG Background */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-blue-100">
+                    <svg viewBox="0 0 400 300" className="w-full h-full">
+                      {/* UAE Outline Simplified */}
+                      <path 
+                        d="M50 150 L100 120 L180 110 L250 125 L320 140 L350 160 L340 180 L280 200 L200 210 L120 195 L70 175 Z" 
+                        fill="hsl(var(--ai-primary))" 
+                        fillOpacity="0.1" 
+                        stroke="hsl(var(--ai-primary))" 
+                        strokeWidth="2"
+                      />
+                      
+                      {/* Dubai */}
+                      <circle cx="280" cy="160" r="8" fill="hsl(var(--ai-primary))" />
+                      <text x="295" y="165" className="text-xs fill-current font-medium">Dubai</text>
+                      
+                      {/* Abu Dhabi */}
+                      <circle cx="200" cy="180" r="6" fill="hsl(var(--ai-secondary))" />
+                      <text x="210" y="185" className="text-xs fill-current font-medium">Abu Dhabi</text>
+                      
+                      {/* Sharjah */}
+                      <circle cx="290" cy="150" r="4" fill="hsl(var(--ai-accent))" />
+                      <text x="300" y="155" className="text-xs fill-current font-medium">Sharjah</text>
+                      
+                      {/* Ajman */}
+                      <circle cx="295" cy="145" r="3" fill="hsl(var(--ai-success))" />
+                      <text x="305" y="150" className="text-xs fill-current font-medium">Ajman</text>
+                    </svg>
+                  </div>
+                  
+                  {/* Map Controls */}
+                  <div className="absolute top-4 right-4 bg-card rounded-lg p-2 shadow-lg border">
+                    <div className="text-xs font-medium mb-2">Talent Density</div>
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full bg-ai-primary"></div>
+                        <span className="text-xs">High (500+)</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full bg-ai-secondary"></div>
+                        <span className="text-xs">Medium (200-500)</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full bg-ai-accent"></div>
+                        <span className="text-xs">Low (50-200)</span>
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { InstructorSidebar } from "@/components/InstructorSidebar";
 import { CourseGenerator } from "@/components/CourseGenerator";
+import { CurriculumCreator } from "@/components/CurriculumCreator";
 import { InstructorAIAssistant } from "@/components/InstructorAIAssistant";
 
 const InstructorDashboard = () => {
@@ -186,6 +187,10 @@ const InstructorDashboard = () => {
 
           {activeTab === "create" && (
             <CourseGenerator />
+          )}
+
+          {activeTab === "curriculum" && (
+            <CurriculumCreator />
           )}
 
           {activeTab === "analytics" && (

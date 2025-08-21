@@ -9,22 +9,22 @@ All colors MUST be HSL.
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 215 25% 15%;
+    --foreground: 215 100% 0%;
 
     --card: 0 0% 100%;
-    --card-foreground: 215 25% 15%;
+    --card-foreground: 215 100% 0%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 15%;
+    --popover-foreground: 215 100% 0%;
 
     --primary: 221 83% 53%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 215 25% 95%;
-    --secondary-foreground: 215 25% 15%;
+    --secondary: 0 0% 90%;
+    --secondary-foreground: 215 100% 0%;
 
-    --muted: 215 25% 95%;
-    --muted-foreground: 215 15% 45%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 215 100% 30%;
 
     --accent: 221 83% 53%;
     --accent-foreground: 0 0% 100%;
@@ -32,27 +32,27 @@ All colors MUST be HSL.
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 215 15% 88%;
-    --input: 215 15% 92%;
+    --border: 215 100% 85%;
+    --input: 0 0% 95%;
     --ring: 221 83% 53%;
 
-    /* Blue, Black, White theme */
+    /* Blue, Black, White theme - Solid colors only */
     --ai-primary: 221 83% 53%;
     --ai-secondary: 215 83% 67%;
-    --ai-accent: 215 25% 15%;
+    --ai-accent: 215 100% 0%;
     --ai-success: 142 76% 36%;
     --ai-warning: 38 92% 50%;
     --ai-info: 221 83% 53%;
     
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(245 82% 67%), hsl(245 70% 55%));
-    --gradient-secondary: linear-gradient(135deg, hsl(15 85% 65%), hsl(245 82% 67%));
-    --gradient-hero: linear-gradient(135deg, hsl(245 82% 67%) 0%, hsl(245 70% 55%) 50%, hsl(15 85% 65%) 100%);
+    /* Solid backgrounds instead of gradients */
+    --primary-bg: 221 83% 97%;
+    --secondary-bg: 215 83% 97%;
+    --accent-bg: 0 0% 98%;
     
-    /* Shadows */
-    --shadow-ai: 0 4px 20px hsl(245 82% 67% / 0.15);
-    --shadow-card: 0 2px 8px hsl(220 25% 12% / 0.08);
-    --shadow-elevated: 0 8px 32px hsl(220 25% 12% / 0.12);
+    /* Shadows with solid colors */
+    --shadow-ai: 0 4px 20px hsl(0 0% 0% / 0.15);
+    --shadow-card: 0 2px 8px hsl(0 0% 0% / 0.08);
+    --shadow-elevated: 0 8px 32px hsl(0 0% 0% / 0.12);
 
     --radius: 0.5rem;
 
@@ -74,23 +74,23 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 215 25% 12%;
+    --background: 215 100% 0%;
     --foreground: 0 0% 100%;
 
-    --card: 215 25% 15%;
+    --card: 215 100% 5%;
     --card-foreground: 0 0% 100%;
 
-    --popover: 215 25% 15%;
+    --popover: 215 100% 5%;
     --popover-foreground: 0 0% 100%;
 
     --primary: 221 83% 53%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 215 25% 20%;
+    --secondary: 0 0% 15%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 215 25% 20%;
-    --muted-foreground: 215 15% 65%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 70%;
 
     --accent: 221 83% 53%;
     --accent-foreground: 0 0% 100%;
@@ -98,8 +98,8 @@ All colors MUST be HSL.
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 215 25% 25%;
-    --input: 215 25% 25%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
     --ring: 221 83% 53%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;

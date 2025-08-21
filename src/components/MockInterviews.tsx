@@ -326,26 +326,44 @@ const MockInterviews = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Video Interface */}
+            {/* Video Interface with Arabic Avatar */}
             <div className="relative bg-gradient-to-br from-gray-900 to-gray-800 rounded-lg aspect-video overflow-hidden">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center text-white space-y-4">
-                  <div className="relative">
-                    <Video className="w-16 h-16 mx-auto" />
-                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full animate-pulse" />
-                  </div>
-                  <p className="text-lg font-medium">Interview Session Active</p>
-                  <div className="flex items-center justify-center gap-4">
-                    <Button size="sm" variant="destructive">
-                      <Mic className="w-4 h-4 mr-2" />
-                      Mute
-                    </Button>
-                    <Button size="sm" variant="secondary">
-                      <Video className="w-4 h-4 mr-2" />
-                      Camera
-                    </Button>
+              <div className="absolute inset-0 flex">
+                {/* User Side */}
+                <div className="flex-1 flex items-center justify-center border-r border-gray-600">
+                  <div className="text-center text-white space-y-2">
+                    <div className="w-20 h-20 mx-auto bg-gray-700 rounded-full flex items-center justify-center">
+                      <Video className="w-10 h-10" />
+                    </div>
+                    <p className="text-sm">You</p>
                   </div>
                 </div>
+                
+                {/* Interviewer Side - Arabic Avatar */}
+                <div className="flex-1 flex items-center justify-center">
+                  <div className="text-center text-white space-y-2">
+                    <div className="w-24 h-24 mx-auto bg-blue-600 rounded-full flex items-center justify-center overflow-hidden">
+                      <div className="w-full h-full bg-gradient-to-b from-amber-100 to-amber-200 rounded-full flex items-center justify-center">
+                        <div className="text-4xl">👨🏽‍💼</div>
+                      </div>
+                    </div>
+                    <p className="text-sm font-medium">Ahmed Al-Rashid</p>
+                    <p className="text-xs text-gray-300">Senior Technical Interviewer</p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Control Bar */}
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center gap-4">
+                <Button size="sm" variant="destructive">
+                  <Mic className="w-4 h-4 mr-2" />
+                  Mute
+                </Button>
+                <Button size="sm" variant="secondary">
+                  <Video className="w-4 h-4 mr-2" />
+                  Camera
+                </Button>
+                <div className="w-4 h-4 bg-red-500 rounded-full animate-pulse" />
               </div>
               
               {/* Current Question Overlay */}

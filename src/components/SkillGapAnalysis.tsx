@@ -117,11 +117,11 @@ const SkillGapAnalysis = ({ learnerProfile }: SkillGapAnalysisProps) => {
     <div className="space-y-8">
       {/* Header */}
       <div className="text-center space-y-4">
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-ai-primary/10 to-ai-accent/10 rounded-full border border-ai-primary/20">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-muted rounded-full border">
           <BarChart3 className="w-5 h-5 text-ai-primary" />
-          <span className="font-semibold text-ai-primary">Professional Skill Gap Analysis</span>
+          <span className="font-semibold text-ai-primary">Skill Assessment</span>
         </div>
-        <h2 className="text-3xl font-bold bg-gradient-to-r from-ai-primary to-ai-accent bg-clip-text text-transparent">
+        <h2 className="text-3xl font-bold text-ai-primary">
           Market-Aligned Skill Assessment
         </h2>
         <p className="text-muted-foreground max-w-2xl mx-auto">

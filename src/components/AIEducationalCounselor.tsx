@@ -133,7 +133,7 @@ export function AIEducationalCounselor() {
               </CardTitle>
             </CardHeader>
             <CardContent className="flex-1 flex flex-col p-0">
-              <ScrollArea className="flex-1 p-4">
+              <ScrollArea className="flex-1 p-4 max-h-96">
                 <div className="space-y-4">
                   {messages.map((message) => (
                     <div

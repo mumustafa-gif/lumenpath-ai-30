@@ -28,11 +28,13 @@ import {
   FileText,
   Target,
   LogOut,
+  GraduationCap,
 } from "lucide-react";
 
 const mainNavItems = [
   { title: "My Courses", tabValue: "courses", icon: BookOpen },
   { title: "AI Course Creator", tabValue: "create", icon: Plus },
+  { title: "Curriculum Creator", tabValue: "curriculum", icon: GraduationCap },
   { title: "Student Analytics", tabValue: "analytics", icon: BarChart3 },
 ];
 
