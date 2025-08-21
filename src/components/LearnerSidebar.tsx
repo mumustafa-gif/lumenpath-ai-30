@@ -39,9 +39,14 @@ const mainNavItems = [
 
 const analysisItems = [
   { title: "Skill Analysis", tabValue: "skill-analysis", icon: Target },
+  { title: "Market Skill Comparison", tabValue: "market-skill-comparison", icon: GitCompare },
   { title: "Mock Interviews", tabValue: "mock-interviews", icon: MessageSquare },
   { title: "Job Matching", tabValue: "job-recommendations", icon: Briefcase },
-  { title: "Progress Analytics", tabValue: "progress", icon: BarChart3 },
+];
+
+const counselorItems = [
+  { title: "AI Career Counselor", tabValue: "ai-career-counselor", icon: Briefcase },
+  { title: "AI Educational Counselor", tabValue: "ai-educational-counselor", icon: BookOpen },
 ];
 
 const profileItems = [
@@ -122,6 +127,29 @@ export function LearnerSidebar({ activeTab, onTabChange, onShowOnboarding }: Lea
             <SidebarGroupContent>
               <SidebarMenu>
                 {analysisItems.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild>
+                      <button
+                        onClick={() => onTabChange(item.tabValue)}
+                        className={`w-full flex items-center gap-3 px-3 py-2 text-left rounded-md transition-colors ${getNavCls(item.tabValue)}`}
+                      >
+                        <item.icon className="h-4 w-4" />
+                        {state !== "collapsed" && <span>{item.title}</span>}
+                      </button>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+
+          <SidebarGroup>
+            <SidebarGroupLabel className={state === "collapsed" ? "sr-only" : ""}>
+              AI Counselors
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {counselorItems.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
                       <button

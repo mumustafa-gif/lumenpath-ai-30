@@ -33,6 +33,9 @@ import SkillGapAnalysis from "@/components/SkillGapAnalysis";
 import MockInterviews from "@/components/MockInterviews";
 import JobRecommendations from "@/components/JobRecommendations";
 import SkillsComparison from "@/components/SkillsComparison";
+import MarketSkillComparison from "@/components/MarketSkillComparison";
+import { AICareerCounselor } from "@/components/AICareerCounselor";
+import { AIEducationalCounselor } from "@/components/AIEducationalCounselor";
 import { LearnerAIAssistant } from "@/components/LearnerAIAssistant";
 
 const LearnerDashboard = () => {
@@ -584,10 +587,19 @@ const LearnerDashboard = () => {
               )}
 
               {activeTab === "skill-analysis" && (
-                <div className="space-y-6">
-                  <SkillGapAnalysis learnerProfile={learnerProfile} />
-                  <SkillsComparison />
-                </div>
+                <SkillGapAnalysis learnerProfile={learnerProfile} />
+              )}
+
+              {activeTab === "market-skill-comparison" && (
+                <MarketSkillComparison />
+              )}
+
+              {activeTab === "ai-career-counselor" && (
+                <AICareerCounselor />
+              )}
+
+              {activeTab === "ai-educational-counselor" && (
+                <AIEducationalCounselor />
               )}
 
               {activeTab === "mock-interviews" && (
