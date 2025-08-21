@@ -29,6 +29,10 @@ import CourseRecommendations from "@/components/CourseRecommendations";
 import LearnerProfile from "@/components/LearnerProfile";
 import { CoursePreview } from "@/components/CoursePreview";
 import { BuddyFinder } from "@/components/BuddyFinder";
+import SkillGapAnalysis from "@/components/SkillGapAnalysis";
+import MockInterviews from "@/components/MockInterviews";
+import JobRecommendations from "@/components/JobRecommendations";
+import SkillsComparison from "@/components/SkillsComparison";
 
 const LearnerDashboard = () => {
   const [showOnboarding, setShowOnboarding] = useState(false); // Set to true for new users
@@ -317,12 +321,15 @@ const LearnerDashboard = () => {
         </div>
 
         <Tabs defaultValue="courses" className="space-y-6">
-          <TabsList>
+          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8">
             <TabsTrigger value="courses">My Courses</TabsTrigger>
             <TabsTrigger value="adaptive-engine">Adaptive Learning</TabsTrigger>
             <TabsTrigger value="study-buddies">Study Buddies</TabsTrigger>
             <TabsTrigger value="progress">Progress & Analytics</TabsTrigger>
-            <TabsTrigger value="profile">My Profile</TabsTrigger>
+            <TabsTrigger value="skill-gap">Skill Analysis</TabsTrigger>
+            <TabsTrigger value="mock-interviews">Mock Interviews</TabsTrigger>
+            <TabsTrigger value="job-recommendations">Job Matching</TabsTrigger>
+            <TabsTrigger value="skills-comparison">Skills Comparison</TabsTrigger>
           </TabsList>
 
           {showBuddyFinder && (
@@ -504,8 +511,20 @@ const LearnerDashboard = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="profile">
-            <LearnerProfile onSave={handleProfileSave} />
+          <TabsContent value="skill-gap">
+            <SkillGapAnalysis learnerProfile={learnerProfile} />
+          </TabsContent>
+
+          <TabsContent value="mock-interviews">
+            <MockInterviews />
+          </TabsContent>
+
+          <TabsContent value="job-recommendations">
+            <JobRecommendations />
+          </TabsContent>
+
+          <TabsContent value="skills-comparison">
+            <SkillsComparison />
           </TabsContent>
         </Tabs>
       </main>
