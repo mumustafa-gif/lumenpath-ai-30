@@ -39,6 +39,7 @@ import { AdminSidebar } from "@/components/AdminSidebar";
 import { ChatInterface } from "@/components/ChatInterface";
 
 const AdminDashboard = () => {
+  const [activeTab, setActiveTab] = useState("overview");
   const [showChartModal, setShowChartModal] = useState(false);
   const [selectedChartType, setSelectedChartType] = useState("bar");
   const [chartData, setChartData] = useState([]);
@@ -200,7 +201,10 @@ const AdminDashboard = () => {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-gradient-to-br from-background via-muted/20 to-accent/5">
-        <AdminSidebar />
+        <AdminSidebar 
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+        />
         <div className="flex-1 flex flex-col">
           <header className="h-16 flex items-center border-b px-6">
             <SidebarTrigger />
@@ -208,32 +212,34 @@ const AdminDashboard = () => {
           </header>
           
           <main className="flex-1 p-4 lg:p-8">
-            {/* Welcome Section */}
-            <div className="mb-8">
-              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
-                <div>
-                  <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-2">
-                    Admin Dashboard
-                  </h1>
-                  <p className="text-muted-foreground text-base lg:text-lg">
-                    Comprehensive analytics and insights for your learning platform
-                  </p>
+            {activeTab === "overview" && (
+              <div>
+                {/* Welcome Section */}
+                <div className="mb-8">
+                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
+                    <div>
+                      <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-2">
+                        Admin Dashboard
+                      </h1>
+                      <p className="text-muted-foreground text-base lg:text-lg">
+                        Comprehensive analytics and insights for your learning platform
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 mt-4 lg:mt-0">
+                      <Badge variant="secondary" className="bg-ai-success/10 text-ai-success border-ai-success/20">
+                        <Activity className="w-3 h-3 mr-1" />
+                        System Online
+                      </Badge>
+                      <Badge variant="outline" className="border-ai-primary/20 text-ai-primary">
+                        <Calendar className="w-3 h-3 mr-1" />
+                        Last Updated: Now
+                      </Badge>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 mt-4 lg:mt-0">
-                  <Badge variant="secondary" className="bg-ai-success/10 text-ai-success border-ai-success/20">
-                    <Activity className="w-3 h-3 mr-1" />
-                    System Online
-                  </Badge>
-                  <Badge variant="outline" className="border-ai-primary/20 text-ai-primary">
-                    <Calendar className="w-3 h-3 mr-1" />
-                    Last Updated: Now
-                  </Badge>
-                </div>
-              </div>
-            </div>
 
-            {/* Key Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                {/* Key Stats Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Total Learners</CardTitle>
@@ -479,6 +485,29 @@ const AdminDashboard = () => {
                 </CardContent>
               </Card>
             </div>
+              </div>
+            )}
+
+            {activeTab === "users" && (
+              <div>
+                <h1 className="text-2xl font-bold mb-6">User Management</h1>
+                <p>User management interface will be implemented here.</p>
+              </div>
+            )}
+
+            {activeTab === "courses" && (
+              <div>
+                <h1 className="text-2xl font-bold mb-6">Course Management</h1>
+                <p>Course management interface will be implemented here.</p>
+              </div>
+            )}
+
+            {activeTab === "analytics" && (
+              <div>
+                <h1 className="text-2xl font-bold mb-6">Advanced Analytics</h1>
+                <p>Advanced analytics and reporting will be implemented here.</p>
+              </div>
+            )}
           </main>
         </div>
       </div>

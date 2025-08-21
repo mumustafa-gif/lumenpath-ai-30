@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
 import {
   Sidebar,
   SidebarContent,
@@ -36,10 +34,10 @@ import {
 } from "lucide-react";
 
 const mainNavItems = [
-  { title: "Dashboard", url: "/admin", icon: Home },
-  { title: "User Management", url: "/admin/users", icon: Users },
-  { title: "Course Management", url: "/admin/courses", icon: GraduationCap },
-  { title: "Analytics", url: "/admin/analytics", icon: BarChart3 },
+  { title: "Dashboard", tabValue: "overview", icon: Home },
+  { title: "User Management", tabValue: "users", icon: Users },
+  { title: "Course Management", tabValue: "courses", icon: GraduationCap },
+  { title: "Analytics", tabValue: "analytics", icon: BarChart3 },
 ];
 
 const insightsItems = [
@@ -63,14 +61,17 @@ const accountItems = [
   { title: "Audit Logs", url: "/admin/logs", icon: FileText },
 ];
 
-export function AdminSidebar() {
-  const { state } = useSidebar();
-  const location = useLocation();
-  const currentPath = location.pathname;
+interface AdminSidebarProps {
+  activeTab: string;
+  onTabChange: (tabValue: string) => void;
+}
 
-  const isActive = (path: string) => currentPath === path || currentPath.startsWith(path + '/');
-  const getNavCls = ({ isActive }: { isActive: boolean }) =>
-    isActive ? "bg-primary/10 text-primary font-medium border-r-2 border-primary" : "hover:bg-muted/50";
+export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
+  const { state } = useSidebar();
+  
+  const isActive = (tabValue: string) => activeTab === tabValue;
+  const getNavCls = (tabValue: string) =>
+    isActive(tabValue) ? "bg-primary/10 text-primary font-medium border-r-2 border-primary" : "hover:bg-muted/50";
 
   return (
     <Sidebar className={state === "collapsed" ? "w-16" : "w-64"} collapsible="icon">
@@ -113,10 +114,13 @@ export function AdminSidebar() {
                 {mainNavItems.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
-                      <NavLink to={item.url} className={getNavCls}>
+                      <button
+                        onClick={() => onTabChange(item.tabValue)}
+                        className={`w-full flex items-center gap-3 px-3 py-2 text-left rounded-md transition-colors ${getNavCls(item.tabValue)}`}
+                      >
                         <item.icon className="h-4 w-4" />
                         {state !== "collapsed" && <span>{item.title}</span>}
-                      </NavLink>
+                      </button>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -124,65 +128,6 @@ export function AdminSidebar() {
             </SidebarGroupContent>
           </SidebarGroup>
 
-          <SidebarGroup>
-            <SidebarGroupLabel className={state === "collapsed" ? "sr-only" : ""}>
-              Business Intelligence
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {insightsItems.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <NavLink to={item.url} className={getNavCls}>
-                        <item.icon className="h-4 w-4" />
-                        {state !== "collapsed" && <span>{item.title}</span>}
-                      </NavLink>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-
-          <SidebarGroup>
-            <SidebarGroupLabel className={state === "collapsed" ? "sr-only" : ""}>
-              System Management
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {systemItems.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <NavLink to={item.url} className={getNavCls}>
-                        <item.icon className="h-4 w-4" />
-                        {state !== "collapsed" && <span>{item.title}</span>}
-                      </NavLink>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-
-          <SidebarGroup>
-            <SidebarGroupLabel className={state === "collapsed" ? "sr-only" : ""}>
-              Account
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {accountItems.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <NavLink to={item.url} className={getNavCls}>
-                        <item.icon className="h-4 w-4" />
-                        {state !== "collapsed" && <span>{item.title}</span>}
-                      </NavLink>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
         </div>
 
         {/* System Status */}

@@ -279,287 +279,286 @@ const LearnerDashboard = () => {
             <h1 className="ml-4 text-xl font-semibold">Learning Dashboard</h1>
           </header>
           <main className="flex-1 p-6">
-        {/* Welcome Banner */}
-        <Card className="mb-8 bg-gradient-to-r from-ai-primary/10 to-ai-accent/10 border-ai-primary/20">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl font-bold mb-2">Welcome, Ahmad!</h1>
-                <p className="text-muted-foreground">
-                  Your AI learning journey continues. You're {learningPath.overallProgress}% closer to becoming an {learningPath.currentGoal}.
-                </p>
-              </div>
-              <div className="text-right">
-                <div className="text-lg font-bold text-ai-primary">{learningPath.overallProgress}%</div>
-                <div className="text-sm text-muted-foreground">Goal Progress</div>
-              </div>
-            </div>
-            <Progress value={learningPath.overallProgress} className="mt-4" />
-          </CardContent>
-        </Card>
-
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Courses</CardTitle>
-              <BookOpen className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{currentCourses.length}</div>
-              <p className="text-xs text-muted-foreground">In progress</p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Study Buddies</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{studyBuddies.length}</div>
-              <p className="text-xs text-muted-foreground">Active partnerships</p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Achievements</CardTitle>
-              <Trophy className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{achievements.length}</div>
-              <p className="text-xs text-muted-foreground">This month</p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Learning Streak</CardTitle>
-              <Calendar className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">7</div>
-              <p className="text-xs text-muted-foreground">Days in a row</p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Quick Action: Retake Onboarding */}
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold">Your Learning Journey</h2>
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => setShowOnboarding(true)}
-          >
-            <Settings className="w-4 h-4 mr-2" />
-            AI Career Path
-          </Button>
-        </div>
-
-        <div className="space-y-6">
-
-          {showBuddyFinder && (
-            <BuddyFinder
-              onClose={() => setShowBuddyFinder(false)}
-              onAddBuddy={handleAddBuddy}
-            />
-          )}
-
-          {activeTab === "courses" && (
-            <div className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-              {currentCourses.map((course) => (
-                <Card key={course.id} className="hover:shadow-lg transition-shadow">
-                  <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
-                      {course.title}
-                      <Badge variant="secondary">{course.difficulty}</Badge>
-                    </CardTitle>
-                    <CardDescription>by {course.instructor}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div>
-                      <div className="flex justify-between text-sm mb-2">
-                        <span>Progress</span>
-                        <span>{course.progress}%</span>
-                      </div>
-                      <Progress value={course.progress} />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <div className="flex items-center text-sm">
-                        <Clock className="w-4 h-4 mr-2 text-muted-foreground" />
-                        {course.timeRemaining} remaining
-                      </div>
-                      <div className="flex items-center text-sm">
-                        <BookOpen className="w-4 h-4 mr-2 text-muted-foreground" />
-                        Next: {course.nextLesson}
-                      </div>
-                    </div>
-                    
-                    <Button 
-                      variant="ai" 
-                      className="w-full"
-                      onClick={() => handleStartCourse(course.id)}
-                    >
-                      <Play className="w-4 h-4 mr-2" />
-                      Continue Learning
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-              
-              <Card className="border-dashed border-2 flex items-center justify-center min-h-[300px]">
-                <div className="text-center space-y-4">
-                  <div className="w-12 h-12 bg-ai-primary/10 rounded-full flex items-center justify-center mx-auto">
-                    <BookOpen className="w-6 h-6 text-ai-primary" />
-                  </div>
+            {/* Welcome Banner */}
+            <Card className="mb-8 bg-gradient-to-r from-ai-primary/10 to-ai-accent/10 border-ai-primary/20">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="font-semibold">Discover New Courses</h3>
-                    <p className="text-sm text-muted-foreground">Explore AI-recommended courses based on your goals</p>
+                    <h1 className="text-2xl font-bold mb-2">Welcome, Ahmad!</h1>
+                    <p className="text-muted-foreground">
+                      Your AI learning journey continues. You're {learningPath.overallProgress}% closer to becoming an {learningPath.currentGoal}.
+                    </p>
                   </div>
-                  <Button 
-                    variant="outline"
-                    onClick={() => setShowCourseRecommendations(true)}
-                  >
-                    Browse Catalog
-                  </Button>
+                  <div className="text-right">
+                    <div className="text-lg font-bold text-ai-primary">{learningPath.overallProgress}%</div>
+                    <div className="text-sm text-muted-foreground">Goal Progress</div>
+                  </div>
                 </div>
-              </Card>
-            </div>
-          )}
+                <Progress value={learningPath.overallProgress} className="mt-4" />
+              </CardContent>
+            </Card>
 
-
-          {activeTab === "adaptive-engine" && (
-            <AdaptiveLearningEngine 
-              learnerData={{
-                currentModule: "Linear Algebra",
-                overallProgress: learningPath.overallProgress,
-                weakAreas: ["Mathematics", "Statistics"],
-                strengths: learnerProfile?.experience || ["Python", "Programming"]
-              }}
-            />
-          )}
-
-          {activeTab === "study-buddies" && (
-            <div className="space-y-6">
-            <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold">Study Buddies</h2>
-              <Button variant="ai" onClick={() => setShowBuddyFinder(true)}>
-                <Users className="w-4 h-4 mr-2" />
-                Find New Buddy
-              </Button>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {studyBuddies.map((buddy) => (
-                <StudyBuddyCard key={buddy.id} buddy={buddy} />
-              ))}
-              
-              <Card className="border-dashed border-2 flex items-center justify-center min-h-[200px]">
-                <div className="text-center space-y-4">
-                  <div className="w-12 h-12 bg-ai-secondary/10 rounded-full flex items-center justify-center mx-auto">
-                    <Users className="w-6 h-6 text-ai-secondary" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold">Find Study Partners</h3>
-                    <p className="text-sm text-muted-foreground">AI will match you with compatible learners</p>
-                  </div>
-                  <Button variant="outline">Get Matched</Button>
-                </div>
-              </Card>
-            </div>
-            </div>
-          )}
-
-          {activeTab === "progress" && (
-            <div className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Quick Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
               <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Target className="w-5 h-5 mr-2 text-ai-primary" />
-                    Learning Path Progress
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <div className="flex justify-between mb-2">
-                      <span className="font-medium">Goal: {learningPath.currentGoal}</span>
-                      <span>{learningPath.overallProgress}%</span>
-                    </div>
-                    <Progress value={learningPath.overallProgress} />
-                  </div>
-                  
-                  <div>
-                    <h4 className="font-medium mb-2">Skills Acquired</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {learningPath.skillsAcquired.map((skill, index) => (
-                        <Badge key={index} variant="default" className="flex items-center">
-                          <CheckCircle className="w-3 h-3 mr-1" />
-                          {skill}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <h4 className="font-medium mb-2">Next Milestones</h4>
-                    <div className="space-y-2">
-                      {learningPath.nextMilestones.map((milestone, index) => (
-                        <div key={index} className="flex items-center justify-between p-2 border rounded">
-                          <span>{milestone}</span>
-                          <Badge variant="secondary">Upcoming</Badge>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Award className="w-5 h-5 mr-2 text-ai-accent" />
-                    Recent Achievements
-                  </CardTitle>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Active Courses</CardTitle>
+                  <BookOpen className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
-                    {achievements.map((achievement) => (
-                      <div key={achievement.id} className="flex items-center space-x-3 p-3 border rounded-lg">
-                        <div className="text-2xl">{achievement.icon}</div>
-                        <div className="flex-1">
-                          <h4 className="font-medium">{achievement.title}</h4>
-                          <p className="text-sm text-muted-foreground">{achievement.date}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                  <div className="text-2xl font-bold">{currentCourses.length}</div>
+                  <p className="text-xs text-muted-foreground">In progress</p>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Study Buddies</CardTitle>
+                  <Users className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{studyBuddies.length}</div>
+                  <p className="text-xs text-muted-foreground">Active partnerships</p>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Achievements</CardTitle>
+                  <Trophy className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{achievements.length}</div>
+                  <p className="text-xs text-muted-foreground">This month</p>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Learning Streak</CardTitle>
+                  <Calendar className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">7</div>
+                  <p className="text-xs text-muted-foreground">Days in a row</p>
                 </CardContent>
               </Card>
             </div>
+
+            {/* Quick Action: Retake Onboarding */}
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-semibold">Your Learning Journey</h2>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setShowOnboarding(true)}
+              >
+                <Settings className="w-4 h-4 mr-2" />
+                AI Career Path
+              </Button>
             </div>
-          )}
 
-          {activeTab === "skill-gap" && (
-            <SkillGapAnalysis learnerProfile={learnerProfile} />
-          )}
+            <div className="space-y-6">
+              {showBuddyFinder && (
+                <BuddyFinder
+                  onClose={() => setShowBuddyFinder(false)}
+                  onAddBuddy={handleAddBuddy}
+                />
+              )}
 
-          {activeTab === "mock-interviews" && (
-            <MockInterviews />
-          )}
+              {activeTab === "courses" && (
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                    {currentCourses.map((course) => (
+                      <Card key={course.id} className="hover:shadow-lg transition-shadow">
+                        <CardHeader>
+                          <CardTitle className="flex items-center justify-between">
+                            {course.title}
+                            <Badge variant="secondary">{course.difficulty}</Badge>
+                          </CardTitle>
+                          <CardDescription>by {course.instructor}</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                          <div>
+                            <div className="flex justify-between text-sm mb-2">
+                              <span>Progress</span>
+                              <span>{course.progress}%</span>
+                            </div>
+                            <Progress value={course.progress} />
+                          </div>
+                          
+                          <div className="space-y-2">
+                            <div className="flex items-center text-sm">
+                              <Clock className="w-4 h-4 mr-2 text-muted-foreground" />
+                              {course.timeRemaining} remaining
+                            </div>
+                            <div className="flex items-center text-sm">
+                              <BookOpen className="w-4 h-4 mr-2 text-muted-foreground" />
+                              Next: {course.nextLesson}
+                            </div>
+                          </div>
+                          
+                          <Button 
+                            variant="ai" 
+                            className="w-full"
+                            onClick={() => handleStartCourse(course.id)}
+                          >
+                            <Play className="w-4 h-4 mr-2" />
+                            Continue Learning
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    ))}
+                    
+                    <Card className="border-dashed border-2 flex items-center justify-center min-h-[300px]">
+                      <div className="text-center space-y-4">
+                        <div className="w-12 h-12 bg-ai-primary/10 rounded-full flex items-center justify-center mx-auto">
+                          <BookOpen className="w-6 h-6 text-ai-primary" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold">Discover New Courses</h3>
+                          <p className="text-sm text-muted-foreground">Explore AI-recommended courses based on your goals</p>
+                        </div>
+                        <Button 
+                          variant="outline"
+                          onClick={() => setShowCourseRecommendations(true)}
+                        >
+                          Browse Catalog
+                        </Button>
+                      </div>
+                    </Card>
+                  </div>
+                </div>
+              )}
 
-          {activeTab === "job-recommendations" && (
-            <JobRecommendations />
-          )}
+              {activeTab === "adaptive-engine" && (
+                <AdaptiveLearningEngine 
+                  learnerData={{
+                    currentModule: "Linear Algebra",
+                    overallProgress: learningPath.overallProgress,
+                    weakAreas: ["Mathematics", "Statistics"],
+                    strengths: learnerProfile?.experience || ["Python", "Programming"]
+                  }}
+                />
+              )}
 
-          {activeTab === "skills-comparison" && (
-            <SkillsComparison />
-          )}
-        </div>
+              {activeTab === "study-buddies" && (
+                <div className="space-y-6">
+                  <div className="flex justify-between items-center">
+                    <h2 className="text-2xl font-bold">Study Buddies</h2>
+                    <Button variant="ai" onClick={() => setShowBuddyFinder(true)}>
+                      <Users className="w-4 h-4 mr-2" />
+                      Find New Buddy
+                    </Button>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {studyBuddies.map((buddy) => (
+                      <StudyBuddyCard key={buddy.id} buddy={buddy} />
+                    ))}
+                    
+                    <Card className="border-dashed border-2 flex items-center justify-center min-h-[200px]">
+                      <div className="text-center space-y-4">
+                        <div className="w-12 h-12 bg-ai-secondary/10 rounded-full flex items-center justify-center mx-auto">
+                          <Users className="w-6 h-6 text-ai-secondary" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold">Find Study Partners</h3>
+                          <p className="text-sm text-muted-foreground">AI will match you with compatible learners</p>
+                        </div>
+                        <Button variant="outline">Get Matched</Button>
+                      </div>
+                    </Card>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === "progress" && (
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center">
+                          <Target className="w-5 h-5 mr-2 text-ai-primary" />
+                          Learning Path Progress
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div>
+                          <div className="flex justify-between mb-2">
+                            <span className="font-medium">Goal: {learningPath.currentGoal}</span>
+                            <span>{learningPath.overallProgress}%</span>
+                          </div>
+                          <Progress value={learningPath.overallProgress} />
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-medium mb-2">Skills Acquired</h4>
+                          <div className="flex flex-wrap gap-2">
+                            {learningPath.skillsAcquired.map((skill, index) => (
+                              <Badge key={index} variant="default" className="flex items-center">
+                                <CheckCircle className="w-3 h-3 mr-1" />
+                                {skill}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-medium mb-2">Next Milestones</h4>
+                          <div className="space-y-2">
+                            {learningPath.nextMilestones.map((milestone, index) => (
+                              <div key={index} className="flex items-center justify-between p-2 border rounded">
+                                <span>{milestone}</span>
+                                <Badge variant="secondary">Upcoming</Badge>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center">
+                          <Award className="w-5 h-5 mr-2 text-ai-accent" />
+                          Recent Achievements
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-4">
+                          {achievements.map((achievement) => (
+                            <div key={achievement.id} className="flex items-center space-x-3 p-3 border rounded-lg">
+                              <div className="text-2xl">{achievement.icon}</div>
+                              <div className="flex-1">
+                                <h4 className="font-medium">{achievement.title}</h4>
+                                <p className="text-sm text-muted-foreground">{achievement.date}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === "skill-gap" && (
+                <SkillGapAnalysis learnerProfile={learnerProfile} />
+              )}
+
+              {activeTab === "mock-interviews" && (
+                <MockInterviews />
+              )}
+
+              {activeTab === "job-recommendations" && (
+                <JobRecommendations />
+              )}
+
+              {activeTab === "skills-comparison" && (
+                <SkillsComparison />
+              )}
+            </div>
           </main>
         </div>
       </div>
