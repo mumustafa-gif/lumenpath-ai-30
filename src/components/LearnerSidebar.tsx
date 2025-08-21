@@ -1,5 +1,5 @@
+
 import { useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
 import {
   Sidebar,
   SidebarContent,
@@ -32,34 +32,38 @@ import {
 } from "lucide-react";
 
 const mainNavItems = [
-  { title: "Dashboard", url: "/learner", icon: Home },
-  { title: "My Courses", url: "/learner/courses", icon: BookOpen },
-  { title: "Adaptive Learning", url: "/learner/adaptive", icon: Brain },
-  { title: "Study Buddies", url: "/learner/buddies", icon: Users },
+  { title: "Dashboard", tabValue: "courses", icon: Home },
+  { title: "My Courses", tabValue: "courses", icon: BookOpen },
+  { title: "Adaptive Learning", tabValue: "adaptive-engine", icon: Brain },
+  { title: "Study Buddies", tabValue: "study-buddies", icon: Users },
 ];
 
 const analysisItems = [
-  { title: "Skill Analysis", url: "/learner/skill-gap", icon: Target },
-  { title: "Mock Interviews", url: "/learner/interviews", icon: MessageSquare },
-  { title: "Job Matching", url: "/learner/jobs", icon: Briefcase },
-  { title: "Skills Comparison", url: "/learner/comparison", icon: GitCompare },
-  { title: "Progress Analytics", url: "/learner/analytics", icon: BarChart3 },
+  { title: "Skill Analysis", tabValue: "skill-gap", icon: Target },
+  { title: "Mock Interviews", tabValue: "mock-interviews", icon: MessageSquare },
+  { title: "Job Matching", tabValue: "job-recommendations", icon: Briefcase },
+  { title: "Skills Comparison", tabValue: "skills-comparison", icon: GitCompare },
+  { title: "Progress Analytics", tabValue: "progress", icon: BarChart3 },
 ];
 
 const profileItems = [
-  { title: "Profile", url: "/learner/profile", icon: User },
-  { title: "Achievements", url: "/learner/achievements", icon: Trophy },
-  { title: "Settings", url: "/learner/settings", icon: Settings },
+  { title: "Profile", tabValue: "profile", icon: User },
+  { title: "Achievements", tabValue: "achievements", icon: Trophy },
+  { title: "Settings", tabValue: "settings", icon: Settings },
 ];
 
-export function LearnerSidebar() {
-  const { state } = useSidebar();
-  const location = useLocation();
-  const currentPath = location.pathname;
+interface LearnerSidebarProps {
+  activeTab: string;
+  onTabChange: (tabValue: string) => void;
+  onShowOnboarding: () => void;
+}
 
-  const isActive = (path: string) => currentPath === path || currentPath.startsWith(path + '/');
-  const getNavCls = ({ isActive }: { isActive: boolean }) =>
-    isActive ? "bg-primary/10 text-primary font-medium border-r-2 border-primary" : "hover:bg-muted/50";
+export function LearnerSidebar({ activeTab, onTabChange, onShowOnboarding }: LearnerSidebarProps) {
+  const { state } = useSidebar();
+
+  const isActive = (tabValue: string) => activeTab === tabValue;
+  const getNavCls = (tabValue: string) =>
+    isActive(tabValue) ? "bg-primary/10 text-primary font-medium border-r-2 border-primary" : "hover:bg-muted/50";
 
   return (
     <Sidebar className={state === "collapsed" ? "w-16" : "w-64"} collapsible="icon">
@@ -101,10 +105,13 @@ export function LearnerSidebar() {
                 {mainNavItems.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
-                      <NavLink to={item.url} className={getNavCls}>
+                      <button
+                        onClick={() => onTabChange(item.tabValue)}
+                        className={`w-full flex items-center gap-3 px-3 py-2 text-left rounded-md transition-colors ${getNavCls(item.tabValue)}`}
+                      >
                         <item.icon className="h-4 w-4" />
                         {state !== "collapsed" && <span>{item.title}</span>}
-                      </NavLink>
+                      </button>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -121,10 +128,13 @@ export function LearnerSidebar() {
                 {analysisItems.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
-                      <NavLink to={item.url} className={getNavCls}>
+                      <button
+                        onClick={() => onTabChange(item.tabValue)}
+                        className={`w-full flex items-center gap-3 px-3 py-2 text-left rounded-md transition-colors ${getNavCls(item.tabValue)}`}
+                      >
                         <item.icon className="h-4 w-4" />
                         {state !== "collapsed" && <span>{item.title}</span>}
-                      </NavLink>
+                      </button>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -141,10 +151,19 @@ export function LearnerSidebar() {
                 {profileItems.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
-                      <NavLink to={item.url} className={getNavCls}>
+                      <button
+                        onClick={() => {
+                          if (item.tabValue === "settings") {
+                            onShowOnboarding();
+                          } else {
+                            onTabChange(item.tabValue);
+                          }
+                        }}
+                        className={`w-full flex items-center gap-3 px-3 py-2 text-left rounded-md transition-colors ${getNavCls(item.tabValue)}`}
+                      >
                         <item.icon className="h-4 w-4" />
                         {state !== "collapsed" && <span>{item.title}</span>}
-                      </NavLink>
+                      </button>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}

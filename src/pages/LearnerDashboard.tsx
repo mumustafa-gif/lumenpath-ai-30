@@ -42,6 +42,7 @@ const LearnerDashboard = () => {
   const [showProfile, setShowProfile] = useState(false);
   const [activeCourse, setActiveCourse] = useState<any>(null);
   const [showBuddyFinder, setShowBuddyFinder] = useState(false);
+  const [activeTab, setActiveTab] = useState("courses");
   
   const [currentCourses] = useState([
     {
@@ -187,6 +188,10 @@ const LearnerDashboard = () => {
     console.log('Added new study buddy:', buddy);
   };
 
+  const handleTabChange = (tabValue: string) => {
+    setActiveTab(tabValue);
+  };
+
   // Show onboarding flow for new users
   if (showOnboarding) {
     return (
@@ -256,7 +261,11 @@ const LearnerDashboard = () => {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-background">
-        <LearnerSidebar />
+        <LearnerSidebar 
+          activeTab={activeTab}
+          onTabChange={handleTabChange}
+          onShowOnboarding={() => setShowOnboarding(true)}
+        />
         <div className="flex-1 flex flex-col">
           <header className="h-16 flex items-center border-b px-6">
             <SidebarTrigger />
@@ -342,7 +351,7 @@ const LearnerDashboard = () => {
           </Button>
         </div>
 
-        <Tabs defaultValue="courses" className="space-y-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8">
             <TabsTrigger value="courses">My Courses</TabsTrigger>
             <TabsTrigger value="adaptive-engine">Adaptive Learning</TabsTrigger>
