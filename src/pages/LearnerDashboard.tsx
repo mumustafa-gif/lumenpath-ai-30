@@ -3,7 +3,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { 
   Brain, 
@@ -359,17 +358,7 @@ const LearnerDashboard = () => {
           </Button>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8">
-            <TabsTrigger value="courses">My Courses</TabsTrigger>
-            <TabsTrigger value="adaptive-engine">Adaptive Learning</TabsTrigger>
-            <TabsTrigger value="study-buddies">Study Buddies</TabsTrigger>
-            <TabsTrigger value="progress">Progress & Analytics</TabsTrigger>
-            <TabsTrigger value="skill-gap">Skill Analysis</TabsTrigger>
-            <TabsTrigger value="mock-interviews">Mock Interviews</TabsTrigger>
-            <TabsTrigger value="job-recommendations">Job Matching</TabsTrigger>
-            <TabsTrigger value="skills-comparison">Skills Comparison</TabsTrigger>
-          </TabsList>
+        <div className="space-y-6">
 
           {showBuddyFinder && (
             <BuddyFinder
@@ -378,7 +367,8 @@ const LearnerDashboard = () => {
             />
           )}
 
-          <TabsContent value="courses" className="space-y-6">
+          {activeTab === "courses" && (
+            <div className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
               {currentCourses.map((course) => (
                 <Card key={course.id} className="hover:shadow-lg transition-shadow">
@@ -439,10 +429,10 @@ const LearnerDashboard = () => {
                 </div>
               </Card>
             </div>
-          </TabsContent>
+          )}
 
 
-          <TabsContent value="adaptive-engine">
+          {activeTab === "adaptive-engine" && (
             <AdaptiveLearningEngine 
               learnerData={{
                 currentModule: "Linear Algebra",
@@ -451,9 +441,10 @@ const LearnerDashboard = () => {
                 strengths: learnerProfile?.experience || ["Python", "Programming"]
               }}
             />
-          </TabsContent>
+          )}
 
-          <TabsContent value="study-buddies" className="space-y-6">
+          {activeTab === "study-buddies" && (
+            <div className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold">Study Buddies</h2>
               <Button variant="ai" onClick={() => setShowBuddyFinder(true)}>
@@ -480,9 +471,11 @@ const LearnerDashboard = () => {
                 </div>
               </Card>
             </div>
-          </TabsContent>
+            </div>
+          )}
 
-          <TabsContent value="progress" className="space-y-6">
+          {activeTab === "progress" && (
+            <div className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <Card>
                 <CardHeader>
@@ -548,24 +541,25 @@ const LearnerDashboard = () => {
                 </CardContent>
               </Card>
             </div>
-          </TabsContent>
+            </div>
+          )}
 
-          <TabsContent value="skill-gap">
+          {activeTab === "skill-gap" && (
             <SkillGapAnalysis learnerProfile={learnerProfile} />
-          </TabsContent>
+          )}
 
-          <TabsContent value="mock-interviews">
+          {activeTab === "mock-interviews" && (
             <MockInterviews />
-          </TabsContent>
+          )}
 
-          <TabsContent value="job-recommendations">
+          {activeTab === "job-recommendations" && (
             <JobRecommendations />
-          </TabsContent>
+          )}
 
-          <TabsContent value="skills-comparison">
+          {activeTab === "skills-comparison" && (
             <SkillsComparison />
-          </TabsContent>
-        </Tabs>
+          )}
+        </div>
           </main>
         </div>
       </div>

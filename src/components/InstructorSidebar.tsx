@@ -33,34 +33,22 @@ import {
 } from "lucide-react";
 
 const mainNavItems = [
-  { title: "Dashboard", url: "/instructor", icon: Home },
-  { title: "My Courses", url: "/instructor/courses", icon: BookOpen },
-  { title: "Create Course", url: "/instructor/create", icon: Plus },
-  { title: "Students", url: "/instructor/students", icon: Users },
+  { title: "My Courses", tabValue: "courses", icon: BookOpen },
+  { title: "AI Course Creator", tabValue: "create", icon: Plus },
+  { title: "Student Analytics", tabValue: "analytics", icon: BarChart3 },
 ];
 
-const toolsItems = [
-  { title: "AI Course Creator", url: "/instructor/ai-creator", icon: Brain },
-  { title: "Content Library", url: "/instructor/library", icon: Video },
-  { title: "Assessment Builder", url: "/instructor/assessments", icon: Target },
-  { title: "Analytics", url: "/instructor/analytics", icon: BarChart3 },
-  { title: "AI Assistant", url: "/instructor/assistant", icon: MessageSquare },
-];
+interface InstructorSidebarProps {
+  activeTab: string;
+  onTabChange: (tabValue: string) => void;
+}
 
-const accountItems = [
-  { title: "Profile", url: "/instructor/profile", icon: User },
-  { title: "Reports", url: "/instructor/reports", icon: FileText },
-  { title: "Settings", url: "/instructor/settings", icon: Settings },
-];
-
-export function InstructorSidebar() {
+export function InstructorSidebar({ activeTab, onTabChange }: InstructorSidebarProps) {
   const { state } = useSidebar();
-  const location = useLocation();
-  const currentPath = location.pathname;
-
-  const isActive = (path: string) => currentPath === path || currentPath.startsWith(path + '/');
-  const getNavCls = ({ isActive }: { isActive: boolean }) =>
-    isActive ? "bg-primary/10 text-primary font-medium border-r-2 border-primary" : "hover:bg-muted/50";
+  
+  const isActive = (tabValue: string) => activeTab === tabValue;
+  const getNavCls = (tabValue: string) =>
+    isActive(tabValue) ? "bg-primary/10 text-primary font-medium border-r-2 border-primary" : "hover:bg-muted/50";
 
   return (
     <Sidebar className={state === "collapsed" ? "w-16" : "w-64"} collapsible="icon">
@@ -102,10 +90,13 @@ export function InstructorSidebar() {
                 {mainNavItems.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
-                      <NavLink to={item.url} className={getNavCls}>
+                      <button
+                        onClick={() => onTabChange(item.tabValue)}
+                        className={`w-full flex items-center gap-3 px-3 py-2 text-left rounded-md transition-colors ${getNavCls(item.tabValue)}`}
+                      >
                         <item.icon className="h-4 w-4" />
                         {state !== "collapsed" && <span>{item.title}</span>}
-                      </NavLink>
+                      </button>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -113,45 +104,6 @@ export function InstructorSidebar() {
             </SidebarGroupContent>
           </SidebarGroup>
 
-          <SidebarGroup>
-            <SidebarGroupLabel className={state === "collapsed" ? "sr-only" : ""}>
-              Teaching Tools
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {toolsItems.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <NavLink to={item.url} className={getNavCls}>
-                        <item.icon className="h-4 w-4" />
-                        {state !== "collapsed" && <span>{item.title}</span>}
-                      </NavLink>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-
-          <SidebarGroup>
-            <SidebarGroupLabel className={state === "collapsed" ? "sr-only" : ""}>
-              Account
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {accountItems.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <NavLink to={item.url} className={getNavCls}>
-                        <item.icon className="h-4 w-4" />
-                        {state !== "collapsed" && <span>{item.title}</span>}
-                      </NavLink>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
         </div>
 
         {/* Quick Stats */}

@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { 
   Brain, 
@@ -24,6 +23,7 @@ import { CourseGenerator } from "@/components/CourseGenerator";
 import { InstructorAIAssistant } from "@/components/InstructorAIAssistant";
 
 const InstructorDashboard = () => {
+  const [activeTab, setActiveTab] = useState("courses");
   const [courses] = useState([
     { 
       id: 1, 
@@ -67,7 +67,10 @@ const InstructorDashboard = () => {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-background">
-        <InstructorSidebar />
+        <InstructorSidebar 
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+        />
         <div className="flex-1 flex flex-col">
           <header className="h-16 flex items-center border-b px-6">
             <SidebarTrigger />
@@ -121,14 +124,9 @@ const InstructorDashboard = () => {
           </Card>
         </div>
 
-        <Tabs defaultValue="courses" className="space-y-6">
-          <TabsList>
-            <TabsTrigger value="courses">My Courses</TabsTrigger>
-            <TabsTrigger value="create">AI Course Creator</TabsTrigger>
-            <TabsTrigger value="analytics">Student Analytics</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="courses" className="space-y-6">
+        <div className="space-y-6">
+          {activeTab === "courses" && (
+            <div className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold">My Courses</h2>
               <Button variant="ai">
@@ -180,14 +178,15 @@ const InstructorDashboard = () => {
                 </Card>
               ))}
             </div>
-          </TabsContent>
+            </div>
+          )}
 
-          <TabsContent value="create">
+          {activeTab === "create" && (
             <CourseGenerator />
-          </TabsContent>
+          )}
 
-
-          <TabsContent value="analytics" className="space-y-6">
+          {activeTab === "analytics" && (
+            <div className="space-y-6">
             <h2 className="text-2xl font-bold">Student Analytics</h2>
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -256,8 +255,9 @@ const InstructorDashboard = () => {
                 </CardContent>
               </Card>
             </div>
-          </TabsContent>
-          </Tabs>
+            </div>
+          )}
+        </div>
           </main>
           
           <InstructorAIAssistant />
