@@ -18,7 +18,8 @@ import {
   Download,
   RefreshCw,
   AlertTriangle,
-  CheckCircle
+  CheckCircle,
+  Globe
 } from "lucide-react";
 import { 
   BarChart, 
@@ -223,11 +224,10 @@ export const DeepAnalytics = () => {
       </div>
 
       <Tabs defaultValue="behavior" className="w-full">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="behavior">Learner Behavior</TabsTrigger>
           <TabsTrigger value="correlations">Skill Correlations</TabsTrigger>
-          <TabsTrigger value="demographics">Demographics</TabsTrigger>
-          <TabsTrigger value="intelligence">Market Intel</TabsTrigger>
+          <TabsTrigger value="globalmap">Global Map</TabsTrigger>
           <TabsTrigger value="predictive">Predictive AI</TabsTrigger>
         </TabsList>
 
@@ -349,70 +349,116 @@ export const DeepAnalytics = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="demographics" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Demographic Distribution Analysis</CardTitle>
-                <CardDescription>Age-based learning behavior and preferences</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                  <RechartsPieChart>
-                    <Pie
-                      data={demographicAnalysis}
-                      cx="50%"
-                      cy="50%"
-                      outerRadius={80}
-                      dataKey="percentage"
-                      label={({ segment, percentage }) => `${segment.split(' ')[0]} ${percentage}%`}
-                    >
-                      {demographicAnalysis.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </RechartsPieChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
+        <TabsContent value="globalmap" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <div className="p-2 bg-ai-primary/10 rounded-xl">
+                  <Globe className="w-5 h-5 text-ai-primary" />
+                </div>
+                UAE Talent & Skills Map
+              </CardTitle>
+              <CardDescription>Interactive visualization of talent distribution and skill gaps across UAE regions</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                {/* UAE Map Placeholder */}
+                <div className="relative h-96 bg-gradient-to-br from-ai-primary/5 to-ai-secondary/5 rounded-xl border-2 border-dashed border-ai-primary/20 flex items-center justify-center">
+                  <div className="text-center space-y-4">
+                    <div className="w-24 h-24 mx-auto bg-ai-primary/10 rounded-full flex items-center justify-center">
+                      <Globe className="w-12 h-12 text-ai-primary" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-ai-primary">Interactive UAE Map</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Talent distribution across Dubai, Abu Dhabi, Sharjah, and other Emirates
+                      </p>
+                    </div>
+                  </div>
+                </div>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Demographic Performance Metrics</CardTitle>
-                <CardDescription>Engagement and completion rates by age segment</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {demographicAnalysis.map((segment, index) => (
-                    <div key={index} className="p-4 rounded-lg border bg-gradient-to-r from-card to-ai-primary/5">
-                      <div className="flex justify-between items-center mb-3">
-                        <h4 className="font-medium">{segment.segment}</h4>
-                        <Badge variant="outline">{segment.preferredFormat}</Badge>
-                      </div>
-                      <div className="grid grid-cols-3 gap-4 text-sm">
-                        <div>
-                          <span className="text-muted-foreground">Engagement</span>
-                          <div className="font-medium text-ai-primary">{segment.engagement}%</div>
-                          <Progress value={segment.engagement} className="h-1 mt-1" />
+                {/* Regional Talent Stats */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {[
+                    { region: "Dubai", talent: 523, skills: "AI, Fintech", gap: "12%" },
+                    { region: "Abu Dhabi", talent: 387, skills: "Energy, Gov Tech", gap: "8%" },
+                    { region: "Sharjah", talent: 245, skills: "Manufacturing", gap: "15%" },
+                    { region: "Ajman", talent: 92, skills: "Tourism, Retail", gap: "22%" }
+                  ].map((region, index) => (
+                    <div key={index} className="p-4 rounded-lg border bg-gradient-to-br from-card to-ai-primary/5">
+                      <h4 className="font-semibold text-ai-primary mb-2">{region.region}</h4>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Talent Pool:</span>
+                          <span className="font-medium">{region.talent}</span>
                         </div>
-                        <div>
-                          <span className="text-muted-foreground">Completion</span>
-                          <div className="font-medium text-ai-success">{segment.completion}%</div>
-                          <Progress value={segment.completion} className="h-1 mt-1" />
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Top Skills:</span>
+                          <span className="font-medium text-right">{region.skills}</span>
                         </div>
-                        <div>
-                          <span className="text-muted-foreground">Share</span>
-                          <div className="font-medium">{segment.percentage}%</div>
-                          <Progress value={segment.percentage} className="h-1 mt-1" />
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Skill Gap:</span>
+                          <span className="font-medium text-destructive">{region.gap}</span>
                         </div>
                       </div>
                     </div>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+
+                {/* Skills Heat Map */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-sm">Skills Demand Heat Map</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        {[
+                          { skill: "AI/ML", demand: 95, regions: ["Dubai", "Abu Dhabi"] },
+                          { skill: "Cybersecurity", demand: 89, regions: ["Dubai", "Sharjah"] },
+                          { skill: "Data Science", demand: 84, regions: ["Abu Dhabi", "Dubai"] },
+                          { skill: "Cloud Computing", demand: 78, regions: ["Dubai", "Ajman"] },
+                          { skill: "Blockchain", demand: 72, regions: ["Dubai"] }
+                        ].map((item, index) => (
+                          <div key={index} className="flex items-center justify-between p-2 rounded border">
+                            <span className="font-medium">{item.skill}</span>
+                            <div className="flex items-center gap-2">
+                              <Progress value={item.demand} className="w-20 h-2" />
+                              <span className="text-sm text-muted-foreground w-8">{item.demand}%</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-sm">Regional Skill Distribution</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ResponsiveContainer width="100%" height={200}>
+                        <BarChart data={[
+                          { region: "Dubai", tech: 45, business: 30, creative: 25 },
+                          { region: "Abu Dhabi", tech: 38, business: 35, creative: 27 },
+                          { region: "Sharjah", tech: 25, business: 40, creative: 35 },
+                          { region: "Others", tech: 20, business: 45, creative: 35 }
+                        ]}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                          <XAxis dataKey="region" stroke="hsl(var(--muted-foreground))" />
+                          <YAxis stroke="hsl(var(--muted-foreground))" />
+                          <Tooltip />
+                          <Bar dataKey="tech" stackId="a" fill="hsl(var(--ai-primary))" />
+                          <Bar dataKey="business" stackId="a" fill="hsl(var(--ai-secondary))" />
+                          <Bar dataKey="creative" stackId="a" fill="hsl(var(--ai-success))" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="intelligence" className="space-y-6">

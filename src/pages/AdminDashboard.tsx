@@ -37,7 +37,7 @@ import {
   Filter
 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart as RechartsLineChart, Line, PieChart as RechartsPieChart, Cell, AreaChart as RechartsAreaChart, Area, Pie } from 'recharts';
-import { ChatInterface } from "@/components/ChatInterface";
+import { AdminAIAssistant } from "@/components/AdminAIAssistant";
 import { AISkillsObservatory } from "@/components/AISkillsObservatory";
 import { WorkforceTrends } from "@/components/WorkforceTrends";
 import { AdminSidebar } from "@/components/AdminSidebar";
@@ -73,10 +73,10 @@ const AdminDashboard = () => {
 
   const talentDemographics = {
     ageGroups: [
-      { group: "22-28 years", percentage: 38.9, growth: "+15%", value: 38.9 },
-      { group: "29-35 years", percentage: 31.4, growth: "+12%", value: 31.4 },
-      { group: "36-42 years", percentage: 19.9, growth: "+8%", value: 19.9 },
-      { group: "43+ years", percentage: 9.8, growth: "+5%", value: 9.8 },
+      { group: "22-28 years", count: 485, percentage: 38.9, growth: "+15%" },
+      { group: "29-35 years", count: 392, percentage: 31.4, growth: "+12%" },
+      { group: "36-42 years", count: 248, percentage: 19.9, growth: "+8%" },
+      { group: "43+ years", count: 122, percentage: 9.8, growth: "+5%" },
     ],
     genderDistribution: [
       { gender: "Male", percentage: 58.4, growth: "+8%", value: 58.4 },
@@ -343,19 +343,20 @@ const AdminDashboard = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={200}>
-              <RechartsPieChart>
-                <Tooltip />
-                <Pie 
-                  data={talentDemographics.ageGroups} 
-                  cx="50%" cy="50%" outerRadius={60} dataKey="value"
-                >
-                  {talentDemographics.ageGroups.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                <div className="space-y-4">
+                  {talentDemographics.ageGroups.map((group, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
+                      <div>
+                        <p className="font-medium">{group.group}</p>
+                        <p className="text-sm text-muted-foreground">{group.count} learners</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-ai-primary font-bold">{group.percentage}%</p>
+                        <p className="text-xs text-ai-success">{group.growth}</p>
+                      </div>
+                    </div>
                   ))}
-                </Pie>
-              </RechartsPieChart>
-            </ResponsiveContainer>
+                </div>
           </CardContent>
         </Card>
 
@@ -367,15 +368,20 @@ const AdminDashboard = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={talentDemographics.genderDistribution}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="gender" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="value" fill="hsl(var(--secondary))" />
-              </BarChart>
-            </ResponsiveContainer>
+                <div className="space-y-4">
+                  {talentDemographics.genderDistribution.map((gender, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
+                      <div>
+                        <p className="font-medium">{gender.gender}</p>
+                        <p className="text-sm text-muted-foreground">Distribution</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-ai-secondary font-bold">{gender.percentage}%</p>
+                        <p className="text-xs text-ai-success">{gender.growth}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
           </CardContent>
         </Card>
 
@@ -696,34 +702,8 @@ const AdminDashboard = () => {
           </DialogContent>
         </Dialog>
 
-        {/* AI Assistant */}
-        {showAIAssistant && (
-          <div className="fixed inset-y-0 right-0 w-96 bg-background/95 backdrop-blur-xl border-l shadow-2xl z-50 animate-in slide-in-from-right duration-300 overflow-hidden">
-            <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-ai-primary/5 to-ai-secondary/5 flex-shrink-0">
-              <div className="flex items-center space-x-2">
-                <div className="p-2 bg-gradient-to-br from-ai-primary/10 to-ai-primary/5 rounded-lg">
-                  <Brain className="w-4 h-4 text-ai-primary" />
-                </div>
-                <h3 className="font-semibold bg-gradient-to-r from-ai-primary to-ai-secondary bg-clip-text text-transparent">
-                  AI Assistant
-                </h3>
-              </div>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => setShowAIAssistant(false)}
-                className="hover:bg-destructive/10 hover:text-destructive"
-              >
-                <X className="w-4 h-4" />
-              </Button>
-            </div>
-            <div className="h-[calc(100vh-80px)] overflow-hidden">
-              <ChatInterface 
-                suggestions={aiSuggestions}
-              />
-            </div>
-          </div>
-        )}
+        {/* Admin AI Assistant */}
+        {showAIAssistant && <AdminAIAssistant />}
       </div>
     </SidebarProvider>
   );
