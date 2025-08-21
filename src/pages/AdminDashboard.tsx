@@ -28,7 +28,13 @@ import {
   Eye,
   Globe,
   Building,
-  Lightbulb
+  Lightbulb,
+  UserCheck,
+  Briefcase,
+  Award,
+  DollarSign,
+  MapPin,
+  Filter
 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart as RechartsLineChart, Line, PieChart as RechartsPieChart, Cell, AreaChart as RechartsAreaChart, Area, Pie } from 'recharts';
 import { ChatInterface } from "@/components/ChatInterface";
@@ -44,6 +50,7 @@ const AdminDashboard = () => {
   const [generationProgress, setGenerationProgress] = useState(0);
   const [showAIAssistant, setShowAIAssistant] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
+  const [selectedCategory, setSelectedCategory] = useState("all");
   
   const stats = {
     totalLearners: 1247,
@@ -67,12 +74,17 @@ const AdminDashboard = () => {
       { group: "36-42 years", count: 248, percentage: 19.9, growth: "+8%" },
       { group: "43+ years", count: 122, percentage: 9.8, growth: "+5%" },
     ],
+    genderDistribution: [
+      { gender: "Male", count: 728, percentage: 58.4, growth: "+8%" },
+      { gender: "Female", count: 456, percentage: 36.6, growth: "+18%" },
+      { gender: "Other", count: 63, percentage: 5.0, growth: "+25%" },
+    ],
     talentTypes: [
-      { type: "Software Engineers", count: 523, percentage: 41.9, trend: "High Demand" },
-      { type: "Data Scientists", count: 312, percentage: 25.0, trend: "Growing" },
-      { type: "DevOps Engineers", count: 198, percentage: 15.9, trend: "Critical Need" },
-      { type: "Cybersecurity Specialists", count: 145, percentage: 11.6, trend: "Emerging" },
-      { type: "AI/ML Engineers", count: 69, percentage: 5.5, trend: "Future Focus" },
+      { type: "Software Engineers", count: 523, percentage: 41.9, trend: "High Demand", majorSkills: ["React", "Node.js", "Python"] },
+      { type: "Data Scientists", count: 312, percentage: 25.0, trend: "Growing", majorSkills: ["Python", "SQL", "Machine Learning"] },
+      { type: "DevOps Engineers", count: 198, percentage: 15.9, trend: "Critical Need", majorSkills: ["AWS", "Docker", "Kubernetes"] },
+      { type: "Cybersecurity Specialists", count: 145, percentage: 11.6, trend: "Emerging", majorSkills: ["Network Security", "Penetration Testing", "SIEM"] },
+      { type: "AI/ML Engineers", count: 69, percentage: 5.5, trend: "Future Focus", majorSkills: ["TensorFlow", "PyTorch", "Deep Learning"] },
     ],
     systemEngagement: {
       dailyActiveUsers: 892,
@@ -81,6 +93,8 @@ const AdminDashboard = () => {
       avgSessionDuration: "47 mins",
       completionRate: 78,
       skillAssessmentsTaken: 2834,
+      avgCourseRating: 4.6,
+      totalLearningHours: 15680,
     },
     upskillSuccess: {
       totalUpskilled: 634,
@@ -89,18 +103,46 @@ const AdminDashboard = () => {
       newRoleTransitions: 187,
       certificationEarned: 756,
       skillsBridged: 1289,
+      avgSalaryBoost: "23%",
+      jobPlacementRate: 87,
     }
   };
 
   const regionWiseData = [
-    { region: "Dubai, UAE", demand: 94, professionals: 12500, skillGap: 32, topSkills: ["Cloud", "AI/ML", "DevOps"], avgSalary: 115000 },
-    { region: "Abu Dhabi, UAE", demand: 89, professionals: 8900, skillGap: 38, topSkills: ["Cybersecurity", "Data Science", "Cloud"], avgSalary: 108000 },
-    { region: "Riyadh, Saudi Arabia", demand: 91, professionals: 15200, skillGap: 35, topSkills: ["AI/ML", "Cloud", "DevOps"], avgSalary: 98000 },
-    { region: "Doha, Qatar", demand: 87, professionals: 6800, skillGap: 41, topSkills: ["Cloud", "Cybersecurity", "Data Science"], avgSalary: 112000 },
-    { region: "Kuwait City, Kuwait", demand: 83, professionals: 5400, skillGap: 45, topSkills: ["Data Science", "Cloud", "Full-Stack"], avgSalary: 92000 },
-    { region: "Manama, Bahrain", demand: 85, professionals: 3200, skillGap: 42, topSkills: ["DevOps", "Cloud", "AI/ML"], avgSalary: 88000 },
-    { region: "Muscat, Oman", demand: 79, professionals: 2800, skillGap: 48, topSkills: ["Cloud", "Data Science", "Cybersecurity"], avgSalary: 82000 },
-    { region: "Amman, Jordan", demand: 76, professionals: 4100, skillGap: 52, topSkills: ["Full-Stack", "Data Science", "Cloud"], avgSalary: 65000 },
+    { region: "Dubai", demand: 94, professionals: 12500, skillGap: 32, topSkills: ["Cloud Computing", "AI/ML", "DevOps"], avgSalary: 115000, growth: "+18%" },
+    { region: "Abu Dhabi", demand: 89, professionals: 8900, skillGap: 38, topSkills: ["Cybersecurity", "Data Science", "Cloud Computing"], avgSalary: 108000, growth: "+15%" },
+    { region: "Sharjah", demand: 86, professionals: 5200, skillGap: 42, topSkills: ["Full-Stack Development", "Digital Marketing", "Cloud Computing"], avgSalary: 95000, growth: "+12%" },
+    { region: "Ajman", demand: 82, professionals: 3100, skillGap: 45, topSkills: ["Web Development", "Data Analysis", "Digital Design"], avgSalary: 88000, growth: "+10%" },
+    { region: "Ras Al Khaimah", demand: 79, professionals: 2800, skillGap: 48, topSkills: ["Mobile Development", "E-commerce", "Content Creation"], avgSalary: 82000, growth: "+8%" },
+    { region: "Fujairah", demand: 75, professionals: 1900, skillGap: 52, topSkills: ["Digital Marketing", "Basic Programming", "Office Automation"], avgSalary: 75000, growth: "+6%" },
+    { region: "Umm Al Quwain", demand: 71, professionals: 1200, skillGap: 55, topSkills: ["Computer Literacy", "Digital Tools", "Basic Analytics"], avgSalary: 68000, growth: "+4%" },
+  ];
+
+  const coursePerformanceData = [
+    { name: "AI Fundamentals", enrolled: 234, completed: 182, satisfaction: 4.8, revenue: 145600, growth: "+25%" },
+    { name: "Data Science Bootcamp", enrolled: 189, completed: 156, satisfaction: 4.7, revenue: 98750, growth: "+22%" },
+    { name: "Cloud Computing AWS", enrolled: 156, completed: 98, satisfaction: 4.3, revenue: 87300, growth: "+18%" },
+    { name: "DevOps Engineering", enrolled: 134, completed: 112, satisfaction: 4.5, revenue: 76200, growth: "+15%" },
+    { name: "Cybersecurity Essentials", enrolled: 98, completed: 78, satisfaction: 4.9, revenue: 68400, growth: "+30%" },
+    { name: "Full-Stack Development", enrolled: 145, completed: 125, satisfaction: 4.6, revenue: 92500, growth: "+20%" },
+  ];
+
+  const skillGapsData = [
+    { skill: "AI/Machine Learning", currentSupply: 23, marketDemand: 87, gap: 64, urgency: "Critical" },
+    { skill: "Cloud Architecture", currentSupply: 34, marketDemand: 89, gap: 55, urgency: "High" },
+    { skill: "Cybersecurity", currentSupply: 41, marketDemand: 92, gap: 51, urgency: "High" },
+    { skill: "Data Engineering", currentSupply: 38, marketDemand: 85, gap: 47, urgency: "Medium" },
+    { skill: "DevOps", currentSupply: 45, marketDemand: 88, gap: 43, urgency: "Medium" },
+    { skill: "Mobile Development", currentSupply: 52, marketDemand: 78, gap: 26, urgency: "Low" },
+  ];
+
+  const jobRolesDemand = [
+    { role: "AI Engineer", demand: 95, supply: 25, gap: 70, avgSalary: 135000, openings: 450 },
+    { role: "Cloud Architect", demand: 92, supply: 31, gap: 61, avgSalary: 128000, openings: 380 },
+    { role: "Data Scientist", demand: 89, supply: 42, gap: 47, avgSalary: 115000, openings: 320 },
+    { role: "DevOps Engineer", demand: 86, supply: 48, gap: 38, avgSalary: 108000, openings: 290 },
+    { role: "Cybersecurity Analyst", demand: 94, supply: 38, gap: 56, avgSalary: 118000, openings: 340 },
+    { role: "Full-Stack Developer", demand: 78, supply: 65, gap: 13, avgSalary: 95000, openings: 180 },
   ];
 
   const handleVisualization = (type: string, data: any[], title: string) => {
@@ -267,6 +309,25 @@ const AdminDashboard = () => {
           {/* Main Content */}
           <div className="p-4 lg:p-6">
             <TabsContent value="overview" className="space-y-8 mt-0">
+              {/* Category Filter */}
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-semibold">Analytics Overview</h2>
+                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <SelectTrigger className="w-48">
+                    <Filter className="w-4 h-4 mr-2" />
+                    <SelectValue placeholder="Select Category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Categories</SelectItem>
+                    <SelectItem value="technology">Technology</SelectItem>
+                    <SelectItem value="business">Business</SelectItem>
+                    <SelectItem value="design">Design & Creative</SelectItem>
+                    <SelectItem value="healthcare">Healthcare</SelectItem>
+                    <SelectItem value="education">Education</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
               {/* Key Stats Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90 hover:shadow-lg transition-all duration-200">
@@ -324,6 +385,270 @@ const AdminDashboard = () => {
                   <CardContent>
                     <div className="text-2xl font-bold bg-gradient-to-r from-ai-success to-ai-primary bg-clip-text text-transparent">{stats.avgEngagement}%</div>
                     <p className="text-xs text-ai-success mt-1">Excellent performance</p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Talent Demographics */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <UserCheck className="w-5 h-5 text-ai-primary" />
+                      Age Demographics
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ResponsiveContainer width="100%" height={200}>
+                      <RechartsPieChart>
+                        <Tooltip />
+                        <Pie 
+                          data={talentDemographics.ageGroups.map(item => ({ name: item.group, value: item.count }))} 
+                          cx="50%" cy="50%" outerRadius={60} dataKey="value"
+                        >
+                          {talentDemographics.ageGroups.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Pie>
+                      </RechartsPieChart>
+                    </ResponsiveContainer>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Users className="w-5 h-5 text-ai-secondary" />
+                      Gender Distribution
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ResponsiveContainer width="100%" height={200}>
+                      <BarChart data={talentDemographics.genderDistribution}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="gender" />
+                        <YAxis />
+                        <Tooltip />
+                        <Bar dataKey="count" fill="hsl(var(--secondary))" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Activity className="w-5 h-5 text-ai-accent" />
+                      System Engagement
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Daily Active</span>
+                      <span className="font-semibold">{talentDemographics.systemEngagement.dailyActiveUsers}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Avg Session</span>
+                      <span className="font-semibold">{talentDemographics.systemEngagement.avgSessionDuration}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Course Rating</span>
+                      <span className="font-semibold">⭐ {talentDemographics.systemEngagement.avgCourseRating}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Learning Hours</span>
+                      <span className="font-semibold">{talentDemographics.systemEngagement.totalLearningHours.toLocaleString()}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Course Performance */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <GraduationCap className="w-5 h-5 text-ai-primary" />
+                      Course Performance Overview
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <BarChart data={coursePerformanceData}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
+                        <YAxis />
+                        <Tooltip />
+                        <Bar dataKey="enrolled" fill="hsl(var(--primary))" name="Enrolled" />
+                        <Bar dataKey="completed" fill="hsl(var(--secondary))" name="Completed" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <TrendingUp className="w-5 h-5 text-ai-secondary" />
+                      Most Demanding Courses
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {coursePerformanceData.slice(0, 5).map((course, index) => (
+                        <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
+                          <div>
+                            <p className="font-medium">{course.name}</p>
+                            <p className="text-sm text-muted-foreground">{course.enrolled} enrolled</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-ai-success font-medium">{course.growth}</p>
+                            <p className="text-sm">⭐ {course.satisfaction}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Skill Gaps Analysis */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <AlertTriangle className="w-5 h-5 text-amber-500" />
+                      Skill Gaps Analysis
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <RechartsAreaChart data={skillGapsData}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="skill" angle={-45} textAnchor="end" height={80} />
+                        <YAxis />
+                        <Tooltip />
+                        <Area type="monotone" dataKey="marketDemand" stackId="1" stroke="hsl(var(--primary))" fill="hsl(var(--primary))" name="Market Demand" />
+                        <Area type="monotone" dataKey="currentSupply" stackId="2" stroke="hsl(var(--secondary))" fill="hsl(var(--secondary))" name="Current Supply" />
+                      </RechartsAreaChart>
+                    </ResponsiveContainer>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Briefcase className="w-5 h-5 text-ai-accent" />
+                      Job Roles vs Skill Gaps
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {jobRolesDemand.map((role, index) => (
+                        <div key={index} className="space-y-2">
+                          <div className="flex justify-between items-center">
+                            <span className="font-medium">{role.role}</span>
+                            <span className="text-sm text-muted-foreground">{role.openings} openings</span>
+                          </div>
+                          <div className="flex items-center gap-4">
+                            <div className="flex-1">
+                              <div className="flex justify-between text-xs mb-1">
+                                <span>Gap: {role.gap}%</span>
+                                <span>${(role.avgSalary / 1000).toFixed(0)}k avg</span>
+                              </div>
+                              <Progress value={role.gap} className="h-2" />
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Regional Skills Demand */}
+              <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <MapPin className="w-5 h-5 text-ai-primary" />
+                    UAE Regional Skills Demand & Supply
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ResponsiveContainer width="100%" height={400}>
+                    <BarChart data={regionWiseData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="region" />
+                      <YAxis />
+                      <Tooltip />
+                      <Bar dataKey="demand" fill="hsl(var(--primary))" name="Demand %" />
+                      <Bar dataKey="skillGap" fill="hsl(var(--destructive))" name="Skill Gap %" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+                    {regionWiseData.slice(0, 6).map((region, index) => (
+                      <div key={index} className="p-4 rounded-lg bg-muted/50">
+                        <h4 className="font-semibold">{region.region}</h4>
+                        <p className="text-sm text-muted-foreground">{region.professionals.toLocaleString()} professionals</p>
+                        <p className="text-sm">Top Skills: {region.topSkills.slice(0, 2).join(', ')}</p>
+                        <p className="text-sm text-ai-success">Growth: {region.growth}</p>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Upskilling Success Metrics */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm font-medium flex items-center gap-2">
+                      <Award className="w-4 h-4 text-ai-primary" />
+                      Total Upskilled
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-ai-primary">{talentDemographics.upskillSuccess.totalUpskilled}</div>
+                    <p className="text-xs text-muted-foreground">Learners successfully upskilled</p>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm font-medium flex items-center gap-2">
+                      <TrendingUp className="w-4 h-4 text-ai-secondary" />
+                      Career Advancement
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-ai-secondary">{talentDemographics.upskillSuccess.careerAdvancement}</div>
+                    <p className="text-xs text-muted-foreground">Got promoted or advanced</p>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm font-medium flex items-center gap-2">
+                      <DollarSign className="w-4 h-4 text-ai-accent" />
+                      Salary Increase
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-ai-accent">{talentDemographics.upskillSuccess.avgSalaryBoost}</div>
+                    <p className="text-xs text-muted-foreground">Average salary boost</p>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm font-medium flex items-center gap-2">
+                      <Target className="w-4 h-4 text-ai-success" />
+                      Job Placement
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-ai-success">{talentDemographics.upskillSuccess.jobPlacementRate}%</div>
+                    <p className="text-xs text-muted-foreground">Successfully placed in jobs</p>
                   </CardContent>
                 </Card>
               </div>
@@ -394,8 +719,8 @@ const AdminDashboard = () => {
 
       {/* AI Assistant */}
       {showAIAssistant && (
-        <div className="fixed inset-y-0 right-0 w-96 bg-background/95 backdrop-blur-xl border-l shadow-2xl z-50 animate-in slide-in-from-right duration-300">
-          <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-ai-primary/5 to-ai-secondary/5">
+        <div className="fixed inset-y-0 right-0 w-96 bg-background/95 backdrop-blur-xl border-l shadow-2xl z-50 animate-in slide-in-from-right duration-300 overflow-hidden">
+          <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-ai-primary/5 to-ai-secondary/5 flex-shrink-0">
             <div className="flex items-center space-x-2">
               <div className="p-2 bg-gradient-to-br from-ai-primary/10 to-ai-primary/5 rounded-lg">
                 <Brain className="w-4 h-4 text-ai-primary" />
@@ -413,7 +738,7 @@ const AdminDashboard = () => {
               <X className="w-4 h-4" />
             </Button>
           </div>
-          <div className="h-[calc(100vh-64px)]">
+          <div className="h-[calc(100vh-80px)] overflow-hidden">
             <ChatInterface 
               suggestions={aiSuggestions}
             />

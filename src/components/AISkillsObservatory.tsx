@@ -1,270 +1,210 @@
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
 import { 
-  TrendingUp, 
-  TrendingDown, 
   Eye, 
-  Target, 
-  AlertTriangle,
-  CheckCircle,
-  Clock,
-  Zap,
+  TrendingUp, 
+  AlertTriangle, 
+  Users, 
+  Brain, 
+  Globe, 
+  MapPin, 
+  Target,
   BarChart3,
-  Activity
+  Activity,
+  Zap,
+  Search,
+  Lightbulb
 } from "lucide-react";
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, BarChart, Bar } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 export const AISkillsObservatory = () => {
+  const [selectedRegion, setSelectedRegion] = useState("uae");
+  const [comparisonRegion, setComparisonRegion] = useState("none");
+  const [selectedSkillCategory, setSelectedSkillCategory] = useState("all");
+
   const skillSupplyDemand = [
-    { 
-      skill: "AI/ML Engineering", 
-      demand: 94, 
-      supply: 32, 
-      gap: 62, 
-      trend: "critical", 
-      growth: "+45%",
-      avgSalary: 145000,
-      jobPostings: 2847,
-      timeToFill: 89
-    },
-    { 
-      skill: "Cloud Architecture", 
-      demand: 89, 
-      supply: 58, 
-      gap: 31, 
-      trend: "high", 
-      growth: "+32%",
-      avgSalary: 132000,
-      jobPostings: 1923,
-      timeToFill: 67
-    },
-    { 
-      skill: "DevOps/SRE", 
-      demand: 87, 
-      supply: 61, 
-      gap: 26, 
-      trend: "high", 
-      growth: "+28%",
-      avgSalary: 128000,
-      jobPostings: 1654,
-      timeToFill: 52
-    },
-    { 
-      skill: "Cybersecurity", 
-      demand: 91, 
-      supply: 45, 
-      gap: 46, 
-      trend: "critical", 
-      growth: "+38%",
-      avgSalary: 138000,
-      jobPostings: 2156,
-      timeToFill: 76
-    },
-    { 
-      skill: "Data Science", 
-      demand: 83, 
-      supply: 67, 
-      gap: 16, 
-      trend: "moderate", 
-      growth: "+22%",
-      avgSalary: 118000,
-      jobPostings: 1432,
-      timeToFill: 45
-    },
-    { 
-      skill: "Full-Stack Dev", 
-      demand: 78, 
-      supply: 74, 
-      gap: 4, 
-      trend: "balanced", 
-      growth: "+15%",
-      avgSalary: 95000,
-      jobPostings: 3214,
-      timeToFill: 38
-    }
+    { skill: "AI/ML Engineering", supply: 23, demand: 87, gap: 64, trend: "Critical", growth: "+45%", category: "technology", salary: 145000 },
+    { skill: "Cloud Architecture", supply: 34, demand: 89, gap: 55, trend: "High", growth: "+38%", category: "technology", salary: 135000 },
+    { skill: "Data Science", supply: 42, demand: 78, gap: 36, trend: "Medium", growth: "+28%", category: "technology", salary: 125000 },
+    { skill: "Cybersecurity", supply: 31, demand: 85, gap: 54, trend: "High", growth: "+42%", category: "technology", salary: 128000 },
+    { skill: "DevOps Engineering", supply: 48, demand: 72, gap: 24, trend: "Low", growth: "+22%", category: "technology", salary: 118000 },
+    { skill: "Full-Stack Development", supply: 65, demand: 71, gap: 6, trend: "Balanced", growth: "+15%", category: "technology", salary: 95000 },
+    { skill: "Digital Marketing", supply: 58, demand: 73, gap: 15, trend: "Low", growth: "+18%", category: "business", salary: 75000 },
+    { skill: "UX/UI Design", supply: 45, demand: 76, gap: 31, trend: "Medium", growth: "+32%", category: "design", salary: 88000 },
   ];
 
-  const demandTrends = [
-    { month: "Jan", aiml: 78, cloud: 82, cybersec: 85, devops: 79 },
-    { month: "Feb", aiml: 82, cloud: 84, cybersec: 87, devops: 81 },
-    { month: "Mar", aiml: 85, cloud: 86, cybersec: 89, devops: 83 },
-    { month: "Apr", aiml: 88, cloud: 87, cybersec: 90, devops: 85 },
-    { month: "May", aiml: 91, cloud: 88, cybersec: 91, devops: 86 },
-    { month: "Jun", aiml: 94, cloud: 89, cybersec: 91, devops: 87 }
-  ];
-
-  const radarData = [
-    { skill: 'AI/ML', demand: 94, supply: 32 },
-    { skill: 'Cloud', demand: 89, supply: 58 },
-    { skill: 'DevOps', demand: 87, supply: 61 },
-    { skill: 'Security', demand: 91, supply: 45 },
-    { skill: 'Data Science', demand: 83, supply: 67 },
-    { skill: 'Full Stack', demand: 78, supply: 74 }
-  ];
-
-  const getTrendColor = (trend: string) => {
-    switch (trend) {
-      case "critical": return "text-red-500 bg-red-50 border-red-200";
-      case "high": return "text-orange-500 bg-orange-50 border-orange-200";
-      case "moderate": return "text-yellow-500 bg-yellow-50 border-yellow-200";
-      case "balanced": return "text-green-500 bg-green-50 border-green-200";
-      default: return "text-gray-500 bg-gray-50 border-gray-200";
-    }
+  const globalComparison = {
+    singapore: { aiTalent: 78, demandGrowth: "+35%", avgSalary: 98000 },
+    london: { aiTalent: 85, demandGrowth: "+28%", avgSalary: 105000 },
+    toronto: { aiTalent: 72, demandGrowth: "+32%", avgSalary: 88000 },
+    berlin: { aiTalent: 69, demandGrowth: "+30%", avgSalary: 82000 },
   };
 
-  const getTrendIcon = (trend: string) => {
-    switch (trend) {
-      case "critical": return <AlertTriangle className="w-4 h-4" />;
-      case "high": return <TrendingUp className="w-4 h-4" />;
-      case "moderate": return <Activity className="w-4 h-4" />;
-      case "balanced": return <CheckCircle className="w-4 h-4" />;
-      default: return <Eye className="w-4 h-4" />;
-    }
-  };
+  const filteredSkills = selectedSkillCategory === "all" 
+    ? skillSupplyDemand 
+    : skillSupplyDemand.filter(skill => skill.category === selectedSkillCategory);
+
+  const COLORS = ['hsl(var(--primary))', 'hsl(var(--secondary))', 'hsl(var(--accent))', 'hsl(var(--muted))'];
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-        <div>
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-ai-primary via-ai-secondary to-ai-accent bg-clip-text text-transparent mb-2">
-            AI Skills Observatory
-          </h2>
-          <p className="text-muted-foreground">
-            Real-time insights into skill supply and demand dynamics
-          </p>
-        </div>
-        <div className="flex gap-2 mt-4 lg:mt-0">
-          <Button variant="outline" size="sm">
-            <BarChart3 className="w-4 h-4 mr-2" />
-            Export Report
-          </Button>
-          <Button variant="outline" size="sm">
-            <Eye className="w-4 h-4 mr-2" />
-            Set Alerts
-          </Button>
+    <div className="space-y-8 bg-gradient-to-br from-background via-background/95 to-primary/5 p-6 rounded-3xl">
+      {/* Futuristic Header */}
+      <div className="relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-3xl opacity-30"></div>
+        <div className="relative bg-card/50 backdrop-blur-xl rounded-2xl p-6 border border-primary/20">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent mb-2 flex items-center gap-3">
+                <div className="p-2 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-xl">
+                  <Eye className="w-8 h-8 text-primary" />
+                </div>
+                AI Skills Observatory
+              </h2>
+              <p className="text-muted-foreground flex items-center gap-2">
+                <Activity className="w-4 h-4 text-accent" />
+                Real-time insights into skill supply, demand, and market trends across UAE
+              </p>
+            </div>
+            <div className="flex items-center gap-3 mt-4 lg:mt-0">
+              <Select value={selectedSkillCategory} onValueChange={setSelectedSkillCategory}>
+                <SelectTrigger className="w-40 bg-card/50 backdrop-blur-sm border-primary/20">
+                  <Search className="w-4 h-4 mr-2" />
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  <SelectItem value="technology">Technology</SelectItem>
+                  <SelectItem value="business">Business</SelectItem>
+                  <SelectItem value="design">Design & Creative</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={comparisonRegion} onValueChange={setComparisonRegion}>
+                <SelectTrigger className="w-40 bg-card/50 backdrop-blur-sm border-secondary/20">
+                  <Globe className="w-4 h-4 mr-2" />
+                  <SelectValue placeholder="Compare with..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">No Comparison</SelectItem>
+                  <SelectItem value="singapore">Singapore</SelectItem>
+                  <SelectItem value="london">London</SelectItem>
+                  <SelectItem value="toronto">Toronto</SelectItem>
+                  <SelectItem value="berlin">Berlin</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Overview Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+      {/* Key Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card className="border-0 bg-gradient-to-br from-destructive/10 via-card to-destructive/5 backdrop-blur-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Critical Skills</CardTitle>
-            <AlertTriangle className="h-4 w-4 text-red-500" />
+            <CardTitle className="text-sm font-medium">Critical Skills Gap</CardTitle>
+            <div className="p-2 bg-destructive/20 rounded-full">
+              <AlertTriangle className="h-4 w-4 text-destructive animate-pulse" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-red-500">4</div>
-            <p className="text-xs text-muted-foreground">Requiring immediate attention</p>
+            <div className="text-2xl font-bold text-destructive">64%</div>
+            <p className="text-xs text-muted-foreground">AI/ML Engineering highest gap</p>
           </CardContent>
         </Card>
-
-        <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+        
+        <Card className="border-0 bg-gradient-to-br from-primary/10 via-card to-primary/5 backdrop-blur-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg Gap</CardTitle>
-            <Target className="h-4 w-4 text-orange-500" />
+            <CardTitle className="text-sm font-medium">Talent Pool</CardTitle>
+            <div className="p-2 bg-primary/20 rounded-full">
+              <Users className="h-4 w-4 text-primary" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-orange-500">31%</div>
-            <p className="text-xs text-muted-foreground">Across all tracked skills</p>
+            <div className="text-2xl font-bold text-primary">34,500</div>
+            <p className="text-xs text-muted-foreground">Active professionals in UAE</p>
           </CardContent>
         </Card>
-
-        <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+        
+        <Card className="border-0 bg-gradient-to-br from-emerald-500/10 via-card to-emerald-500/5 backdrop-blur-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Growing Demand</CardTitle>
-            <TrendingUp className="h-4 w-4 text-ai-success" />
+            <CardTitle className="text-sm font-medium">Growth Rate</CardTitle>
+            <div className="p-2 bg-emerald-500/20 rounded-full">
+              <TrendingUp className="h-4 w-4 text-emerald-500" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-ai-success">+29%</div>
-            <p className="text-xs text-muted-foreground">YoY growth average</p>
+            <div className="text-2xl font-bold text-emerald-500">+32%</div>
+            <p className="text-xs text-muted-foreground">Average skill demand growth</p>
           </CardContent>
         </Card>
-
-        <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+        
+        <Card className="border-0 bg-gradient-to-br from-secondary/10 via-card to-secondary/5 backdrop-blur-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg Fill Time</CardTitle>
-            <Clock className="h-4 w-4 text-ai-accent" />
+            <CardTitle className="text-sm font-medium">Market Value</CardTitle>
+            <div className="p-2 bg-secondary/20 rounded-full">
+              <Target className="h-4 w-4 text-secondary" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-ai-accent">61</div>
-            <p className="text-xs text-muted-foreground">Days to fill positions</p>
+            <div className="text-2xl font-bold text-secondary">$2.3B</div>
+            <p className="text-xs text-muted-foreground">Total market opportunity</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Skills Matrix */}
-      <Card className="border-0 shadow-card">
+      {/* Skills Analysis */}
+      <Card className="border-0 bg-gradient-to-br from-card/50 via-card to-primary/5 backdrop-blur-xl">
         <CardHeader>
-          <CardTitle className="flex items-center">
-            <Target className="w-5 h-5 mr-2 text-ai-primary" />
-            Skills Supply vs Demand Matrix
+          <CardTitle className="flex items-center gap-2">
+            <BarChart3 className="w-5 h-5 text-primary" />
+            UAE Skills Supply vs Demand Matrix
           </CardTitle>
           <CardDescription>
-            Comprehensive analysis of skill gaps across key technology domains
+            Real-time market gaps and opportunities in {selectedSkillCategory === "all" ? "all categories" : selectedSkillCategory}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-6">
-            {skillSupplyDemand.map((skill, index) => (
-              <div key={index} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-4">
-                  <div className="flex items-center space-x-3">
-                    <h3 className="font-semibold text-lg">{skill.skill}</h3>
-                    <Badge className={getTrendColor(skill.trend)}>
-                      {getTrendIcon(skill.trend)}
-                      <span className="ml-1 capitalize">{skill.trend}</span>
-                    </Badge>
-                  </div>
-                  <div className="flex items-center space-x-4 mt-2 lg:mt-0">
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-ai-primary">{skill.demand}%</div>
-                      <div className="text-xs text-muted-foreground">Demand</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-ai-secondary">{skill.supply}%</div>
-                      <div className="text-xs text-muted-foreground">Supply</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-red-500">{skill.gap}%</div>
-                      <div className="text-xs text-muted-foreground">Gap</div>
-                    </div>
-                  </div>
+          <ResponsiveContainer width="100%" height={350}>
+            <BarChart data={filteredSkills}>
+              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
+              <XAxis 
+                dataKey="skill" 
+                angle={-45} 
+                textAnchor="end" 
+                height={100}
+                fontSize={11}
+                stroke="hsl(var(--muted-foreground))"
+              />
+              <YAxis stroke="hsl(var(--muted-foreground))" />
+              <Tooltip 
+                contentStyle={{ 
+                  backgroundColor: 'hsl(var(--card))', 
+                  border: '1px solid hsl(var(--border))',
+                  borderRadius: '8px',
+                  backdropFilter: 'blur(10px)'
+                }} 
+              />
+              <Bar dataKey="supply" fill="hsl(var(--secondary))" name="Current Supply %" radius={[2, 2, 0, 0]} />
+              <Bar dataKey="demand" fill="hsl(var(--primary))" name="Market Demand %" radius={[2, 2, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+          
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6">
+            {filteredSkills.slice(0, 6).map((skill, index) => (
+              <div key={index} className="p-3 rounded-lg bg-muted/30 backdrop-blur-sm border border-primary/10">
+                <h4 className="font-medium text-sm mb-1">{skill.skill}</h4>
+                <div className="flex justify-between text-xs text-muted-foreground">
+                  <span>Gap: {skill.gap}%</span>
+                  <Badge variant={skill.trend === "Critical" ? "destructive" : skill.trend === "High" ? "secondary" : "outline"} className="h-5 text-xs">
+                    {skill.trend}
+                  </Badge>
                 </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Growth Rate</span>
-                    <span className="font-semibold text-ai-success">{skill.growth}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Avg Salary</span>
-                    <span className="font-semibold">${(skill.avgSalary / 1000).toFixed(0)}k</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Job Postings</span>
-                    <span className="font-semibold">{skill.jobPostings.toLocaleString()}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Time to Fill</span>
-                    <span className="font-semibold">{skill.timeToFill} days</span>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Supply-Demand Balance</span>
-                    <span className="text-sm font-medium">{skill.gap}% gap</span>
-                  </div>
-                  <div className="relative">
-                    <Progress value={skill.supply} className="h-2" />
-                    <div 
-                      className="absolute top-0 right-0 h-2 bg-red-500/20 rounded-r"
-                      style={{ width: `${skill.gap}%` }}
-                    />
-                  </div>
+                <div className="flex justify-between text-xs mt-1">
+                  <span className="text-emerald-600">{skill.growth}</span>
+                  <span>${(skill.salary / 1000).toFixed(0)}k</span>
                 </div>
               </div>
             ))}
@@ -272,48 +212,36 @@ export const AISkillsObservatory = () => {
         </CardContent>
       </Card>
 
-      {/* Visualization Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="border-0 shadow-card">
+      {/* Global Comparison */}
+      {comparisonRegion !== "none" && globalComparison[comparisonRegion] && (
+        <Card className="border-0 bg-gradient-to-br from-card/50 via-card to-accent/5 backdrop-blur-xl">
           <CardHeader>
-            <CardTitle>Demand Trends (6 Months)</CardTitle>
-            <CardDescription>Evolution of skill demand over time</CardDescription>
+            <CardTitle className="flex items-center gap-2">
+              <Globe className="w-5 h-5 text-accent" />
+              Global Comparison: UAE vs {comparisonRegion.charAt(0).toUpperCase() + comparisonRegion.slice(1)}
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <AreaChart data={demandTrends}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
-                <Area type="monotone" dataKey="aiml" stackId="1" stroke="hsl(var(--ai-primary))" fill="hsl(var(--ai-primary))" />
-                <Area type="monotone" dataKey="cloud" stackId="1" stroke="hsl(var(--ai-secondary))" fill="hsl(var(--ai-secondary))" />
-                <Area type="monotone" dataKey="cybersec" stackId="1" stroke="hsl(var(--ai-accent))" fill="hsl(var(--ai-accent))" />
-                <Area type="monotone" dataKey="devops" stackId="1" stroke="hsl(var(--ai-success))" fill="hsl(var(--ai-success))" />
-              </AreaChart>
-            </ResponsiveContainer>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary/10 to-transparent">
+                <div className="text-3xl font-bold text-primary mb-2">78%</div>
+                <div className="text-sm font-medium mb-1">UAE AI Talent</div>
+                <Badge variant="outline" className="text-xs">UAE Position</Badge>
+              </div>
+              <div className="text-center p-6 rounded-xl bg-gradient-to-br from-secondary/10 to-transparent">
+                <div className="text-3xl font-bold text-secondary mb-2">{globalComparison[comparisonRegion].aiTalent}%</div>
+                <div className="text-sm font-medium mb-1">{comparisonRegion.charAt(0).toUpperCase() + comparisonRegion.slice(1)} AI Talent</div>
+                <Badge variant="outline" className="text-xs">Comparison</Badge>
+              </div>
+              <div className="text-center p-6 rounded-xl bg-gradient-to-br from-accent/10 to-transparent">
+                <div className="text-3xl font-bold text-accent mb-2">{globalComparison[comparisonRegion].demandGrowth}</div>
+                <div className="text-sm font-medium mb-1">Demand Growth</div>
+                <Badge variant="outline" className="text-xs">6 Month Trend</Badge>
+              </div>
+            </div>
           </CardContent>
         </Card>
-
-        <Card className="border-0 shadow-card">
-          <CardHeader>
-            <CardTitle>Supply vs Demand Radar</CardTitle>
-            <CardDescription>Comprehensive skill landscape overview</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <RadarChart data={radarData}>
-                <PolarGrid />
-                <PolarAngleAxis dataKey="skill" />
-                <PolarRadiusAxis angle={30} domain={[0, 100]} />
-                <Radar name="Demand" dataKey="demand" stroke="hsl(var(--ai-primary))" fill="hsl(var(--ai-primary))" fillOpacity={0.3} />
-                <Radar name="Supply" dataKey="supply" stroke="hsl(var(--ai-secondary))" fill="hsl(var(--ai-secondary))" fillOpacity={0.3} />
-                <Tooltip />
-              </RadarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-      </div>
+      )}
     </div>
   );
 };
