@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { 
   Brain, 
   BookOpen, 
@@ -20,7 +21,7 @@ import {
   Settings,
   X
 } from "lucide-react";
-import { LearnerHeader } from "@/components/LearnerHeader";
+import { LearnerSidebar } from "@/components/LearnerSidebar";
 import { ChatInterface } from "@/components/ChatInterface";
 import { StudyBuddyCard } from "@/components/StudyBuddyCard";
 import OnboardingFlow, { OnboardingData } from "@/components/OnboardingFlow";
@@ -199,30 +200,46 @@ const LearnerDashboard = () => {
   // Show course recommendations after onboarding
   if (showCourseRecommendations && learnerProfile) {
     return (
-      <div className="min-h-screen bg-background">
-        <LearnerHeader />
-        <main className="p-6">
-          <CourseRecommendations 
-            onboardingData={learnerProfile}
-            onStartCourse={handleStartCourse}
-            onCreateCustomCourse={() => {
-              // Custom course creation is handled within CourseRecommendations
-            }}
-          />
-        </main>
-      </div>
+      <SidebarProvider>
+        <div className="min-h-screen flex w-full bg-background">
+          <LearnerSidebar />
+          <div className="flex-1 flex flex-col">
+            <header className="h-16 flex items-center border-b px-6">
+              <SidebarTrigger />
+              <h1 className="ml-4 text-xl font-semibold">Course Recommendations</h1>
+            </header>
+            <main className="flex-1 p-6">
+              <CourseRecommendations 
+                onboardingData={learnerProfile}
+                onStartCourse={handleStartCourse}
+                onCreateCustomCourse={() => {
+                  // Custom course creation is handled within CourseRecommendations
+                }}
+              />
+            </main>
+          </div>
+        </div>
+      </SidebarProvider>
     );
   }
 
   // Show learner profile
   if (showProfile) {
     return (
-      <div className="min-h-screen bg-background">
-        <LearnerHeader />
-        <main className="p-6">
-          <LearnerProfile onSave={handleProfileSave} />
-        </main>
-      </div>
+      <SidebarProvider>
+        <div className="min-h-screen flex w-full bg-background">
+          <LearnerSidebar />
+          <div className="flex-1 flex flex-col">
+            <header className="h-16 flex items-center border-b px-6">
+              <SidebarTrigger />
+              <h1 className="ml-4 text-xl font-semibold">Profile Settings</h1>
+            </header>
+            <main className="flex-1 p-6">
+              <LearnerProfile onSave={handleProfileSave} />
+            </main>
+          </div>
+        </div>
+      </SidebarProvider>
     );
   }
 
@@ -237,10 +254,15 @@ const LearnerDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <LearnerHeader />
-      
-      <main className="p-6">
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full bg-background">
+        <LearnerSidebar />
+        <div className="flex-1 flex flex-col">
+          <header className="h-16 flex items-center border-b px-6">
+            <SidebarTrigger />
+            <h1 className="ml-4 text-xl font-semibold">Learning Dashboard</h1>
+          </header>
+          <main className="flex-1 p-6">
         {/* Welcome Banner */}
         <Card className="mb-8 bg-gradient-to-r from-ai-primary/10 to-ai-accent/10 border-ai-primary/20">
           <CardContent className="p-6">
@@ -527,8 +549,10 @@ const LearnerDashboard = () => {
             <SkillsComparison />
           </TabsContent>
         </Tabs>
-      </main>
-    </div>
+          </main>
+        </div>
+      </div>
+    </SidebarProvider>
   );
 };
 

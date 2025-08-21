@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { 
   Brain, 
   Plus, 
@@ -18,7 +19,7 @@ import {
   BarChart3,
   Sparkles
 } from "lucide-react";
-import { InstructorHeader } from "@/components/InstructorHeader";
+import { InstructorSidebar } from "@/components/InstructorSidebar";
 import { CourseGenerator } from "@/components/CourseGenerator";
 import { InstructorAIAssistant } from "@/components/InstructorAIAssistant";
 
@@ -64,10 +65,15 @@ const InstructorDashboard = () => {
   });
 
   return (
-    <div className="min-h-screen bg-background">
-      <InstructorHeader />
-      
-      <main className="p-6">
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full bg-background">
+        <InstructorSidebar />
+        <div className="flex-1 flex flex-col">
+          <header className="h-16 flex items-center border-b px-6">
+            <SidebarTrigger />
+            <h1 className="ml-4 text-xl font-semibold">Instructor Dashboard</h1>
+          </header>
+          <main className="flex-1 p-6">
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card>
@@ -251,11 +257,13 @@ const InstructorDashboard = () => {
               </Card>
             </div>
           </TabsContent>
-        </Tabs>
-      </main>
-      
-      <InstructorAIAssistant />
-    </div>
+          </Tabs>
+          </main>
+          
+          <InstructorAIAssistant />
+        </div>
+      </div>
+    </SidebarProvider>
   );
 };
 
