@@ -207,7 +207,11 @@ const LearnerDashboard = () => {
     return (
       <SidebarProvider>
         <div className="min-h-screen flex w-full bg-background">
-          <LearnerSidebar />
+          <LearnerSidebar 
+            activeTab={activeTab}
+            onTabChange={handleTabChange}
+            onShowOnboarding={() => setShowOnboarding(true)}
+          />
           <div className="flex-1 flex flex-col">
             <header className="h-16 flex items-center border-b px-6">
               <SidebarTrigger />
@@ -233,7 +237,11 @@ const LearnerDashboard = () => {
     return (
       <SidebarProvider>
         <div className="min-h-screen flex w-full bg-background">
-          <LearnerSidebar />
+          <LearnerSidebar 
+            activeTab={activeTab}
+            onTabChange={handleTabChange}
+            onShowOnboarding={() => setShowOnboarding(true)}
+          />
           <div className="flex-1 flex flex-col">
             <header className="h-16 flex items-center border-b px-6">
               <SidebarTrigger />
