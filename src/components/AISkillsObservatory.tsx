@@ -42,6 +42,12 @@ export const AISkillsObservatory = () => {
     london: { aiTalent: 85, demandGrowth: "+28%", avgSalary: 105000 },
     toronto: { aiTalent: 72, demandGrowth: "+32%", avgSalary: 88000 },
     berlin: { aiTalent: 69, demandGrowth: "+30%", avgSalary: 82000 },
+    sydney: { aiTalent: 74, demandGrowth: "+31%", avgSalary: 92000 },
+    tokyo: { aiTalent: 81, demandGrowth: "+25%", avgSalary: 87000 },
+    newyork: { aiTalent: 89, demandGrowth: "+22%", avgSalary: 125000 },
+    sanfrancisco: { aiTalent: 92, demandGrowth: "+18%", avgSalary: 145000 },
+    zurich: { aiTalent: 83, demandGrowth: "+27%", avgSalary: 112000 },
+    amsterdam: { aiTalent: 77, demandGrowth: "+29%", avgSalary: 95000 },
   };
 
   const filteredSkills = selectedSkillCategory === "all" 
@@ -75,11 +81,19 @@ export const AISkillsObservatory = () => {
                   <Search className="w-4 h-4 mr-2" />
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="max-h-60">
                   <SelectItem value="all">All Categories</SelectItem>
-                  <SelectItem value="technology">Technology</SelectItem>
-                  <SelectItem value="business">Business</SelectItem>
+                  <SelectItem value="technology">Technology & IT</SelectItem>
+                  <SelectItem value="business">Business & Management</SelectItem>
                   <SelectItem value="design">Design & Creative</SelectItem>
+                  <SelectItem value="healthcare">Healthcare & Medical</SelectItem>
+                  <SelectItem value="finance">Finance & Banking</SelectItem>
+                  <SelectItem value="marketing">Marketing & Sales</SelectItem>
+                  <SelectItem value="engineering">Engineering</SelectItem>
+                  <SelectItem value="education">Education & Training</SelectItem>
+                  <SelectItem value="retail">Retail & E-commerce</SelectItem>
+                  <SelectItem value="hospitality">Hospitality & Tourism</SelectItem>
+                  <SelectItem value="construction">Construction</SelectItem>
                 </SelectContent>
               </Select>
               <Select value={comparisonRegion} onValueChange={setComparisonRegion}>
@@ -87,12 +101,18 @@ export const AISkillsObservatory = () => {
                   <Globe className="w-4 h-4 mr-2" />
                   <SelectValue placeholder="Compare with..." />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="max-h-60">
                   <SelectItem value="none">No Comparison</SelectItem>
                   <SelectItem value="singapore">Singapore</SelectItem>
                   <SelectItem value="london">London</SelectItem>
                   <SelectItem value="toronto">Toronto</SelectItem>
                   <SelectItem value="berlin">Berlin</SelectItem>
+                  <SelectItem value="sydney">Sydney</SelectItem>
+                  <SelectItem value="tokyo">Tokyo</SelectItem>
+                  <SelectItem value="newyork">New York</SelectItem>
+                  <SelectItem value="sanfrancisco">San Francisco</SelectItem>
+                  <SelectItem value="zurich">Zurich</SelectItem>
+                  <SelectItem value="amsterdam">Amsterdam</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -212,31 +232,79 @@ export const AISkillsObservatory = () => {
         </CardContent>
       </Card>
 
-      {/* Global Comparison */}
+      {/* Global Comparison & Interactive World Map */}
       {comparisonRegion !== "none" && globalComparison[comparisonRegion] && (
-        <Card className="border-0 bg-gradient-to-br from-card/50 via-card to-accent/5 backdrop-blur-xl">
+        <Card className="border-0 bg-gradient-to-br from-card/50 via-card to-ai-accent/5 backdrop-blur-xl">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Globe className="w-5 h-5 text-accent" />
-              Global Comparison: UAE vs {comparisonRegion.charAt(0).toUpperCase() + comparisonRegion.slice(1)}
+              <Globe className="w-5 h-5 text-ai-accent animate-pulse" />
+              Global Talent Intelligence: UAE vs {comparisonRegion.charAt(0).toUpperCase() + comparisonRegion.slice(1)}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary/10 to-transparent">
-                <div className="text-3xl font-bold text-primary mb-2">78%</div>
-                <div className="text-sm font-medium mb-1">UAE AI Talent</div>
-                <Badge variant="outline" className="text-xs">UAE Position</Badge>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+              <div className="text-center p-6 rounded-xl bg-gradient-to-br from-ai-primary/10 to-transparent border border-ai-primary/20">
+                <div className="text-3xl font-bold text-ai-primary mb-2">78%</div>
+                <div className="text-sm font-medium mb-1">UAE AI Talent Index</div>
+                <Badge variant="outline" className="text-xs border-ai-primary/30">Regional Leader</Badge>
               </div>
-              <div className="text-center p-6 rounded-xl bg-gradient-to-br from-secondary/10 to-transparent">
-                <div className="text-3xl font-bold text-secondary mb-2">{globalComparison[comparisonRegion].aiTalent}%</div>
+              <div className="text-center p-6 rounded-xl bg-gradient-to-br from-ai-secondary/10 to-transparent border border-ai-secondary/20">
+                <div className="text-3xl font-bold text-ai-secondary mb-2">{globalComparison[comparisonRegion].aiTalent}%</div>
                 <div className="text-sm font-medium mb-1">{comparisonRegion.charAt(0).toUpperCase() + comparisonRegion.slice(1)} AI Talent</div>
-                <Badge variant="outline" className="text-xs">Comparison</Badge>
+                <Badge variant="outline" className="text-xs border-ai-secondary/30">Global Benchmark</Badge>
               </div>
-              <div className="text-center p-6 rounded-xl bg-gradient-to-br from-accent/10 to-transparent">
-                <div className="text-3xl font-bold text-accent mb-2">{globalComparison[comparisonRegion].demandGrowth}</div>
-                <div className="text-sm font-medium mb-1">Demand Growth</div>
-                <Badge variant="outline" className="text-xs">6 Month Trend</Badge>
+              <div className="text-center p-6 rounded-xl bg-gradient-to-br from-ai-success/10 to-transparent border border-ai-success/20">
+                <div className="text-3xl font-bold text-ai-success mb-2">{globalComparison[comparisonRegion].demandGrowth}</div>
+                <div className="text-sm font-medium mb-1">Demand Growth Rate</div>
+                <Badge variant="outline" className="text-xs border-ai-success/30">6M Trend</Badge>
+              </div>
+            </div>
+            
+            {/* Futuristic World Map Visualization */}
+            <div className="relative h-80 bg-gradient-to-br from-ai-primary/5 via-background to-ai-secondary/5 rounded-2xl border border-ai-primary/20 overflow-hidden">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_70%)]"></div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-center space-y-4">
+                  <div className="relative">
+                    <Globe className="w-20 h-20 text-ai-primary mx-auto animate-spin" style={{ animationDuration: '20s' }} />
+                    <div className="absolute inset-0 bg-gradient-to-r from-ai-primary/20 to-ai-secondary/20 rounded-full blur-xl"></div>
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-bold text-ai-primary">Interactive Global Talent Map</h3>
+                    <p className="text-sm text-muted-foreground max-w-md">
+                      Real-time visualization of skill gaps, talent distribution, and market opportunities across global regions
+                    </p>
+                    <div className="flex justify-center gap-2 mt-4">
+                      <Badge variant="outline" className="bg-ai-primary/10 text-ai-primary border-ai-primary/30">
+                        🟢 High Demand
+                      </Badge>
+                      <Badge variant="outline" className="bg-ai-warning/10 text-ai-warning border-ai-warning/30">
+                        🟡 Medium Gap
+                      </Badge>
+                      <Badge variant="outline" className="bg-destructive/10 text-destructive border-destructive/30">
+                        🔴 Critical Shortage
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Floating Data Points */}
+              <div className="absolute top-4 left-4 p-2 bg-card/80 backdrop-blur-sm rounded-lg border border-ai-primary/20">
+                <div className="text-xs text-muted-foreground">UAE Position</div>
+                <div className="text-sm font-bold text-ai-primary">#4 Global Ranking</div>
+              </div>
+              <div className="absolute top-4 right-4 p-2 bg-card/80 backdrop-blur-sm rounded-lg border border-ai-success/20">
+                <div className="text-xs text-muted-foreground">Growth Rate</div>
+                <div className="text-sm font-bold text-ai-success">+32% YoY</div>
+              </div>
+              <div className="absolute bottom-4 left-4 p-2 bg-card/80 backdrop-blur-sm rounded-lg border border-ai-warning/20">
+                <div className="text-xs text-muted-foreground">Talent Pool</div>
+                <div className="text-sm font-bold text-ai-warning">34.5K Active</div>
+              </div>
+              <div className="absolute bottom-4 right-4 p-2 bg-card/80 backdrop-blur-sm rounded-lg border border-ai-secondary/20">
+                <div className="text-xs text-muted-foreground">Market Value</div>
+                <div className="text-sm font-bold text-ai-secondary">$2.3B Opportunity</div>
               </div>
             </div>
           </CardContent>

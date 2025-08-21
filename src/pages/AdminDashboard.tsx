@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { 
   Brain, 
   Users, 
@@ -40,6 +40,10 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { ChatInterface } from "@/components/ChatInterface";
 import { AISkillsObservatory } from "@/components/AISkillsObservatory";
 import { WorkforceTrends } from "@/components/WorkforceTrends";
+import { AdminSidebar } from "@/components/AdminSidebar";
+import { ForecastReport } from "@/components/ForecastReport";
+import { StrategicPlanning } from "@/components/StrategicPlanning";
+import { DeepAnalytics } from "@/components/DeepAnalytics";
 
 const AdminDashboard = () => {
   const [showChartModal, setShowChartModal] = useState(false);
@@ -69,15 +73,15 @@ const AdminDashboard = () => {
 
   const talentDemographics = {
     ageGroups: [
-      { group: "22-28 years", count: 485, percentage: 38.9, growth: "+15%" },
-      { group: "29-35 years", count: 392, percentage: 31.4, growth: "+12%" },
-      { group: "36-42 years", count: 248, percentage: 19.9, growth: "+8%" },
-      { group: "43+ years", count: 122, percentage: 9.8, growth: "+5%" },
+      { group: "22-28 years", percentage: 38.9, growth: "+15%" },
+      { group: "29-35 years", percentage: 31.4, growth: "+12%" },
+      { group: "36-42 years", percentage: 19.9, growth: "+8%" },
+      { group: "43+ years", percentage: 9.8, growth: "+5%" },
     ],
     genderDistribution: [
-      { gender: "Male", count: 728, percentage: 58.4, growth: "+8%" },
-      { gender: "Female", count: 456, percentage: 36.6, growth: "+18%" },
-      { gender: "Other", count: 63, percentage: 5.0, growth: "+25%" },
+      { gender: "Male", percentage: 58.4, growth: "+8%" },
+      { gender: "Female", percentage: 36.6, growth: "+18%" },
+      { gender: "Other", percentage: 5.0, growth: "+25%" },
     ],
     talentTypes: [
       { type: "Software Engineers", count: 523, percentage: 41.9, trend: "High Demand", majorSkills: ["React", "Node.js", "Python"] },
@@ -134,6 +138,10 @@ const AdminDashboard = () => {
     { skill: "Data Engineering", currentSupply: 38, marketDemand: 85, gap: 47, urgency: "Medium" },
     { skill: "DevOps", currentSupply: 45, marketDemand: 88, gap: 43, urgency: "Medium" },
     { skill: "Mobile Development", currentSupply: 52, marketDemand: 78, gap: 26, urgency: "Low" },
+    { skill: "Blockchain", currentSupply: 18, marketDemand: 73, gap: 55, urgency: "High" },
+    { skill: "IoT Development", currentSupply: 29, marketDemand: 68, gap: 39, urgency: "Medium" },
+    { skill: "AR/VR Development", currentSupply: 15, marketDemand: 56, gap: 41, urgency: "Medium" },
+    { skill: "Quantum Computing", currentSupply: 8, marketDemand: 42, gap: 34, urgency: "Emerging" },
   ];
 
   const jobRolesDemand = [
@@ -237,96 +245,96 @@ const AdminDashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-accent/5">
-      {/* Header Section */}
-      <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b">
-        <div className="p-4 lg:p-6">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-            <div>
-              <h1 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-ai-primary via-ai-secondary to-ai-accent bg-clip-text text-transparent mb-1">
-                Admin Command Center
-              </h1>
-              <p className="text-muted-foreground text-sm lg:text-base">
-                Advanced analytics and insights for strategic decision making
-              </p>
-            </div>
-            <div className="flex items-center gap-3 mt-3 lg:mt-0">
-              <Button
-                onClick={() => setShowAIAssistant(true)}
-                className="bg-gradient-to-r from-ai-primary to-ai-secondary hover:from-ai-primary/90 hover:to-ai-secondary/90 text-white shadow-lg"
-              >
-                <Brain className="w-4 h-4 mr-2" />
-                AI Assistant
-              </Button>
-              <Button
-                onClick={() => {
-                  localStorage.clear();
-                  sessionStorage.clear();
-                  window.location.href = '/';
-                }}
-                variant="outline"
-                className="border-destructive/20 text-destructive hover:bg-destructive/10"
-              >
-                Logout
-              </Button>
-              <div className="flex items-center gap-2">
-                <Badge variant="secondary" className="bg-ai-success/10 text-ai-success border-ai-success/20 shadow-sm">
-                  <Activity className="w-3 h-3 mr-1" />
-                  Live
-                </Badge>
-                <Badge variant="outline" className="border-ai-primary/20 text-ai-primary shadow-sm">
-                  <Calendar className="w-3 h-3 mr-1" />
-                  Real-time
-                </Badge>
+    <SidebarProvider>
+      <div className="min-h-screen w-full flex bg-gradient-to-br from-background via-background/95 to-ai-primary/5">
+        <AdminSidebar activeTab={activeTab} onTabChange={setActiveTab} />
+        
+        <main className="flex-1 flex flex-col overflow-hidden">
+          {/* Header Section */}
+          <div className="sticky top-0 z-40 bg-background/95 backdrop-blur-md border-b border-ai-primary/10">
+            <div className="p-4 lg:p-6">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                  <h1 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-ai-primary via-ai-secondary to-ai-accent bg-clip-text text-transparent mb-1">
+                    Admin Intelligence Hub
+                  </h1>
+                  <p className="text-muted-foreground text-sm lg:text-base">
+                    Advanced analytics, insights, and strategic intelligence for UAE talent ecosystem
+                  </p>
+                </div>
+                <div className="flex items-center gap-3 mt-3 lg:mt-0">
+                  <Button
+                    onClick={() => setShowAIAssistant(true)}
+                    className="bg-gradient-to-r from-ai-primary to-ai-secondary hover:from-ai-primary/90 hover:to-ai-secondary/90 text-white shadow-lg"
+                  >
+                    <Brain className="w-4 h-4 mr-2" />
+                    AI Assistant
+                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="secondary" className="bg-ai-success/10 text-ai-success border-ai-success/20 shadow-sm">
+                      <Activity className="w-3 h-3 mr-1" />
+                      Live System
+                    </Badge>
+                    <Badge variant="outline" className="border-ai-primary/20 text-ai-primary shadow-sm">
+                      <Calendar className="w-3 h-3 mr-1" />
+                      Real-time Analytics
+                    </Badge>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Navigation Tabs */}
-      <div className="px-4 lg:px-6 py-2 bg-muted/5">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:grid-cols-4 bg-background/50 backdrop-blur-sm border">
-            <TabsTrigger value="overview" className="flex items-center gap-2">
-              <BarChart3 className="w-4 h-4" />
-              <span className="hidden sm:inline">Overview</span>
-            </TabsTrigger>
-            <TabsTrigger value="skills-observatory" className="flex items-center gap-2">
-              <Eye className="w-4 h-4" />
-              <span className="hidden sm:inline">Skills Observatory</span>
-            </TabsTrigger>
-            <TabsTrigger value="workforce-trends" className="flex items-center gap-2">
-              <TrendingUp className="w-4 h-4" />
-              <span className="hidden sm:inline">Workforce Trends</span>
-            </TabsTrigger>
-            <TabsTrigger value="analytics" className="flex items-center gap-2">
-              <Target className="w-4 h-4" />
-              <span className="hidden sm:inline">Deep Analytics</span>
-            </TabsTrigger>
-          </TabsList>
 
           {/* Main Content */}
-          <div className="p-4 lg:p-6">
-            <TabsContent value="overview" className="space-y-8 mt-0">
-              {/* Category Filter */}
-              <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold">Analytics Overview</h2>
-                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                  <SelectTrigger className="w-48">
-                    <Filter className="w-4 h-4 mr-2" />
-                    <SelectValue placeholder="Select Category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Categories</SelectItem>
-                    <SelectItem value="technology">Technology</SelectItem>
-                    <SelectItem value="business">Business</SelectItem>
-                    <SelectItem value="design">Design & Creative</SelectItem>
-                    <SelectItem value="healthcare">Healthcare</SelectItem>
-                    <SelectItem value="education">Education</SelectItem>
-                  </SelectContent>
-                </Select>
+          <div className="flex-1 overflow-auto p-4 lg:p-6">
+            {activeTab === "overview" && (
+              <div className="space-y-8">
+                {/* Category Filter */}
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl font-semibold text-ai-primary">Dashboard Overview</h2>
+                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                    <SelectTrigger className="w-48">
+                      <Filter className="w-4 h-4 mr-2" />
+                      <SelectValue placeholder="Select Category" />
+                    </SelectTrigger>
+                    <SelectContent className="max-h-60">
+                      <SelectItem value="all">All Categories</SelectItem>
+                      <SelectItem value="technology">Technology & IT</SelectItem>
+                      <SelectItem value="business">Business & Management</SelectItem>
+                      <SelectItem value="design">Design & Creative</SelectItem>
+                      <SelectItem value="healthcare">Healthcare & Medical</SelectItem>
+                      <SelectItem value="education">Education & Training</SelectItem>
+                      <SelectItem value="finance">Finance & Banking</SelectItem>
+                      <SelectItem value="marketing">Marketing & Sales</SelectItem>
+                      <SelectItem value="engineering">Engineering & Manufacturing</SelectItem>
+                      <SelectItem value="hospitality">Hospitality & Tourism</SelectItem>
+                      <SelectItem value="construction">Construction & Real Estate</SelectItem>
+                      <SelectItem value="retail">Retail & E-commerce</SelectItem>
+                      <SelectItem value="logistics">Logistics & Supply Chain</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Key Stats Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90 hover:shadow-lg transition-all duration-200">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium">Total Learners</CardTitle>
+                      <div className="p-2 bg-gradient-to-br from-ai-primary/10 to-ai-primary/5 rounded-lg">
+                        <Users className="h-4 w-4 text-ai-primary" />
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold bg-gradient-to-r from-ai-primary to-ai-secondary bg-clip-text text-transparent">{stats.totalLearners}</div>
+                      <p className="text-xs text-ai-success flex items-center mt-1">
+                        <TrendingUp className="w-3 h-3 mr-1" />
+                        +12% from last month
+                      </p>
+                    </CardContent>
+                  </Card>
+                </div>
               </div>
+            )}
 
               {/* Key Stats Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

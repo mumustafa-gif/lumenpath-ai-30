@@ -7,57 +7,29 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Home,
-  Users,
-  GraduationCap,
   BarChart3,
+  Eye,
   TrendingUp,
-  Shield,
-  Settings,
-  Brain,
   Target,
-  AlertTriangle,
-  MessageSquare,
-  FileText,
-  Database,
   Activity,
-  Globe,
   User,
   LogOut,
+  Brain,
+  Sparkles,
+  Calendar
 } from "lucide-react";
 
 const menuItems = [
-  { title: "Overview", tabValue: "overview", icon: BarChart3 },
-  { title: "Analytics", tabValue: "analytics", icon: TrendingUp },
-  { title: "Reports", tabValue: "reports", icon: FileText },
-];
-
-const insightsItems = [
-  { title: "Talent Demographics", url: "/admin/demographics", icon: Users },
-  { title: "Skill Gap Analysis", url: "/admin/skill-gaps", icon: Target },
-  { title: "Market Trends", url: "/admin/trends", icon: TrendingUp },
-  { title: "Regional Analysis", url: "/admin/regional", icon: Globe },
-  { title: "Performance Metrics", url: "/admin/performance", icon: Activity },
-];
-
-const systemItems = [
-  { title: "AI Assistant", url: "/admin/assistant", icon: Brain },
-  { title: "Reports", url: "/admin/reports", icon: FileText },
-  { title: "Security", url: "/admin/security", icon: Shield },
-  { title: "System Health", url: "/admin/health", icon: Activity },
-  { title: "Settings", url: "/admin/settings", icon: Settings },
-];
-
-const accountItems = [
-  { title: "Profile", url: "/admin/profile", icon: User },
-  { title: "Audit Logs", url: "/admin/logs", icon: FileText },
+  { title: "Dashboard", tabValue: "overview", icon: BarChart3 },
+  { title: "Skills Observatory", tabValue: "skills-observatory", icon: Eye },
+  { title: "Workforce Trends", tabValue: "workforce-trends", icon: TrendingUp },
+  { title: "Deep Analytics", tabValue: "deep-analytics", icon: Target },
 ];
 
 interface AdminSidebarProps {
@@ -70,33 +42,36 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
   
   const isActive = (tabValue: string) => activeTab === tabValue;
   const getNavCls = (tabValue: string) =>
-    isActive(tabValue) ? "bg-primary/10 text-primary font-medium border-r-2 border-primary" : "hover:bg-muted/50";
+    isActive(tabValue) 
+      ? "bg-ai-primary text-white font-medium border-r-2 border-ai-primary shadow-lg" 
+      : "hover:bg-ai-primary/10 text-muted-foreground hover:text-ai-primary";
 
   return (
     <Sidebar className={state === "collapsed" ? "w-16" : "w-64"} collapsible="icon">
-      <SidebarContent className="flex flex-col h-full">
+      <SidebarContent className="flex flex-col h-full bg-gradient-to-b from-card via-card to-ai-primary/5">
         {/* Profile Section */}
-        <div className={`p-4 border-b ${state === "collapsed" ? 'px-2' : ''}`}>
+        <div className={`p-4 border-b border-ai-primary/20 ${state === "collapsed" ? 'px-2' : ''}`}>
           <div className={`flex items-center ${state === "collapsed" ? 'justify-center' : 'gap-3'}`}>
-            <Avatar className="h-8 w-8">
+            <Avatar className="h-8 w-8 border-2 border-ai-primary/20">
               <AvatarImage src="/placeholder.svg" />
-              <AvatarFallback className="bg-accent/10 text-accent">AD</AvatarFallback>
+              <AvatarFallback className="bg-ai-primary/10 text-ai-primary font-semibold">AD</AvatarFallback>
             </Avatar>
             {state !== "collapsed" && (
               <div className="flex flex-col">
-                <span className="text-sm font-semibold">Admin Panel</span>
+                <span className="text-sm font-bold bg-gradient-to-r from-ai-primary to-ai-secondary bg-clip-text text-transparent">Admin Control</span>
                 <span className="text-xs text-muted-foreground">System Administrator</span>
               </div>
             )}
           </div>
           {state !== "collapsed" && (
             <div className="mt-3 flex items-center gap-2">
-              <Badge variant="secondary" className="text-xs bg-green-500/10 text-green-600 border-green-500/20">
+              <Badge variant="secondary" className="text-xs bg-ai-success/10 text-ai-success border-ai-success/20">
                 <Activity className="w-3 h-3 mr-1" />
                 Online
               </Badge>
-              <Badge variant="outline" className="text-xs">
-                1,247 Users
+              <Badge variant="outline" className="text-xs border-ai-primary/20 text-ai-primary">
+                <Brain className="w-3 h-3 mr-1" />
+                AI Ready
               </Badge>
             </div>
           )}
@@ -105,8 +80,8 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
         {/* Navigation Groups */}
         <div className="flex-1 overflow-auto">
           <SidebarGroup>
-            <SidebarGroupLabel className={state === "collapsed" ? "sr-only" : ""}>
-              Main
+            <SidebarGroupLabel className={`${state === "collapsed" ? "sr-only" : ""} text-ai-primary font-medium`}>
+              Main Dashboard
             </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
@@ -115,10 +90,10 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
                     <SidebarMenuButton asChild>
                       <button
                         onClick={() => onTabChange(item.tabValue)}
-                        className={`w-full flex items-center gap-3 px-3 py-2 text-left rounded-md transition-colors ${getNavCls(item.tabValue)}`}
+                        className={`w-full flex items-center gap-3 px-3 py-3 text-left rounded-lg transition-all duration-200 ${getNavCls(item.tabValue)}`}
                       >
                         <item.icon className="h-4 w-4" />
-                        {state !== "collapsed" && <span>{item.title}</span>}
+                        {state !== "collapsed" && <span className="text-sm">{item.title}</span>}
                       </button>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -126,40 +101,41 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
-
         </div>
 
         {/* System Status */}
         {state !== "collapsed" && (
-          <div className="p-4 border-t bg-muted/20">
+          <div className="p-4 border-t border-ai-primary/20 bg-gradient-to-r from-ai-primary/5 to-transparent">
             <div className="space-y-2">
               <div className="flex justify-between text-xs">
-                <span className="text-muted-foreground">Total Learners</span>
-                <span className="font-semibold">1,247</span>
+                <span className="text-muted-foreground">Total Users</span>
+                <span className="font-semibold text-ai-primary">1,247</span>
               </div>
               <div className="flex justify-between text-xs">
-                <span className="text-muted-foreground">Active Courses</span>
-                <span className="font-semibold">24</span>
+                <span className="text-muted-foreground">Active Sessions</span>
+                <span className="font-semibold text-ai-primary">892</span>
               </div>
               <div className="flex justify-between text-xs">
                 <span className="text-muted-foreground">System Health</span>
-                <span className="font-semibold text-green-600">98.5%</span>
+                <span className="font-semibold text-ai-success">98.5%</span>
+              </div>
+              <div className="flex items-center gap-2 mt-3">
+                <Sparkles className="w-3 h-3 text-ai-warning" />
+                <span className="text-xs text-ai-warning font-medium">AI Insights Active</span>
               </div>
             </div>
           </div>
         )}
 
         {/* Logout Button */}
-        <div className="p-4 border-t">
+        <div className="p-4 border-t border-ai-primary/20">
           <Button
             variant="ghost"
             size="sm"
-            className={`w-full ${state === "collapsed" ? 'px-2' : 'justify-start'} text-muted-foreground hover:text-foreground`}
+            className={`w-full ${state === "collapsed" ? 'px-2' : 'justify-start'} text-muted-foreground hover:text-destructive hover:bg-destructive/10`}
             onClick={() => {
-              // Clear any stored user data
               localStorage.clear();
               sessionStorage.clear();
-              // Redirect to login page
               window.location.href = '/';
             }}
           >
