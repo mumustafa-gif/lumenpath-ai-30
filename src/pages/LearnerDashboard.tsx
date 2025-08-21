@@ -33,6 +33,7 @@ import SkillGapAnalysis from "@/components/SkillGapAnalysis";
 import MockInterviews from "@/components/MockInterviews";
 import JobRecommendations from "@/components/JobRecommendations";
 import SkillsComparison from "@/components/SkillsComparison";
+import { LearnerAIAssistant } from "@/components/LearnerAIAssistant";
 
 const LearnerDashboard = () => {
   const [showOnboarding, setShowOnboarding] = useState(false); // Set to true for new users
@@ -41,7 +42,8 @@ const LearnerDashboard = () => {
   const [showProfile, setShowProfile] = useState(false);
   const [activeCourse, setActiveCourse] = useState<any>(null);
   const [showBuddyFinder, setShowBuddyFinder] = useState(false);
-  const [activeTab, setActiveTab] = useState("courses");
+  const [activeTab, setActiveTab] = useState("dashboard");
+  const [showAICareerPath, setShowAICareerPath] = useState(true); // Auto-show on login
   
   const [currentCourses] = useState([
     {
@@ -190,6 +192,44 @@ const LearnerDashboard = () => {
   const handleTabChange = (tabValue: string) => {
     setActiveTab(tabValue);
   };
+
+  // Show AI Career Path modal on login
+  if (showAICareerPath && !learnerProfile) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="max-w-md mx-auto p-6 bg-card rounded-lg shadow-lg border">
+          <div className="text-center space-y-4">
+            <div className="w-16 h-16 bg-ai-primary/10 rounded-full flex items-center justify-center mx-auto">
+              <Brain className="w-8 h-8 text-ai-primary" />
+            </div>
+            <h2 className="text-xl font-bold">AI Career Path</h2>
+            <p className="text-muted-foreground">
+              Would you like to update your career path and learning preferences?
+            </p>
+            <div className="flex space-x-3">
+              <Button 
+                variant="outline" 
+                onClick={() => setShowAICareerPath(false)}
+                className="flex-1"
+              >
+                Skip for Now
+              </Button>
+              <Button 
+                variant="ai" 
+                onClick={() => {
+                  setShowAICareerPath(false);
+                  setShowOnboarding(true);
+                }}
+                className="flex-1"
+              >
+                Update Path
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Show onboarding flow for new users
   if (showOnboarding) {
@@ -366,7 +406,7 @@ const LearnerDashboard = () => {
                 />
               )}
 
-              {activeTab === "courses" && (
+              {activeTab === "dashboard" && (
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                     {currentCourses.map((course) => (
@@ -543,8 +583,11 @@ const LearnerDashboard = () => {
                 </div>
               )}
 
-              {activeTab === "skill-gap" && (
-                <SkillGapAnalysis learnerProfile={learnerProfile} />
+              {activeTab === "skill-analysis" && (
+                <div className="space-y-6">
+                  <SkillGapAnalysis learnerProfile={learnerProfile} />
+                  <SkillsComparison />
+                </div>
               )}
 
               {activeTab === "mock-interviews" && (
@@ -555,11 +598,14 @@ const LearnerDashboard = () => {
                 <JobRecommendations />
               )}
 
-              {activeTab === "skills-comparison" && (
-                <SkillsComparison />
+              {activeTab === "profile" && (
+                <LearnerProfile onSave={handleProfileSave} />
               )}
             </div>
           </main>
+          
+          {/* AI Assistant */}
+          <LearnerAIAssistant />
         </div>
       </div>
     </SidebarProvider>

@@ -32,24 +32,20 @@ import {
 } from "lucide-react";
 
 const mainNavItems = [
-  { title: "Dashboard", tabValue: "courses", icon: Home },
-  { title: "My Courses", tabValue: "courses", icon: BookOpen },
+  { title: "Dashboard", tabValue: "dashboard", icon: Home },
   { title: "Adaptive Learning", tabValue: "adaptive-engine", icon: Brain },
   { title: "Study Buddies", tabValue: "study-buddies", icon: Users },
 ];
 
 const analysisItems = [
-  { title: "Skill Analysis", tabValue: "skill-gap", icon: Target },
+  { title: "Skill Analysis", tabValue: "skill-analysis", icon: Target },
   { title: "Mock Interviews", tabValue: "mock-interviews", icon: MessageSquare },
   { title: "Job Matching", tabValue: "job-recommendations", icon: Briefcase },
-  { title: "Skills Comparison", tabValue: "skills-comparison", icon: GitCompare },
   { title: "Progress Analytics", tabValue: "progress", icon: BarChart3 },
 ];
 
 const profileItems = [
   { title: "Profile", tabValue: "profile", icon: User },
-  { title: "Achievements", tabValue: "achievements", icon: Trophy },
-  { title: "Settings", tabValue: "settings", icon: Settings },
 ];
 
 interface LearnerSidebarProps {
@@ -153,11 +149,7 @@ export function LearnerSidebar({ activeTab, onTabChange, onShowOnboarding }: Lea
                     <SidebarMenuButton asChild>
                       <button
                         onClick={() => {
-                          if (item.tabValue === "settings") {
-                            onShowOnboarding();
-                          } else {
-                            onTabChange(item.tabValue);
-                          }
+                  onTabChange(item.tabValue);
                         }}
                         className={`w-full flex items-center gap-3 px-3 py-2 text-left rounded-md transition-colors ${getNavCls(item.tabValue)}`}
                       >
@@ -178,7 +170,13 @@ export function LearnerSidebar({ activeTab, onTabChange, onShowOnboarding }: Lea
             variant="ghost"
             size="sm"
             className={`w-full ${state === "collapsed" ? 'px-2' : 'justify-start'} text-muted-foreground hover:text-foreground`}
-            onClick={() => console.log('Logout')}
+            onClick={() => {
+              // Clear any stored user data
+              localStorage.clear();
+              sessionStorage.clear();
+              // Redirect to login page
+              window.location.href = '/';
+            }}
           >
             <LogOut className="h-4 w-4" />
             {state !== "collapsed" && <span className="ml-2">Logout</span>}

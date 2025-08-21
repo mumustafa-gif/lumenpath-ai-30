@@ -32,7 +32,8 @@ import {
   Activity,
   Calendar,
   Zap,
-  X
+  X,
+  Sparkles
 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart as RechartsLineChart, Line, PieChart as RechartsPieChart, Cell, AreaChart as RechartsAreaChart, Area, Pie } from 'recharts';
 import { AdminSidebar } from "@/components/AdminSidebar";
@@ -488,27 +489,154 @@ const AdminDashboard = () => {
               </div>
             )}
 
-            {activeTab === "users" && (
-              <div>
-                <h1 className="text-2xl font-bold mb-6">User Management</h1>
-                <p>User management interface will be implemented here.</p>
-              </div>
-            )}
-
-            {activeTab === "courses" && (
-              <div>
-                <h1 className="text-2xl font-bold mb-6">Course Management</h1>
-                <p>Course management interface will be implemented here.</p>
-              </div>
-            )}
-
             {activeTab === "analytics" && (
               <div>
                 <h1 className="text-2xl font-bold mb-6">Advanced Analytics</h1>
-                <p>Advanced analytics and reporting will be implemented here.</p>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Detailed Course Analytics</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        {courseAnalytics.map((course) => (
+                          <div key={course.name} className="p-4 border rounded-lg">
+                            <h4 className="font-semibold">{course.name}</h4>
+                            <div className="grid grid-cols-2 gap-4 mt-2 text-sm">
+                              <div>Enrolled: {course.enrolled}</div>
+                              <div>Completed: {course.completed}</div>
+                              <div>Avg Score: {course.avgScore}%</div>
+                              <div>Satisfaction: {course.satisfaction}/5</div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Regional Insights</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        {regionWiseData.slice(0, 5).map((region) => (
+                          <div key={region.region} className="flex justify-between items-center p-2 border rounded">
+                            <span className="font-medium">{region.region}</span>
+                            <div className="text-sm">
+                              <span className="text-green-600">{region.demand}% demand</span>
+                              <span className="text-orange-600 ml-2">{region.skillGap}% gap</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            )}
+
+            {activeTab === "reports" && (
+              <div>
+                <h1 className="text-2xl font-bold mb-6">System Reports</h1>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Monthly Summary</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span>New Learners</span>
+                          <span className="font-bold text-green-600">+127</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Course Completions</span>
+                          <span className="font-bold text-blue-600">489</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Certifications Issued</span>
+                          <span className="font-bold text-purple-600">234</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>System Health</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span>Uptime</span>
+                          <span className="font-bold text-green-600">99.8%</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Response Time</span>
+                          <span className="font-bold text-blue-600">124ms</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Active Sessions</span>
+                          <span className="font-bold text-orange-600">892</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Performance Metrics</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span>Engagement Rate</span>
+                          <span className="font-bold text-green-600">85%</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Completion Rate</span>
+                          <span className="font-bold text-blue-600">78%</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Satisfaction Score</span>
+                          <span className="font-bold text-purple-600">4.6/5</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
               </div>
             )}
           </main>
+          
+          {/* AI Assistant */}
+          <div className="fixed bottom-6 right-6 z-50">
+            <div className="relative">
+              <Button
+                className="w-16 h-16 rounded-full shadow-2xl bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-700 hover:scale-110 transition-all duration-300 border-0 overflow-hidden"
+                onClick={() => {
+                  // Show AI Assistant
+                  handleVisualization("bar", courseAnalytics.map(course => ({ 
+                    name: course.name, 
+                    value: course.enrolled 
+                  })), "Course Enrollment Analytics");
+                }}
+              >
+                <div className="relative flex items-center justify-center">
+                  <Brain className="w-7 h-7 text-white drop-shadow-sm" />
+                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-400 rounded-full flex items-center justify-center">
+                    <Sparkles className="w-2.5 h-2.5 text-yellow-900" />
+                  </div>
+                </div>
+              </Button>
+              <ChatInterface 
+                placeholder="Ask me about analytics, reports, or system insights..."
+                suggestions={aiSuggestions}
+                onVisualizationRequest={handleVisualization}
+              />
+            </div>
+          </div>
         </div>
       </div>
 

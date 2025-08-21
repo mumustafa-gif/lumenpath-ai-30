@@ -33,11 +33,10 @@ import {
   LogOut,
 } from "lucide-react";
 
-const mainNavItems = [
-  { title: "Dashboard", tabValue: "overview", icon: Home },
-  { title: "User Management", tabValue: "users", icon: Users },
-  { title: "Course Management", tabValue: "courses", icon: GraduationCap },
-  { title: "Analytics", tabValue: "analytics", icon: BarChart3 },
+const menuItems = [
+  { title: "Overview", tabValue: "overview", icon: BarChart3 },
+  { title: "Analytics", tabValue: "analytics", icon: TrendingUp },
+  { title: "Reports", tabValue: "reports", icon: FileText },
 ];
 
 const insightsItems = [
@@ -111,7 +110,7 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
             </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {mainNavItems.map((item) => (
+                {menuItems.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
                       <button
@@ -156,7 +155,13 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
             variant="ghost"
             size="sm"
             className={`w-full ${state === "collapsed" ? 'px-2' : 'justify-start'} text-muted-foreground hover:text-foreground`}
-            onClick={() => console.log('Logout')}
+            onClick={() => {
+              // Clear any stored user data
+              localStorage.clear();
+              sessionStorage.clear();
+              // Redirect to login page
+              window.location.href = '/';
+            }}
           >
             <LogOut className="h-4 w-4" />
             {state !== "collapsed" && <span className="ml-2">Logout</span>}

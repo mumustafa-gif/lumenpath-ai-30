@@ -129,7 +129,10 @@ const InstructorDashboard = () => {
             <div className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold">My Courses</h2>
-              <Button variant="ai">
+              <Button 
+                variant="ai"
+                onClick={() => setActiveTab("create")}
+              >
                 <Plus className="w-4 h-4 mr-2" />
                 Create New Course
               </Button>

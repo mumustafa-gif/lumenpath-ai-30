@@ -130,7 +130,13 @@ export function InstructorSidebar({ activeTab, onTabChange }: InstructorSidebarP
             variant="ghost"
             size="sm"
             className={`w-full ${state === "collapsed" ? 'px-2' : 'justify-start'} text-muted-foreground hover:text-foreground`}
-            onClick={() => console.log('Logout')}
+            onClick={() => {
+              // Clear any stored user data
+              localStorage.clear();
+              sessionStorage.clear();
+              // Redirect to login page
+              window.location.href = '/';
+            }}
           >
             <LogOut className="h-4 w-4" />
             {state !== "collapsed" && <span className="ml-2">Logout</span>}
