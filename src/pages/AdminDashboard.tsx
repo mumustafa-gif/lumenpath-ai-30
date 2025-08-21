@@ -73,15 +73,15 @@ const AdminDashboard = () => {
 
   const talentDemographics = {
     ageGroups: [
-      { group: "22-28 years", percentage: 38.9, growth: "+15%" },
-      { group: "29-35 years", percentage: 31.4, growth: "+12%" },
-      { group: "36-42 years", percentage: 19.9, growth: "+8%" },
-      { group: "43+ years", percentage: 9.8, growth: "+5%" },
+      { group: "22-28 years", percentage: 38.9, growth: "+15%", value: 38.9 },
+      { group: "29-35 years", percentage: 31.4, growth: "+12%", value: 31.4 },
+      { group: "36-42 years", percentage: 19.9, growth: "+8%", value: 19.9 },
+      { group: "43+ years", percentage: 9.8, growth: "+5%", value: 9.8 },
     ],
     genderDistribution: [
-      { gender: "Male", percentage: 58.4, growth: "+8%" },
-      { gender: "Female", percentage: 36.6, growth: "+18%" },
-      { gender: "Other", percentage: 5.0, growth: "+25%" },
+      { gender: "Male", percentage: 58.4, growth: "+8%", value: 58.4 },
+      { gender: "Female", percentage: 36.6, growth: "+18%", value: 36.6 },
+      { gender: "Other", percentage: 5.0, growth: "+25%", value: 5.0 },
     ],
     talentTypes: [
       { type: "Software Engineers", count: 523, percentage: 41.9, trend: "High Demand", majorSkills: ["React", "Node.js", "Python"] },
@@ -244,6 +244,361 @@ const AdminDashboard = () => {
     "Generate completion rate charts"
   ];
 
+  const renderOverview = () => (
+    <div className="space-y-8">
+      {/* Category Filter */}
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold text-ai-primary">Dashboard Overview</h2>
+        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+          <SelectTrigger className="w-48">
+            <Filter className="w-4 h-4 mr-2" />
+            <SelectValue placeholder="Select Category" />
+          </SelectTrigger>
+          <SelectContent className="max-h-60">
+            <SelectItem value="all">All Categories</SelectItem>
+            <SelectItem value="technology">Technology & IT</SelectItem>
+            <SelectItem value="business">Business & Management</SelectItem>
+            <SelectItem value="design">Design & Creative</SelectItem>
+            <SelectItem value="healthcare">Healthcare & Medical</SelectItem>
+            <SelectItem value="education">Education & Training</SelectItem>
+            <SelectItem value="finance">Finance & Banking</SelectItem>
+            <SelectItem value="marketing">Marketing & Sales</SelectItem>
+            <SelectItem value="engineering">Engineering & Manufacturing</SelectItem>
+            <SelectItem value="hospitality">Hospitality & Tourism</SelectItem>
+            <SelectItem value="construction">Construction & Real Estate</SelectItem>
+            <SelectItem value="retail">Retail & E-commerce</SelectItem>
+            <SelectItem value="logistics">Logistics & Supply Chain</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Key Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90 hover:shadow-lg transition-all duration-200">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Learners</CardTitle>
+            <div className="p-2 bg-gradient-to-br from-ai-primary/10 to-ai-primary/5 rounded-lg">
+              <Users className="h-4 w-4 text-ai-primary" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold bg-gradient-to-r from-ai-primary to-ai-secondary bg-clip-text text-transparent">{stats.totalLearners}</div>
+            <p className="text-xs text-ai-success flex items-center mt-1">
+              <TrendingUp className="w-3 h-3 mr-1" />
+              +12% from last month
+            </p>
+          </CardContent>
+        </Card>
+        
+        <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90 hover:shadow-lg transition-all duration-200">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Active Courses</CardTitle>
+            <div className="p-2 bg-gradient-to-br from-ai-secondary/10 to-ai-secondary/5 rounded-lg">
+              <GraduationCap className="h-4 w-4 text-ai-secondary" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold bg-gradient-to-r from-ai-secondary to-ai-accent bg-clip-text text-transparent">{stats.activeCourses}</div>
+            <p className="text-xs text-muted-foreground mt-1">Across all instructors</p>
+          </CardContent>
+        </Card>
+        
+        <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90 hover:shadow-lg transition-all duration-200">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Completion Rate</CardTitle>
+            <div className="p-2 bg-gradient-to-br from-ai-accent/10 to-ai-accent/5 rounded-lg">
+              <Target className="h-4 w-4 text-ai-accent" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold bg-gradient-to-r from-ai-accent to-ai-success bg-clip-text text-transparent">{stats.completionRate}%</div>
+            <p className="text-xs text-ai-success flex items-center mt-1">
+              <TrendingUp className="w-3 h-3 mr-1" />
+              +5% improvement
+            </p>
+          </CardContent>
+        </Card>
+        
+        <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90 hover:shadow-lg transition-all duration-200">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Avg Engagement</CardTitle>
+            <div className="p-2 bg-gradient-to-br from-ai-success/10 to-ai-success/5 rounded-lg">
+              <Activity className="h-4 w-4 text-ai-success" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold bg-gradient-to-r from-ai-success to-ai-primary bg-clip-text text-transparent">{stats.avgEngagement}%</div>
+            <p className="text-xs text-ai-success mt-1">Excellent performance</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Talent Demographics */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <UserCheck className="w-5 h-5 text-ai-primary" />
+              Age Demographics
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={200}>
+              <RechartsPieChart>
+                <Tooltip />
+                <Pie 
+                  data={talentDemographics.ageGroups} 
+                  cx="50%" cy="50%" outerRadius={60} dataKey="value"
+                >
+                  {talentDemographics.ageGroups.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+              </RechartsPieChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Users className="w-5 h-5 text-ai-secondary" />
+              Gender Distribution
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={200}>
+              <BarChart data={talentDemographics.genderDistribution}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="gender" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="value" fill="hsl(var(--secondary))" />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Activity className="w-5 h-5 text-ai-accent" />
+              System Engagement
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex justify-between items-center">
+              <span className="text-sm">Daily Active</span>
+              <span className="font-semibold">{talentDemographics.systemEngagement.dailyActiveUsers}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm">Avg Session</span>
+              <span className="font-semibold">{talentDemographics.systemEngagement.avgSessionDuration}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm">Course Rating</span>
+              <span className="font-semibold">⭐ {talentDemographics.systemEngagement.avgCourseRating}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm">Learning Hours</span>
+              <span className="font-semibold">{talentDemographics.systemEngagement.totalLearningHours.toLocaleString()}</span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Course Performance */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <GraduationCap className="w-5 h-5 text-ai-primary" />
+              Course Performance Overview
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={coursePerformanceData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="enrolled" fill="hsl(var(--primary))" name="Enrolled" />
+                <Bar dataKey="completed" fill="hsl(var(--secondary))" name="Completed" />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="w-5 h-5 text-ai-secondary" />
+              Most Demanding Courses
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {coursePerformanceData.slice(0, 5).map((course, index) => (
+                <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
+                  <div>
+                    <p className="font-medium">{course.name}</p>
+                    <p className="text-sm text-muted-foreground">{course.enrolled} enrolled</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-ai-success font-medium">{course.growth}</p>
+                    <p className="text-sm">⭐ {course.satisfaction}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Skill Gaps Analysis */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-amber-500" />
+              Skill Gaps Analysis
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <RechartsAreaChart data={skillGapsData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="skill" angle={-45} textAnchor="end" height={80} />
+                <YAxis />
+                <Tooltip />
+                <Area type="monotone" dataKey="marketDemand" stackId="1" stroke="hsl(var(--primary))" fill="hsl(var(--primary))" name="Market Demand" />
+                <Area type="monotone" dataKey="currentSupply" stackId="2" stroke="hsl(var(--secondary))" fill="hsl(var(--secondary))" name="Current Supply" />
+              </RechartsAreaChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Briefcase className="w-5 h-5 text-ai-accent" />
+              Job Roles vs Skill Gaps
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {jobRolesDemand.map((role, index) => (
+                <div key={index} className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="font-medium">{role.role}</span>
+                    <span className="text-sm text-muted-foreground">{role.openings} openings</span>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="flex-1">
+                      <div className="flex justify-between text-xs mb-1">
+                        <span>Gap: {role.gap}%</span>
+                        <span>${(role.avgSalary / 1000).toFixed(0)}k avg</span>
+                      </div>
+                      <Progress value={role.gap} className="h-2" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Regional Skills Demand */}
+      <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <MapPin className="w-5 h-5 text-ai-primary" />
+            UAE Regional Skills Demand & Supply
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ResponsiveContainer width="100%" height={400}>
+            <BarChart data={regionWiseData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="region" />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="demand" fill="hsl(var(--primary))" name="Demand %" />
+              <Bar dataKey="skillGap" fill="hsl(var(--destructive))" name="Skill Gap %" />
+            </BarChart>
+          </ResponsiveContainer>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+            {regionWiseData.slice(0, 6).map((region, index) => (
+              <div key={index} className="p-4 rounded-lg bg-muted/50">
+                <h4 className="font-semibold">{region.region}</h4>
+                <p className="text-sm text-muted-foreground">{region.professionals.toLocaleString()} professionals</p>
+                <p className="text-sm">Top Skills: {region.topSkills.slice(0, 2).join(', ')}</p>
+                <p className="text-sm text-ai-success">Growth: {region.growth}</p>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Upskilling Success Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <Award className="w-4 h-4 text-ai-primary" />
+              Total Upskilled
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-ai-primary">{talentDemographics.upskillSuccess.totalUpskilled}</div>
+            <p className="text-xs text-muted-foreground">Learners successfully upskilled</p>
+          </CardContent>
+        </Card>
+
+        <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-ai-secondary" />
+              Career Advancement
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-ai-secondary">{talentDemographics.upskillSuccess.careerAdvancement}</div>
+            <p className="text-xs text-muted-foreground">Got promoted or advanced</p>
+          </CardContent>
+        </Card>
+
+        <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <DollarSign className="w-4 h-4 text-ai-accent" />
+              Salary Increase
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-ai-accent">{talentDemographics.upskillSuccess.avgSalaryBoost}</div>
+            <p className="text-xs text-muted-foreground">Average salary boost</p>
+          </CardContent>
+        </Card>
+
+        <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <Target className="w-4 h-4 text-ai-success" />
+              Job Placement
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-ai-success">{talentDemographics.upskillSuccess.jobPlacementRate}%</div>
+            <p className="text-xs text-muted-foreground">Successfully placed in jobs</p>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+
   return (
     <SidebarProvider>
       <div className="min-h-screen w-full flex bg-gradient-to-br from-background via-background/95 to-ai-primary/5">
@@ -287,473 +642,90 @@ const AdminDashboard = () => {
 
           {/* Main Content */}
           <div className="flex-1 overflow-auto p-4 lg:p-6">
-            {activeTab === "overview" && (
-              <div className="space-y-8">
-                {/* Category Filter */}
-                <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-semibold text-ai-primary">Dashboard Overview</h2>
-                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                    <SelectTrigger className="w-48">
-                      <Filter className="w-4 h-4 mr-2" />
-                      <SelectValue placeholder="Select Category" />
+            {activeTab === "overview" && renderOverview()}
+            {activeTab === "skills-observatory" && <AISkillsObservatory />}
+            {activeTab === "workforce-trends" && <WorkforceTrends />}
+            {activeTab === "forecast-report" && <ForecastReport />}
+            {activeTab === "strategic-planning" && <StrategicPlanning />}
+            {activeTab === "deep-analytics" && <DeepAnalytics />}
+          </div>
+        </main>
+
+        {/* Chart Modal */}
+        <Dialog open={showChartModal} onOpenChange={setShowChartModal}>
+          <DialogContent className="max-w-4xl">
+            <DialogHeader>
+              <DialogTitle className="flex items-center justify-between">
+                {chartTitle}
+                <div className="flex gap-2">
+                  <Select value={selectedChartType} onValueChange={setSelectedChartType}>
+                    <SelectTrigger className="w-32">
+                      <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="max-h-60">
-                      <SelectItem value="all">All Categories</SelectItem>
-                      <SelectItem value="technology">Technology & IT</SelectItem>
-                      <SelectItem value="business">Business & Management</SelectItem>
-                      <SelectItem value="design">Design & Creative</SelectItem>
-                      <SelectItem value="healthcare">Healthcare & Medical</SelectItem>
-                      <SelectItem value="education">Education & Training</SelectItem>
-                      <SelectItem value="finance">Finance & Banking</SelectItem>
-                      <SelectItem value="marketing">Marketing & Sales</SelectItem>
-                      <SelectItem value="engineering">Engineering & Manufacturing</SelectItem>
-                      <SelectItem value="hospitality">Hospitality & Tourism</SelectItem>
-                      <SelectItem value="construction">Construction & Real Estate</SelectItem>
-                      <SelectItem value="retail">Retail & E-commerce</SelectItem>
-                      <SelectItem value="logistics">Logistics & Supply Chain</SelectItem>
+                    <SelectContent>
+                      <SelectItem value="bar">Bar Chart</SelectItem>
+                      <SelectItem value="line">Line Chart</SelectItem>
+                      <SelectItem value="pie">Pie Chart</SelectItem>
+                      <SelectItem value="area">Area Chart</SelectItem>
                     </SelectContent>
                   </Select>
+                  <Button variant="outline" size="sm">
+                    <Download className="w-4 h-4" />
+                  </Button>
                 </div>
-
-                {/* Key Stats Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                  <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90 hover:shadow-lg transition-all duration-200">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium">Total Learners</CardTitle>
-                      <div className="p-2 bg-gradient-to-br from-ai-primary/10 to-ai-primary/5 rounded-lg">
-                        <Users className="h-4 w-4 text-ai-primary" />
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-2xl font-bold bg-gradient-to-r from-ai-primary to-ai-secondary bg-clip-text text-transparent">{stats.totalLearners}</div>
-                      <p className="text-xs text-ai-success flex items-center mt-1">
-                        <TrendingUp className="w-3 h-3 mr-1" />
-                        +12% from last month
-                      </p>
-                    </CardContent>
-                  </Card>
+              </DialogTitle>
+            </DialogHeader>
+            
+            {isGeneratingChart ? (
+              <div className="flex flex-col items-center justify-center py-12">
+                <div className="w-16 h-16 bg-ai-primary/10 rounded-full flex items-center justify-center mb-4 animate-pulse">
+                  <Sparkles className="w-8 h-8 text-ai-primary" />
                 </div>
+                <h3 className="text-lg font-semibold mb-2">AI Generating Visualization</h3>
+                <p className="text-muted-foreground mb-4">Analyzing data patterns and creating insights...</p>
+                <div className="w-full max-w-xs">
+                  <Progress value={generationProgress} className="mb-2" />
+                  <p className="text-center text-sm text-muted-foreground">{Math.round(generationProgress)}% Complete</p>
+                </div>
+              </div>
+            ) : (
+              <div className="mt-4">
+                {renderChart()}
               </div>
             )}
+          </DialogContent>
+        </Dialog>
 
-              {/* Key Stats Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90 hover:shadow-lg transition-all duration-200">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Total Learners</CardTitle>
-                    <div className="p-2 bg-gradient-to-br from-ai-primary/10 to-ai-primary/5 rounded-lg">
-                      <Users className="h-4 w-4 text-ai-primary" />
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold bg-gradient-to-r from-ai-primary to-ai-secondary bg-clip-text text-transparent">{stats.totalLearners}</div>
-                    <p className="text-xs text-ai-success flex items-center mt-1">
-                      <TrendingUp className="w-3 h-3 mr-1" />
-                      +12% from last month
-                    </p>
-                  </CardContent>
-                </Card>
-                
-                <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90 hover:shadow-lg transition-all duration-200">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Active Courses</CardTitle>
-                    <div className="p-2 bg-gradient-to-br from-ai-secondary/10 to-ai-secondary/5 rounded-lg">
-                      <GraduationCap className="h-4 w-4 text-ai-secondary" />
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold bg-gradient-to-r from-ai-secondary to-ai-accent bg-clip-text text-transparent">{stats.activeCourses}</div>
-                    <p className="text-xs text-muted-foreground mt-1">Across all instructors</p>
-                  </CardContent>
-                </Card>
-                
-                <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90 hover:shadow-lg transition-all duration-200">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Completion Rate</CardTitle>
-                    <div className="p-2 bg-gradient-to-br from-ai-accent/10 to-ai-accent/5 rounded-lg">
-                      <Target className="h-4 w-4 text-ai-accent" />
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold bg-gradient-to-r from-ai-accent to-ai-success bg-clip-text text-transparent">{stats.completionRate}%</div>
-                    <p className="text-xs text-ai-success flex items-center mt-1">
-                      <TrendingUp className="w-3 h-3 mr-1" />
-                      +5% improvement
-                    </p>
-                  </CardContent>
-                </Card>
-                
-                <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90 hover:shadow-lg transition-all duration-200">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Avg Engagement</CardTitle>
-                    <div className="p-2 bg-gradient-to-br from-ai-success/10 to-ai-success/5 rounded-lg">
-                      <Activity className="h-4 w-4 text-ai-success" />
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold bg-gradient-to-r from-ai-success to-ai-primary bg-clip-text text-transparent">{stats.avgEngagement}%</div>
-                    <p className="text-xs text-ai-success mt-1">Excellent performance</p>
-                  </CardContent>
-                </Card>
+        {/* AI Assistant */}
+        {showAIAssistant && (
+          <div className="fixed inset-y-0 right-0 w-96 bg-background/95 backdrop-blur-xl border-l shadow-2xl z-50 animate-in slide-in-from-right duration-300 overflow-hidden">
+            <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-ai-primary/5 to-ai-secondary/5 flex-shrink-0">
+              <div className="flex items-center space-x-2">
+                <div className="p-2 bg-gradient-to-br from-ai-primary/10 to-ai-primary/5 rounded-lg">
+                  <Brain className="w-4 h-4 text-ai-primary" />
+                </div>
+                <h3 className="font-semibold bg-gradient-to-r from-ai-primary to-ai-secondary bg-clip-text text-transparent">
+                  AI Assistant
+                </h3>
               </div>
-
-              {/* Talent Demographics */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <UserCheck className="w-5 h-5 text-ai-primary" />
-                      Age Demographics
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ResponsiveContainer width="100%" height={200}>
-                      <RechartsPieChart>
-                        <Tooltip />
-                        <Pie 
-                          data={talentDemographics.ageGroups.map(item => ({ name: item.group, value: item.count }))} 
-                          cx="50%" cy="50%" outerRadius={60} dataKey="value"
-                        >
-                          {talentDemographics.ageGroups.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                          ))}
-                        </Pie>
-                      </RechartsPieChart>
-                    </ResponsiveContainer>
-                  </CardContent>
-                </Card>
-
-                <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Users className="w-5 h-5 text-ai-secondary" />
-                      Gender Distribution
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ResponsiveContainer width="100%" height={200}>
-                      <BarChart data={talentDemographics.genderDistribution}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="gender" />
-                        <YAxis />
-                        <Tooltip />
-                        <Bar dataKey="count" fill="hsl(var(--secondary))" />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </CardContent>
-                </Card>
-
-                <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Activity className="w-5 h-5 text-ai-accent" />
-                      System Engagement
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Daily Active</span>
-                      <span className="font-semibold">{talentDemographics.systemEngagement.dailyActiveUsers}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Avg Session</span>
-                      <span className="font-semibold">{talentDemographics.systemEngagement.avgSessionDuration}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Course Rating</span>
-                      <span className="font-semibold">⭐ {talentDemographics.systemEngagement.avgCourseRating}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Learning Hours</span>
-                      <span className="font-semibold">{talentDemographics.systemEngagement.totalLearningHours.toLocaleString()}</span>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* Course Performance */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <GraduationCap className="w-5 h-5 text-ai-primary" />
-                      Course Performance Overview
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ResponsiveContainer width="100%" height={300}>
-                      <BarChart data={coursePerformanceData}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
-                        <YAxis />
-                        <Tooltip />
-                        <Bar dataKey="enrolled" fill="hsl(var(--primary))" name="Enrolled" />
-                        <Bar dataKey="completed" fill="hsl(var(--secondary))" name="Completed" />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </CardContent>
-                </Card>
-
-                <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <TrendingUp className="w-5 h-5 text-ai-secondary" />
-                      Most Demanding Courses
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {coursePerformanceData.slice(0, 5).map((course, index) => (
-                        <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-                          <div>
-                            <p className="font-medium">{course.name}</p>
-                            <p className="text-sm text-muted-foreground">{course.enrolled} enrolled</p>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-ai-success font-medium">{course.growth}</p>
-                            <p className="text-sm">⭐ {course.satisfaction}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* Skill Gaps Analysis */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <AlertTriangle className="w-5 h-5 text-amber-500" />
-                      Skill Gaps Analysis
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ResponsiveContainer width="100%" height={300}>
-                      <RechartsAreaChart data={skillGapsData}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="skill" angle={-45} textAnchor="end" height={80} />
-                        <YAxis />
-                        <Tooltip />
-                        <Area type="monotone" dataKey="marketDemand" stackId="1" stroke="hsl(var(--primary))" fill="hsl(var(--primary))" name="Market Demand" />
-                        <Area type="monotone" dataKey="currentSupply" stackId="2" stroke="hsl(var(--secondary))" fill="hsl(var(--secondary))" name="Current Supply" />
-                      </RechartsAreaChart>
-                    </ResponsiveContainer>
-                  </CardContent>
-                </Card>
-
-                <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Briefcase className="w-5 h-5 text-ai-accent" />
-                      Job Roles vs Skill Gaps
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {jobRolesDemand.map((role, index) => (
-                        <div key={index} className="space-y-2">
-                          <div className="flex justify-between items-center">
-                            <span className="font-medium">{role.role}</span>
-                            <span className="text-sm text-muted-foreground">{role.openings} openings</span>
-                          </div>
-                          <div className="flex items-center gap-4">
-                            <div className="flex-1">
-                              <div className="flex justify-between text-xs mb-1">
-                                <span>Gap: {role.gap}%</span>
-                                <span>${(role.avgSalary / 1000).toFixed(0)}k avg</span>
-                              </div>
-                              <Progress value={role.gap} className="h-2" />
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* Regional Skills Demand */}
-              <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <MapPin className="w-5 h-5 text-ai-primary" />
-                    UAE Regional Skills Demand & Supply
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={400}>
-                    <BarChart data={regionWiseData}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="region" />
-                      <YAxis />
-                      <Tooltip />
-                      <Bar dataKey="demand" fill="hsl(var(--primary))" name="Demand %" />
-                      <Bar dataKey="skillGap" fill="hsl(var(--destructive))" name="Skill Gap %" />
-                    </BarChart>
-                  </ResponsiveContainer>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-                    {regionWiseData.slice(0, 6).map((region, index) => (
-                      <div key={index} className="p-4 rounded-lg bg-muted/50">
-                        <h4 className="font-semibold">{region.region}</h4>
-                        <p className="text-sm text-muted-foreground">{region.professionals.toLocaleString()} professionals</p>
-                        <p className="text-sm">Top Skills: {region.topSkills.slice(0, 2).join(', ')}</p>
-                        <p className="text-sm text-ai-success">Growth: {region.growth}</p>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Upskilling Success Metrics */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium flex items-center gap-2">
-                      <Award className="w-4 h-4 text-ai-primary" />
-                      Total Upskilled
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold text-ai-primary">{talentDemographics.upskillSuccess.totalUpskilled}</div>
-                    <p className="text-xs text-muted-foreground">Learners successfully upskilled</p>
-                  </CardContent>
-                </Card>
-
-                <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium flex items-center gap-2">
-                      <TrendingUp className="w-4 h-4 text-ai-secondary" />
-                      Career Advancement
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold text-ai-secondary">{talentDemographics.upskillSuccess.careerAdvancement}</div>
-                    <p className="text-xs text-muted-foreground">Got promoted or advanced</p>
-                  </CardContent>
-                </Card>
-
-                <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium flex items-center gap-2">
-                      <DollarSign className="w-4 h-4 text-ai-accent" />
-                      Salary Increase
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold text-ai-accent">{talentDemographics.upskillSuccess.avgSalaryBoost}</div>
-                    <p className="text-xs text-muted-foreground">Average salary boost</p>
-                  </CardContent>
-                </Card>
-
-                <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium flex items-center gap-2">
-                      <Target className="w-4 h-4 text-ai-success" />
-                      Job Placement
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold text-ai-success">{talentDemographics.upskillSuccess.jobPlacementRate}%</div>
-                    <p className="text-xs text-muted-foreground">Successfully placed in jobs</p>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="skills-observatory" className="mt-0">
-              <AISkillsObservatory />
-            </TabsContent>
-
-            <TabsContent value="workforce-trends" className="mt-0">
-              <WorkforceTrends />
-            </TabsContent>
-
-            <TabsContent value="analytics" className="space-y-8 mt-0">
-              <div className="text-center py-12">
-                <h3 className="text-lg font-semibold mb-2">Deep Analytics Coming Soon</h3>
-                <p className="text-muted-foreground">Advanced course and regional analysis features</p>
-              </div>
-            </TabsContent>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => setShowAIAssistant(false)}
+                className="hover:bg-destructive/10 hover:text-destructive"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+            <div className="h-[calc(100vh-80px)] overflow-hidden">
+              <ChatInterface 
+                suggestions={aiSuggestions}
+              />
+            </div>
           </div>
-        </Tabs>
+        )}
       </div>
-
-      {/* Chart Modal */}
-      <Dialog open={showChartModal} onOpenChange={setShowChartModal}>
-        <DialogContent className="max-w-4xl">
-          <DialogHeader>
-            <DialogTitle className="flex items-center justify-between">
-              {chartTitle}
-              <div className="flex gap-2">
-                <Select value={selectedChartType} onValueChange={setSelectedChartType}>
-                  <SelectTrigger className="w-32">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="bar">Bar Chart</SelectItem>
-                    <SelectItem value="line">Line Chart</SelectItem>
-                    <SelectItem value="pie">Pie Chart</SelectItem>
-                    <SelectItem value="area">Area Chart</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Button variant="outline" size="sm">
-                  <Download className="w-4 h-4" />
-                </Button>
-              </div>
-            </DialogTitle>
-          </DialogHeader>
-          
-          {isGeneratingChart ? (
-            <div className="flex flex-col items-center justify-center py-12">
-              <div className="w-16 h-16 bg-ai-primary/10 rounded-full flex items-center justify-center mb-4 animate-pulse">
-                <Sparkles className="w-8 h-8 text-ai-primary" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">AI Generating Visualization</h3>
-              <p className="text-muted-foreground mb-4">Analyzing data patterns and creating insights...</p>
-              <div className="w-full max-w-xs">
-                <Progress value={generationProgress} className="mb-2" />
-                <p className="text-center text-sm text-muted-foreground">{Math.round(generationProgress)}% Complete</p>
-              </div>
-            </div>
-          ) : (
-            <div className="mt-4">
-              {renderChart()}
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
-
-      {/* AI Assistant */}
-      {showAIAssistant && (
-        <div className="fixed inset-y-0 right-0 w-96 bg-background/95 backdrop-blur-xl border-l shadow-2xl z-50 animate-in slide-in-from-right duration-300 overflow-hidden">
-          <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-ai-primary/5 to-ai-secondary/5 flex-shrink-0">
-            <div className="flex items-center space-x-2">
-              <div className="p-2 bg-gradient-to-br from-ai-primary/10 to-ai-primary/5 rounded-lg">
-                <Brain className="w-4 h-4 text-ai-primary" />
-              </div>
-              <h3 className="font-semibold bg-gradient-to-r from-ai-primary to-ai-secondary bg-clip-text text-transparent">
-                AI Assistant
-              </h3>
-            </div>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={() => setShowAIAssistant(false)}
-              className="hover:bg-destructive/10 hover:text-destructive"
-            >
-              <X className="w-4 h-4" />
-            </Button>
-          </div>
-          <div className="h-[calc(100vh-80px)] overflow-hidden">
-            <ChatInterface 
-              suggestions={aiSuggestions}
-            />
-          </div>
-        </div>
-      )}
-    </div>
+    </SidebarProvider>
   );
 };
 
