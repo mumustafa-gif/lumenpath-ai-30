@@ -64,7 +64,7 @@ const accountItems = [
 ];
 
 export function AdminSidebar() {
-  const { collapsed } = useSidebar();
+  const { state } = useSidebar();
   const location = useLocation();
   const currentPath = location.pathname;
 
@@ -73,23 +73,23 @@ export function AdminSidebar() {
     isActive ? "bg-primary/10 text-primary font-medium border-r-2 border-primary" : "hover:bg-muted/50";
 
   return (
-    <Sidebar className={collapsed ? "w-16" : "w-64"} collapsible>
+    <Sidebar className={state === "collapsed" ? "w-16" : "w-64"} collapsible="icon">
       <SidebarContent className="flex flex-col h-full">
         {/* Profile Section */}
-        <div className={`p-4 border-b ${collapsed ? 'px-2' : ''}`}>
-          <div className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3'}`}>
+        <div className={`p-4 border-b ${state === "collapsed" ? 'px-2' : ''}`}>
+          <div className={`flex items-center ${state === "collapsed" ? 'justify-center' : 'gap-3'}`}>
             <Avatar className="h-8 w-8">
               <AvatarImage src="/placeholder.svg" />
               <AvatarFallback className="bg-accent/10 text-accent">AD</AvatarFallback>
             </Avatar>
-            {!collapsed && (
+            {state !== "collapsed" && (
               <div className="flex flex-col">
                 <span className="text-sm font-semibold">Admin Panel</span>
                 <span className="text-xs text-muted-foreground">System Administrator</span>
               </div>
             )}
           </div>
-          {!collapsed && (
+          {state !== "collapsed" && (
             <div className="mt-3 flex items-center gap-2">
               <Badge variant="secondary" className="text-xs bg-green-500/10 text-green-600 border-green-500/20">
                 <Activity className="w-3 h-3 mr-1" />
@@ -105,7 +105,7 @@ export function AdminSidebar() {
         {/* Navigation Groups */}
         <div className="flex-1 overflow-auto">
           <SidebarGroup>
-            <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>
+            <SidebarGroupLabel className={state === "collapsed" ? "sr-only" : ""}>
               Main
             </SidebarGroupLabel>
             <SidebarGroupContent>
@@ -115,7 +115,7 @@ export function AdminSidebar() {
                     <SidebarMenuButton asChild>
                       <NavLink to={item.url} className={getNavCls}>
                         <item.icon className="h-4 w-4" />
-                        {!collapsed && <span>{item.title}</span>}
+                        {state !== "collapsed" && <span>{item.title}</span>}
                       </NavLink>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -125,7 +125,7 @@ export function AdminSidebar() {
           </SidebarGroup>
 
           <SidebarGroup>
-            <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>
+            <SidebarGroupLabel className={state === "collapsed" ? "sr-only" : ""}>
               Business Intelligence
             </SidebarGroupLabel>
             <SidebarGroupContent>
@@ -135,7 +135,7 @@ export function AdminSidebar() {
                     <SidebarMenuButton asChild>
                       <NavLink to={item.url} className={getNavCls}>
                         <item.icon className="h-4 w-4" />
-                        {!collapsed && <span>{item.title}</span>}
+                        {state !== "collapsed" && <span>{item.title}</span>}
                       </NavLink>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -145,7 +145,7 @@ export function AdminSidebar() {
           </SidebarGroup>
 
           <SidebarGroup>
-            <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>
+            <SidebarGroupLabel className={state === "collapsed" ? "sr-only" : ""}>
               System Management
             </SidebarGroupLabel>
             <SidebarGroupContent>
@@ -155,7 +155,7 @@ export function AdminSidebar() {
                     <SidebarMenuButton asChild>
                       <NavLink to={item.url} className={getNavCls}>
                         <item.icon className="h-4 w-4" />
-                        {!collapsed && <span>{item.title}</span>}
+                        {state !== "collapsed" && <span>{item.title}</span>}
                       </NavLink>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -165,7 +165,7 @@ export function AdminSidebar() {
           </SidebarGroup>
 
           <SidebarGroup>
-            <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>
+            <SidebarGroupLabel className={state === "collapsed" ? "sr-only" : ""}>
               Account
             </SidebarGroupLabel>
             <SidebarGroupContent>
@@ -175,7 +175,7 @@ export function AdminSidebar() {
                     <SidebarMenuButton asChild>
                       <NavLink to={item.url} className={getNavCls}>
                         <item.icon className="h-4 w-4" />
-                        {!collapsed && <span>{item.title}</span>}
+                        {state !== "collapsed" && <span>{item.title}</span>}
                       </NavLink>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -186,7 +186,7 @@ export function AdminSidebar() {
         </div>
 
         {/* System Status */}
-        {!collapsed && (
+        {state !== "collapsed" && (
           <div className="p-4 border-t bg-muted/20">
             <div className="space-y-2">
               <div className="flex justify-between text-xs">
@@ -210,11 +210,11 @@ export function AdminSidebar() {
           <Button
             variant="ghost"
             size="sm"
-            className={`w-full ${collapsed ? 'px-2' : 'justify-start'} text-muted-foreground hover:text-foreground`}
+            className={`w-full ${state === "collapsed" ? 'px-2' : 'justify-start'} text-muted-foreground hover:text-foreground`}
             onClick={() => console.log('Logout')}
           >
             <LogOut className="h-4 w-4" />
-            {!collapsed && <span className="ml-2">Logout</span>}
+            {state !== "collapsed" && <span className="ml-2">Logout</span>}
           </Button>
         </div>
       </SidebarContent>
