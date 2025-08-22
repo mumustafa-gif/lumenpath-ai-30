@@ -17,7 +17,6 @@ export const FacultyAIAssistant = () => {
   const [currentChart, setCurrentChart] = useState<any>(null);
   const [activeQuickAction, setActiveQuickAction] = useState<string | null>(null);
   const [isQuickActionsMinimized, setIsQuickActionsMinimized] = useState(false);
-  const [isFeaturesMinimized, setIsFeaturesMinimized] = useState(false);
 
   // Sample course data for visualization
   const courseData = [
@@ -345,9 +344,9 @@ What is the purpose of the \`__init__\` method in Python classes? Write a simple
       <div className="fixed bottom-6 right-6 z-50">
         <Button
           onClick={() => setIsOpen(true)}
-          className="group relative w-16 h-16 rounded-full shadow-2xl bg-gradient-to-br from-purple-600 via-blue-600 to-emerald-500 hover:scale-110 transition-all duration-300 border-0 overflow-hidden"
+          className="group relative w-16 h-16 rounded-full shadow-2xl bg-ai-primary hover:scale-110 transition-all duration-300 border-0 overflow-hidden"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-400/20 via-blue-400/20 to-emerald-400/20 animate-pulse"></div>
+          <div className="absolute inset-0 bg-white/10 animate-pulse"></div>
           <div className="relative flex items-center justify-center">
             <GraduationCap className="w-7 h-7 text-white drop-shadow-sm" />
             <div className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-400 rounded-full flex items-center justify-center">
@@ -360,7 +359,7 @@ What is the purpose of the \`__init__\` method in Python classes? Write a simple
         {/* Floating tooltip */}
         <div className="absolute bottom-full right-0 mb-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
           <div className="bg-gray-900 text-white text-sm px-3 py-2 rounded-lg shadow-lg whitespace-nowrap">
-            AI Course Assistant
+            Academic Counselor
             <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
           </div>
         </div>
@@ -375,7 +374,7 @@ What is the purpose of the \`__init__\` method in Python classes? Write a simple
       }`}>
         <Card className="h-full bg-gradient-to-br from-slate-50/95 via-white/95 to-blue-50/95 dark:from-slate-900/95 dark:via-slate-800/95 dark:to-blue-900/95 backdrop-blur-xl border-0 shadow-2xl ring-1 ring-black/5 dark:ring-white/10 overflow-hidden">
           {/* Header */}
-          <div className="relative bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-700 p-6 border-b border-white/10">
+          <div className="relative bg-ai-primary p-6 border-b border-white/10">
             <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
             <div className="relative flex items-center justify-between">
               <div className="flex items-center space-x-4">
@@ -388,7 +387,7 @@ What is the purpose of the \`__init__\` method in Python classes? Write a simple
                   </div>
                 </div>
                 <div>
-                  <h3 className="font-bold text-xl text-white">AI Course Assistant</h3>
+                  <h3 className="font-bold text-xl text-white">Academic Counselor</h3>
                   <p className="text-white/80 text-sm font-medium">Smart Content Creation</p>
                 </div>
               </div>
@@ -429,55 +428,42 @@ What is the purpose of the \`__init__\` method in Python classes? Write a simple
                       <ChevronUp className="w-4 h-4" />
                     </Button>
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-3 gap-3">
                     <Button 
                       variant="outline" 
-                      className={`h-12 justify-start space-x-3 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 border-emerald-200 dark:border-emerald-800 hover:shadow-md transition-all duration-200 ${
-                        activeQuickAction === "lesson" ? "ring-2 ring-emerald-500 bg-emerald-100 dark:bg-emerald-900/50" : ""
+                      className={`h-12 justify-start space-x-3 bg-ai-success/5 border-ai-success/20 hover:shadow-md transition-all duration-200 ${
+                        activeQuickAction === "lesson" ? "ring-2 ring-ai-success bg-ai-success/10" : ""
                       }`}
                       onClick={() => handleQuickAction("lesson")}
                       disabled={activeQuickAction === "lesson"}
                     >
-                      <FileText className="w-4 h-4 text-emerald-600" />
+                      <FileText className="w-4 h-4 text-ai-success" />
                       <span className="text-sm font-medium">
-                        {activeQuickAction === "lesson" ? "Generating..." : "Lesson Plans"}
+                        {activeQuickAction === "lesson" ? "Generating..." : "Lesson Plan"}
                       </span>
                     </Button>
                     <Button 
                       variant="outline" 
-                      className={`h-12 justify-start space-x-3 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-800 hover:shadow-md transition-all duration-200 ${
-                        activeQuickAction === "assessment" ? "ring-2 ring-blue-500 bg-blue-100 dark:bg-blue-900/50" : ""
+                      className={`h-12 justify-start space-x-3 bg-ai-info/5 border-ai-info/20 hover:shadow-md transition-all duration-200 ${
+                        activeQuickAction === "assessment" ? "ring-2 ring-ai-info bg-ai-info/10" : ""
                       }`}
                       onClick={() => handleQuickAction("assessment")}
                       disabled={activeQuickAction === "assessment"}
                     >
-                      <Target className="w-4 h-4 text-blue-600" />
+                      <Target className="w-4 h-4 text-ai-info" />
                       <span className="text-sm font-medium">
-                        {activeQuickAction === "assessment" ? "Creating..." : "Assessments"}
+                        {activeQuickAction === "assessment" ? "Creating..." : "Assessment"}
                       </span>
                     </Button>
                     <Button 
                       variant="outline" 
-                      className={`h-12 justify-start space-x-3 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-purple-200 dark:border-purple-800 hover:shadow-md transition-all duration-200 ${
-                        activeQuickAction === "analytics" ? "ring-2 ring-purple-500 bg-purple-100 dark:bg-purple-900/50" : ""
-                      }`}
-                      onClick={() => handleQuickAction("analytics")}
-                      disabled={activeQuickAction === "analytics"}
-                    >
-                      <BarChart3 className="w-4 h-4 text-purple-600" />
-                      <span className="text-sm font-medium">
-                        {activeQuickAction === "analytics" ? "Analyzing..." : "Analytics"}
-                      </span>
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      className={`h-12 justify-start space-x-3 bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 border-orange-200 dark:border-orange-800 hover:shadow-md transition-all duration-200 ${
-                        activeQuickAction === "engagement" ? "ring-2 ring-orange-500 bg-orange-100 dark:bg-orange-900/50" : ""
+                      className={`h-12 justify-start space-x-3 bg-ai-warning/5 border-ai-warning/20 hover:shadow-md transition-all duration-200 ${
+                        activeQuickAction === "engagement" ? "ring-2 ring-ai-warning bg-ai-warning/10" : ""
                       }`}
                       onClick={() => handleQuickAction("engagement")}
                       disabled={activeQuickAction === "engagement"}
                     >
-                      <Users className="w-4 h-4 text-orange-600" />
+                      <Users className="w-4 h-4 text-ai-warning" />
                       <span className="text-sm font-medium">
                         {activeQuickAction === "engagement" ? "Planning..." : "Engagement"}
                       </span>
@@ -503,75 +489,6 @@ What is the purpose of the \`__init__\` method in Python classes? Write a simple
                 </div>
               )}
 
-              {/* AI Features */}
-              {!isFeaturesMinimized && (
-                <div className="p-6 border-b border-gray-100 dark:border-gray-800">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center space-x-2">
-                      <Zap className="w-5 h-5 text-yellow-500" />
-                      <h4 className="font-semibold text-gray-900 dark:text-gray-100">AI-Powered Features</h4>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="w-6 h-6 p-0 text-gray-500 hover:text-gray-700"
-                      onClick={() => setIsFeaturesMinimized(true)}
-                    >
-                      <ChevronUp className="w-4 h-4" />
-                    </Button>
-                  </div>
-                  <div className="space-y-3">
-                    <div className="flex items-center space-x-3 p-3 rounded-lg bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 hover:shadow-sm transition-all duration-200">
-                      <div className="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                        <BookOpen className="w-4 h-4 text-green-600" />
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Smart Content Generation</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">Create engaging course materials</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-3 p-3 rounded-lg bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 hover:shadow-sm transition-all duration-200">
-                      <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                        <TrendingUp className="w-4 h-4 text-blue-600" />
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Performance Analytics</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">Visualize student progress data</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-3 p-3 rounded-lg bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 hover:shadow-sm transition-all duration-200">
-                      <div className="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
-                        <Lightbulb className="w-4 h-4 text-purple-600" />
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Smart Recommendations</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">Get personalized teaching tips</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* AI Features - Minimized */}
-              {isFeaturesMinimized && (
-                <div className="px-6 py-3 border-b border-gray-100 dark:border-gray-800">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <Zap className="w-4 h-4 text-yellow-500" />
-                      <span className="text-sm font-medium text-gray-600 dark:text-gray-400">AI Features</span>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="w-6 h-6 p-0 text-gray-500 hover:text-gray-700"
-                      onClick={() => setIsFeaturesMinimized(false)}
-                    >
-                      <ChevronDown className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              )}
-
               {/* Chat Interface */}
               <div className="flex-1 flex flex-col min-h-0">
                 <ScrollArea className="flex-1 px-6">
@@ -581,7 +498,6 @@ What is the purpose of the \`__init__\` method in Python classes? Write a simple
                       suggestions={[
                         "Create engaging lesson plan",
                         "Design interactive assessment", 
-                        "Show student analytics",
                         "Improve course engagement"
                       ]}
                       onVisualizationRequest={handleVisualizationRequest}

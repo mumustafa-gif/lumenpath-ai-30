@@ -36,10 +36,10 @@ All colors MUST be HSL.
     --input: 0 0% 95%;
     --ring: 221 83% 45%;
 
-    /* Strategic color system */
+    /* Strategic color system - removed purple tones */
     --ai-primary: 221 83% 45%;
     --ai-secondary: 215 83% 67%;
-    --ai-accent: 215 100% 0%;
+    --ai-accent: 215 100% 20%;
     --ai-success: 142 76% 36%;
     --ai-warning: 38 92% 50%;
     --ai-info: 221 83% 45%;
@@ -47,7 +47,7 @@ All colors MUST be HSL.
     --ai-increase: 142 76% 36%;
     --ai-decrease: 0 84% 60%;
     
-    /* Solid backgrounds instead of gradients */
+    /* Solid backgrounds instead of gradients - blue tones only */
     --primary-bg: 221 83% 97%;
     --secondary-bg: 215 83% 97%;
     --accent-bg: 0 0% 98%;
