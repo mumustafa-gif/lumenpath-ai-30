@@ -163,7 +163,7 @@ export const useSpeech = (options: UseSpeechOptions = {}) => {
       
       utterance.onerror = () => {
         setIsSpeaking(false);
-        options.onError?.('Speech synthesis failed');
+        // Silently handle speech synthesis errors
       };
 
       speechSynthesisRef.current = utterance;
@@ -183,7 +183,7 @@ export const useSpeech = (options: UseSpeechOptions = {}) => {
           speechSynthesis.speak(utterance);
         } catch (e) {
           setIsSpeaking(false);
-          options.onError?.('Speech synthesis failed');
+          // Silently handle speech synthesis errors
         }
       };
 
@@ -208,7 +208,7 @@ export const useSpeech = (options: UseSpeechOptions = {}) => {
       }
     } else {
       setIsSpeaking(false);
-      options.onError?.('Speech synthesis not supported');
+      // Speech synthesis not supported
     }
   }, [options]);
 

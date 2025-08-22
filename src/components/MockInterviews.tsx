@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -19,6 +19,7 @@ import {
   CheckCircle,
   Lightbulb
 } from "lucide-react";
+import HeyGenAvatar from "./HeyGenAvatar";
 
 const MockInterviews = () => {
   const [activeInterview, setActiveInterview] = useState<string | null>(null);
@@ -27,6 +28,8 @@ const MockInterviews = () => {
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [interviewCompleted, setInterviewCompleted] = useState(false);
   const [interviewScore, setInterviewScore] = useState(0);
+  const [userResponses, setUserResponses] = useState<string[]>([]);
+  const [currentUserResponse, setCurrentUserResponse] = useState<string>('');
 
   const interviewTypes = [
     {
@@ -135,6 +138,8 @@ const MockInterviews = () => {
     setTimeElapsed(0);
     setInterviewCompleted(false);
     setInterviewScore(0);
+    setUserResponses([]);
+    setCurrentUserResponse('');
     
     // Start timer
     const timer = setInterval(() => {
@@ -146,6 +151,25 @@ const MockInterviews = () => {
       completeInterview();
       clearInterval(timer);
     }, 2700000); // 45 minutes
+  };
+
+  const handleAvatarSpeak = (text: string) => {
+    console.log('Avatar spoke:', text);
+  };
+
+  const handleUserResponse = (response: string) => {
+    setCurrentUserResponse(response);
+    setUserResponses(prev => [...prev, response]);
+    
+    // Auto-advance to next question after user responds
+    setTimeout(() => {
+      if (currentQuestion < (mockQuestions[activeInterview as keyof typeof mockQuestions]?.length || 0) - 1) {
+        setCurrentQuestion(prev => prev + 1);
+        setCurrentUserResponse('');
+      } else {
+        completeInterview();
+      }
+    }, 2000);
   };
 
   const completeInterview = () => {
@@ -326,55 +350,57 @@ const MockInterviews = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Video Interface with Arabic Avatar */}
-            <div className="relative bg-gradient-to-br from-gray-900 to-gray-800 rounded-lg aspect-video overflow-hidden">
-              <div className="absolute inset-0 flex">
-                {/* User Side */}
-                <div className="flex-1 flex items-center justify-center border-r border-gray-600">
-                  <div className="text-center text-white space-y-2">
-                    <div className="w-20 h-20 mx-auto bg-gray-700 rounded-full flex items-center justify-center">
-                      <Video className="w-10 h-10" />
-                    </div>
-                    <p className="text-sm">You</p>
-                  </div>
-                </div>
-                
-                {/* Interviewer Side - Arabic Avatar */}
-                <div className="flex-1 flex items-center justify-center">
-                  <div className="text-center text-white space-y-2">
-                    <div className="w-24 h-24 mx-auto bg-blue-600 rounded-full flex items-center justify-center overflow-hidden">
-                      <div className="w-full h-full bg-gradient-to-b from-amber-100 to-amber-200 rounded-full flex items-center justify-center">
-                        <div className="text-4xl">👨🏽‍💼</div>
+            {/* HeyGen AI Avatar Interface */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* User Video */}
+              <Card className="relative overflow-hidden">
+                <CardContent className="p-0 aspect-video bg-gradient-to-br from-gray-900 to-gray-800">
+                  <div className="w-full h-full flex items-center justify-center">
+                    <div className="text-center text-white space-y-2">
+                      <div className="w-20 h-20 mx-auto bg-gray-700 rounded-full flex items-center justify-center">
+                        <Video className="w-10 h-10" />
                       </div>
+                      <p className="text-sm">You</p>
                     </div>
-                    <p className="text-sm font-medium">Ahmed Al-Rashid</p>
-                    <p className="text-xs text-gray-300">Senior Technical Interviewer</p>
                   </div>
-                </div>
-              </div>
-              
-              {/* Control Bar */}
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center gap-4">
-                <Button size="sm" variant="destructive">
-                  <Mic className="w-4 h-4 mr-2" />
-                  Mute
-                </Button>
-                <Button size="sm" variant="secondary">
-                  <Video className="w-4 h-4 mr-2" />
-                  Camera
-                </Button>
-                <div className="w-4 h-4 bg-red-500 rounded-full animate-pulse" />
-              </div>
-              
-              {/* Current Question Overlay */}
-              <div className="absolute bottom-4 left-4 right-4 bg-black/80 backdrop-blur rounded-lg p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                  <span className="text-white text-sm font-medium">Current Question:</span>
-                </div>
-                <p className="text-white text-sm">{currentQ}</p>
-              </div>
+                  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center gap-2">
+                    <Button size="sm" variant="destructive">
+                      <Mic className="w-4 h-4 mr-2" />
+                      Mute
+                    </Button>
+                    <Button size="sm" variant="secondary">
+                      <Video className="w-4 h-4 mr-2" />
+                      Camera
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* AI Avatar */}
+              <HeyGenAvatar
+                onAvatarSpeak={handleAvatarSpeak}
+                onUserResponse={handleUserResponse}
+                className="w-full"
+              />
             </div>
+
+            {/* Current Question Display */}
+            <Card className="border-ai-primary/20 bg-ai-primary/5">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
+                  <span className="text-lg font-medium">Question {currentQuestion + 1}:</span>
+                </div>
+                <p className="text-lg">{currentQ}</p>
+                {currentUserResponse && (
+                  <div className="mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded">
+                    <p className="text-sm text-green-800">
+                      <strong>Your Response:</strong> {currentUserResponse}
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
             
             {/* Live Stats */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
