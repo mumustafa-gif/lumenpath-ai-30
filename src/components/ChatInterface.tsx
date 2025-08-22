@@ -35,6 +35,7 @@ export const ChatInterface = ({
   ]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [speakEnabled, setSpeakEnabled] = useState(false);
 
   // Speech functionality
   const {
@@ -58,16 +59,16 @@ export const ChatInterface = ({
     },
   });
 
-  // Auto-speak AI responses
+  // Auto-speak AI responses (only when enabled by user)
   useEffect(() => {
+    if (!speakEnabled) return;
     if (messages.length > 0) {
       const lastMessage = messages[messages.length - 1];
-      if (lastMessage.sender === "ai" && !isTyping) {
-        // Auto-speak the AI response
+      if (lastMessage.sender === "ai" && !isTyping && lastMessage.content?.trim()) {
         speak(lastMessage.content);
       }
     }
-  }, [messages, isTyping, speak]);
+  }, [messages, isTyping, speak, speakEnabled]);
 
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
@@ -284,12 +285,12 @@ export const ChatInterface = ({
           
           {/* Text to Speech Toggle Button */}
           <Button
-            variant={isSpeaking ? "destructive" : "outline"}
+            variant={isSpeaking ? "destructive" : speakEnabled ? "default" : "outline"}
             size="icon"
-            onClick={isSpeaking ? stopSpeaking : () => {}}
-            title={isSpeaking ? "Stop speaking" : "Speech enabled"}
+            onClick={isSpeaking ? stopSpeaking : () => setSpeakEnabled((v) => !v)}
+            title={isSpeaking ? "Stop speaking" : speakEnabled ? "Disable auto-speak" : "Enable auto-speak"}
           >
-            {isSpeaking ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+            {isSpeaking ? <VolumeX className="w-4 h-4" /> : (speakEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />)}
           </Button>
           
           {/* Send Button */}

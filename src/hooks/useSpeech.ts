@@ -95,7 +95,7 @@ export const useSpeech = (options: UseSpeechOptions = {}) => {
     if (useElevenLabs) {
       try {
         // Try ElevenLabs API first
-        const response = await fetch('/api/text-to-speech', {
+        const response = await fetch('/functions/v1/text-to-speech', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -154,7 +154,33 @@ export const useSpeech = (options: UseSpeechOptions = {}) => {
       };
 
       speechSynthesisRef.current = utterance;
-      speechSynthesis.speak(utterance);
+
+      const speakNow = () => {
+        try {
+          speechSynthesis.speak(utterance);
+        } catch (e) {
+          setIsSpeaking(false);
+          options.onError?.('Speech synthesis failed');
+        }
+      };
+
+      const voices = speechSynthesis.getVoices();
+      if (!voices || voices.length === 0) {
+        const handleVoices = () => {
+          // Remove handler to avoid multiple triggers
+          speechSynthesis.onvoiceschanged = null;
+          speakNow();
+        };
+        speechSynthesis.onvoiceschanged = handleVoices;
+        // Fallback if voiceschanged never fires
+        setTimeout(() => {
+          if (!speechSynthesis.speaking && speechSynthesisRef.current) {
+            speakNow();
+          }
+        }, 300);
+      } else {
+        speakNow();
+      }
     } else {
       setIsSpeaking(false);
       options.onError?.('Speech synthesis not supported');
