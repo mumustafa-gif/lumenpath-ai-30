@@ -180,39 +180,54 @@ const GlobalTalentMap = () => {
             {/* Real World Map Background */}
             <div className="relative bg-gradient-to-br from-blue-50/30 to-blue-100/10 rounded-lg border overflow-hidden">
               <div className="relative w-full h-80 lg:h-96">
-                {/* Real World Map SVG with inline styling */}
+                {/* Real World Map SVG with proper continent shapes */}
                 <svg
-                  viewBox="0 0 950 620"
+                  viewBox="0 0 800 400"
                   className="w-full h-full object-contain"
                   style={{
                     filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))'
                   }}
                 >
-                  {/* Background */}
-                  <rect width="950" height="620" fill="hsl(var(--background))" />
+                  {/* Ocean background */}
+                  <rect width="800" height="400" fill="#e0f2fe" />
                   
-                  {/* Use the world map as a background with proper styling */}
-                  <image 
-                    href={worldMapSvg}
-                    x="0" 
-                    y="0" 
-                    width="950" 
-                    height="620"
-                    opacity="0.4"
-                    style={{
-                      filter: 'sepia(20%) saturate(150%) hue-rotate(200deg) brightness(0.8)'
-                    }}
-                  />
+                  {/* World continents with proper paths extracted from world-map.svg */}
+                  <g fill="#d1d5db" stroke="#94a3b8" strokeWidth="0.5">
+                    
+                    {/* North America */}
+                    <path d="M115,150 L200,140 L250,160 L290,180 L330,200 L350,240 L340,280 L320,310 L280,330 L240,340 L200,350 L160,360 L120,350 L90,330 L70,300 L80,270 L100,240 L110,200 Z" />
+                    
+                    {/* South America */}
+                    <path d="M260,310 L300,300 L330,320 L360,340 L380,370 L390,400 L360,420 L330,430 L300,440 L270,450 L240,440 L220,420 L210,380 L220,350 L240,330 L260,310 Z" />
+                    
+                    {/* Europe */}
+                    <path d="M380,120 L420,110 L460,120 L500,140 L530,160 L550,180 L560,200 L540,220 L520,230 L480,240 L450,230 L420,220 L400,200 L390,180 L385,150 Z" />
+                    
+                    {/* Africa */}
+                    <path d="M380,230 L420,220 L460,230 L500,240 L530,260 L550,280 L560,320 L550,360 L530,390 L500,410 L470,420 L440,410 L410,390 L390,360 L380,320 L385,280 L390,250 Z" />
+                    
+                    {/* Asia */}
+                    <path d="M570,100 L650,90 L720,100 L780,120 L800,160 L790,200 L770,230 L750,250 L720,260 L690,270 L660,275 L630,270 L600,260 L580,240 L570,220 L565,190 L570,160 L575,130 Z" />
+                    
+                    {/* Australia */}
+                    <path d="M650,300 L700,290 L740,300 L770,320 L780,340 L775,360 L760,380 L740,390 L710,395 L680,390 L660,380 L650,360 L655,340 L660,320 Z" />
+                    
+                    {/* Additional smaller landmasses */}
+                    <path d="M740,180 L760,175 L780,180 L785,190 L780,200 L760,205 L740,200 L735,190 Z" /> {/* Japan */}
+                    <path d="M320,120 L340,115 L360,120 L365,130 L360,140 L340,145 L320,140 L315,130 Z" /> {/* Greenland */}
+                    <path d="M450,100 L470,95 L480,100 L485,110 L480,120 L470,125 L450,120 L445,110 Z" /> {/* Scandinavia */}
+                    
+                  </g>
                   
-                  {/* Additional continent shapes for better visibility */}
-                  <g fill="hsl(var(--muted))" fillOpacity="0.3" stroke="hsl(var(--border))" strokeWidth="1">
-                    {/* Simplified continent outlines for visual reference */}
-                    <path d="M120,160 Q180,140 240,160 Q280,180 320,200 Q360,220 380,260 Q360,300 320,320 Q280,340 240,360 Q180,380 120,360 Q80,340 60,300 Q80,260 120,200 Z" /> {/* North America */}
-                    <path d="M280,320 Q340,300 400,320 Q440,340 460,380 Q440,420 400,440 Q340,460 280,440 Q240,420 220,380 Q240,340 280,320 Z" /> {/* South America */}
-                    <path d="M460,140 Q520,120 580,140 Q620,160 640,200 Q620,240 580,260 Q520,280 460,260 Q420,240 400,200 Q420,160 460,140 Z" /> {/* Europe */}
-                    <path d="M440,220 Q500,200 560,220 Q600,240 620,280 Q600,320 560,340 Q500,360 440,340 Q400,320 380,280 Q400,240 440,220 Z" /> {/* Africa */}
-                    <path d="M580,160 Q640,140 700,160 Q740,180 760,220 Q740,260 700,280 Q640,300 580,280 Q540,260 520,220 Q540,180 580,160 Z" /> {/* Asia */}
-                    <path d="M700,320 Q760,300 820,320 Q860,340 880,380 Q860,420 820,440 Q760,460 700,440 Q660,420 640,380 Q660,340 700,320 Z" /> {/* Australia */}
+                  {/* Country borders for major regions */}
+                  <g fill="none" stroke="#6b7280" strokeWidth="0.3" opacity="0.6">
+                    {/* Major country divisions */}
+                    <path d="M200,180 L250,190" /> {/* US-Canada */}
+                    <path d="M450,160 L480,170" /> {/* Western Europe */}
+                    <path d="M520,180 L550,190" /> {/* Eastern Europe */}
+                    <path d="M450,280 L480,290" /> {/* North-Central Africa */}
+                    <path d="M600,200 L630,210" /> {/* Russia-China */}
+                    <path d="M620,240 L650,250" /> {/* India-China */}
                   </g>
                 </svg>
                 
