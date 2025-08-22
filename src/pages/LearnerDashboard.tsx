@@ -38,6 +38,7 @@ import { AICareerCounselor } from "@/components/AICareerCounselor";
 import { AIEducationalCounselor } from "@/components/AIEducationalCounselor";
 import { LearnerAIAssistant } from "@/components/LearnerAIAssistant";
 import ResumeBuilder from "@/components/ResumeBuilder";
+import MockAssessments from "@/components/MockAssessments";
 
 const LearnerDashboard = () => {
   const [showOnboarding, setShowOnboarding] = useState(false); // Set to true for new users
@@ -617,6 +618,10 @@ const LearnerDashboard = () => {
 
               {activeTab === "resume-builder" && (
                 <ResumeBuilder />
+              )}
+
+              {activeTab === "mock-assessments" && (
+                <MockAssessments />
               )}
             </div>
           </main>

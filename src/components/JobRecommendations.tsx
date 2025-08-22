@@ -184,11 +184,7 @@ const JobRecommendations = () => {
   return (
     <div className="space-y-6">
       <div className="text-center space-y-4">
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-ai-primary/10 to-ai-accent/10 rounded-full border border-ai-primary/20">
-          <Briefcase className="w-5 h-5 text-ai-primary" />
-          <span className="font-semibold text-ai-primary">Career Path Intelligence</span>
-        </div>
-        <h2 className="text-3xl font-bold bg-gradient-to-r from-ai-primary to-ai-accent bg-clip-text text-transparent">
+        <h2 className="text-3xl font-bold text-foreground">
           Future Career Opportunities
         </h2>
         <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -339,13 +335,9 @@ const JobRecommendations = () => {
               
               {/* Actions */}
               <div className="flex gap-3 pt-4">
-                <Button className="flex-1 bg-gradient-to-r from-ai-primary to-ai-accent">
-                  <Target className="w-4 h-4 mr-2" />
-                  Set as Career Goal
-                </Button>
-                <Button variant="outline" className="flex-1">
-                  <BookOpen className="w-4 h-4 mr-2" />
-                  View Learning Path
+                <Button variant="outline" className="w-full">
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  View Job Details
                 </Button>
               </div>
             </CardContent>

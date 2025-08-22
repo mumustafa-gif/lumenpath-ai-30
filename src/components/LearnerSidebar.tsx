@@ -43,6 +43,7 @@ const analysisItems = [
   { title: "Market Skill Comparison", tabValue: "market-skill-comparison", icon: GitCompare },
   { title: "Mock Interviews", tabValue: "mock-interviews", icon: MessageSquare },
   { title: "Job Matching", tabValue: "job-recommendations", icon: Briefcase },
+  { title: "Mock Assessments", tabValue: "mock-assessments", icon: BarChart3 },
 ];
 
 const counselorItems = [
