@@ -416,8 +416,8 @@ export const CourseGenerator = () => {
               Let's create your course together through conversation
             </CardDescription>
           </CardHeader>
-          <CardContent className="flex-1 flex flex-col p-0">
-            <ScrollArea className="flex-1 px-6">
+          <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
+            <ScrollArea className="flex-1 px-6 max-h-[480px]">
               <div className="space-y-4 py-4">
                 {messages.map((message) => (
                   <div

@@ -405,8 +405,8 @@ export const CurriculumCreator = () => {
                 Let's create your comprehensive curriculum through conversation
               </CardDescription>
             </CardHeader>
-            <CardContent className="flex-1 flex flex-col p-0">
-              <ScrollArea className="flex-1 px-6">
+            <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
+              <ScrollArea className="flex-1 px-6 max-h-[480px]">
                 <div className="space-y-4 py-4">
                   {messages.map((message) => (
                     <div

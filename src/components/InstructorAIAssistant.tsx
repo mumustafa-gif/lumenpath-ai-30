@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -18,12 +18,6 @@ export const InstructorAIAssistant = () => {
   const [activeQuickAction, setActiveQuickAction] = useState<string | null>(null);
   const [isQuickActionsMinimized, setIsQuickActionsMinimized] = useState(false);
   const [isFeaturesMinimized, setIsFeaturesMinimized] = useState(false);
-  
-  // Draggable state
-  const [position, setPosition] = useState({ x: 24, y: 24 }); // bottom-6 right-6 = 24px
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const dragRef = useRef<HTMLDivElement>(null);
 
   // Sample course data for visualization
   const courseData = [
@@ -42,45 +36,6 @@ export const InstructorAIAssistant = () => {
   ];
 
   const COLORS = ['#4ade80', '#60a5fa', '#fbbf24', '#f87171'];
-
-  // Drag handlers
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    if (!dragRef.current) return;
-    
-    setIsDragging(true);
-    const rect = dragRef.current.getBoundingClientRect();
-    setDragOffset({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
-    });
-  }, []);
-
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (!isDragging) return;
-    
-    const newX = window.innerWidth - (e.clientX - dragOffset.x + (isOpen ? 420 : 64));
-    const newY = window.innerHeight - (e.clientY - dragOffset.y + (isOpen && !isMinimized ? 680 : isOpen ? 80 : 64));
-    
-    setPosition({
-      x: Math.max(0, Math.min(newX, window.innerWidth - (isOpen ? 420 : 64))),
-      y: Math.max(0, Math.min(newY, window.innerHeight - (isOpen && !isMinimized ? 680 : isOpen ? 80 : 64)))
-    });
-  }, [isDragging, dragOffset, isOpen, isMinimized]);
-
-  const handleMouseUp = useCallback(() => {
-    setIsDragging(false);
-  }, []);
-
-  useEffect(() => {
-    if (isDragging) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-      return () => {
-        document.removeEventListener('mousemove', handleMouseMove);
-        document.removeEventListener('mouseup', handleMouseUp);
-      };
-    }
-  }, [isDragging, handleMouseMove, handleMouseUp]);
 
   const handleQuickAction = async (actionType: string) => {
     setActiveQuickAction(actionType);
@@ -387,16 +342,7 @@ What is the purpose of the \`__init__\` method in Python classes? Write a simple
 
   if (!isOpen) {
     return (
-      <div 
-        ref={dragRef}
-        className="fixed z-50 cursor-move"
-        style={{ 
-          right: `${position.x}px`, 
-          bottom: `${position.y}px`,
-          cursor: isDragging ? 'grabbing' : 'grab'
-        }}
-        onMouseDown={handleMouseDown}
-      >
+      <div className="fixed bottom-6 right-6 z-50">
         <Button
           onClick={() => setIsOpen(true)}
           className="group relative w-16 h-16 rounded-full shadow-2xl bg-gradient-to-br from-purple-600 via-blue-600 to-emerald-500 hover:scale-110 transition-all duration-300 border-0 overflow-hidden"
@@ -424,25 +370,12 @@ What is the purpose of the \`__init__\` method in Python classes? Write a simple
 
   return (
     <>
-      <div 
-        ref={dragRef}
-        className={`fixed z-50 transition-all duration-500 ease-out ${
-          isMinimized ? 'h-20' : 'h-[680px]'
-        }`}
-        style={{ 
-          right: `${position.x}px`, 
-          bottom: `${position.y}px`,
-          width: '420px',
-          cursor: isDragging ? 'grabbing' : 'grab'
-        }}
-      >
+      <div className={`fixed bottom-6 right-6 w-[420px] z-50 transition-all duration-500 ease-out ${
+        isMinimized ? 'h-20' : 'h-[680px]'
+      }`}>
         <Card className="h-full bg-gradient-to-br from-slate-50/95 via-white/95 to-blue-50/95 dark:from-slate-900/95 dark:via-slate-800/95 dark:to-blue-900/95 backdrop-blur-xl border-0 shadow-2xl ring-1 ring-black/5 dark:ring-white/10 overflow-hidden">
           {/* Header */}
-          <div 
-            className="relative bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-700 p-6 border-b border-white/10 cursor-move"
-            onMouseDown={handleMouseDown}
-            style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
-          >
+          <div className="relative bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-700 p-6 border-b border-white/10">
             <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
             <div className="relative flex items-center justify-between">
               <div className="flex items-center space-x-4">
