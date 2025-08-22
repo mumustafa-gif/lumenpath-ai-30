@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -36,6 +37,7 @@ export const ChatInterface = ({
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [speakEnabled, setSpeakEnabled] = useState(false);
+  const lastSpokenIdRef = useRef<string | null>(null);
 
   // Speech functionality
   const {
@@ -59,16 +61,22 @@ export const ChatInterface = ({
     },
   });
 
-  // Auto-speak AI responses (only when enabled by user)
+  // Auto-speak AI responses (only when enabled by user) with id guard to avoid repeats
   useEffect(() => {
     if (!speakEnabled) return;
-    if (messages.length > 0) {
-      const lastMessage = messages[messages.length - 1];
-      if (lastMessage.sender === "ai" && !isTyping && lastMessage.content?.trim()) {
-        speak(lastMessage.content);
-      }
+    if (messages.length === 0 || isTyping) return;
+
+    const lastMessage = messages[messages.length - 1];
+    if (
+      lastMessage.sender === "ai" &&
+      lastMessage.content?.trim() &&
+      lastMessage.id !== lastSpokenIdRef.current
+    ) {
+      lastSpokenIdRef.current = lastMessage.id;
+      // Use browser TTS for reliability during prototyping; skip ElevenLabs until backend is connected
+      speak(lastMessage.content, false);
     }
-  }, [messages, isTyping, speak, speakEnabled]);
+  }, [messages, isTyping, speakEnabled]); // intentionally omit `speak` to avoid identity changes retriggering
 
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
@@ -287,7 +295,18 @@ export const ChatInterface = ({
           <Button
             variant={isSpeaking ? "destructive" : speakEnabled ? "default" : "outline"}
             size="icon"
-            onClick={isSpeaking ? stopSpeaking : () => setSpeakEnabled((v) => !v)}
+            onClick={
+              isSpeaking 
+                ? stopSpeaking 
+                : () => setSpeakEnabled((v) => {
+                    const next = !v;
+                    if (next) {
+                      // reset last spoken guard to speak the current last AI message immediately
+                      lastSpokenIdRef.current = null;
+                    }
+                    return next;
+                  })
+            }
             title={isSpeaking ? "Stop speaking" : speakEnabled ? "Disable auto-speak" : "Enable auto-speak"}
           >
             {isSpeaking ? <VolumeX className="w-4 h-4" /> : (speakEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />)}

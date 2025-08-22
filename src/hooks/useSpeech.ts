@@ -1,3 +1,4 @@
+
 import { useState, useRef, useCallback } from 'react';
 
 interface UseSpeechOptions {
@@ -81,6 +82,8 @@ export const useSpeech = (options: UseSpeechOptions = {}) => {
 
   // Speak text using ElevenLabs or fallback to browser TTS
   const speak = useCallback(async (text: string, useElevenLabs: boolean = true) => {
+    if (!text || !text.trim()) return;
+
     if (isSpeaking) {
       // Stop current speech
       if (speechSynthesisRef.current) {
@@ -138,11 +141,21 @@ export const useSpeech = (options: UseSpeechOptions = {}) => {
 
   // Browser TTS fallback
   const speakWithBrowserTTS = useCallback((text: string) => {
+    if (!text || !text.trim()) {
+      setIsSpeaking(false);
+      return;
+    }
+
     if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.rate = 0.9;
       utterance.pitch = 1;
       utterance.volume = 1;
+
+      // mark speaking at start for better UI feedback
+      utterance.onstart = () => {
+        setIsSpeaking(true);
+      };
       
       utterance.onend = () => {
         setIsSpeaking(false);
@@ -155,8 +168,18 @@ export const useSpeech = (options: UseSpeechOptions = {}) => {
 
       speechSynthesisRef.current = utterance;
 
+      const assignPreferredVoice = () => {
+        const voices = speechSynthesis.getVoices() || [];
+        const preferred = voices.find(v => v.lang?.toLowerCase().includes('en')) || voices[0];
+        if (preferred) {
+          utterance.voice = preferred;
+        }
+      };
+
       const speakNow = () => {
         try {
+          // clear any queued speech that might cause InvalidStateError
+          speechSynthesis.cancel();
           speechSynthesis.speak(utterance);
         } catch (e) {
           setIsSpeaking(false);
@@ -167,18 +190,20 @@ export const useSpeech = (options: UseSpeechOptions = {}) => {
       const voices = speechSynthesis.getVoices();
       if (!voices || voices.length === 0) {
         const handleVoices = () => {
-          // Remove handler to avoid multiple triggers
           speechSynthesis.onvoiceschanged = null;
+          assignPreferredVoice();
           speakNow();
         };
         speechSynthesis.onvoiceschanged = handleVoices;
         // Fallback if voiceschanged never fires
         setTimeout(() => {
           if (!speechSynthesis.speaking && speechSynthesisRef.current) {
+            assignPreferredVoice();
             speakNow();
           }
         }, 300);
       } else {
+        assignPreferredVoice();
         speakNow();
       }
     } else {
