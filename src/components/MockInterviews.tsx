@@ -30,6 +30,8 @@ const MockInterviews = () => {
   const [interviewScore, setInterviewScore] = useState(0);
   const [userResponses, setUserResponses] = useState<string[]>([]);
   const [currentUserResponse, setCurrentUserResponse] = useState<string>('');
+  const [avatarReady, setAvatarReady] = useState(false);
+  const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
 
   const interviewTypes = [
     {
@@ -140,6 +142,8 @@ const MockInterviews = () => {
     setInterviewScore(0);
     setUserResponses([]);
     setCurrentUserResponse('');
+    setAvatarReady(false);
+    setIsWaitingForResponse(false);
     
     // Start timer
     const timer = setInterval(() => {
@@ -155,11 +159,15 @@ const MockInterviews = () => {
 
   const handleAvatarSpeak = (text: string) => {
     console.log('Avatar spoke:', text);
+    setIsWaitingForResponse(true);
   };
 
   const handleUserResponse = (response: string) => {
+    if (!response.trim() || !isWaitingForResponse) return;
+    
     setCurrentUserResponse(response);
     setUserResponses(prev => [...prev, response]);
+    setIsWaitingForResponse(false);
     
     // Auto-advance to next question after user responds
     setTimeout(() => {
@@ -170,6 +178,10 @@ const MockInterviews = () => {
         completeInterview();
       }
     }, 2000);
+  };
+
+  const handleSessionReady = () => {
+    setAvatarReady(true);
   };
 
   const completeInterview = () => {
@@ -380,6 +392,9 @@ const MockInterviews = () => {
               <HeyGenAvatar
                 onAvatarSpeak={handleAvatarSpeak}
                 onUserResponse={handleUserResponse}
+                onSessionReady={handleSessionReady}
+                currentQuestion={avatarReady ? currentQ : undefined}
+                isInterviewActive={interviewStarted}
                 className="w-full"
               />
             </div>

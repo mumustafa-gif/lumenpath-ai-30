@@ -8,11 +8,14 @@ import StreamingAvatar, {
 } from '@heygen/streaming-avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Mic, MicOff, Video, VideoOff, Volume2, VolumeX } from 'lucide-react';
+import { Mic, MicOff, Video, VideoOff, Volume2, VolumeX, Play, Pause } from 'lucide-react';
 
 interface HeyGenAvatarProps {
   onAvatarSpeak?: (text: string) => void;
   onUserResponse?: (text: string) => void;
+  onSessionReady?: () => void;
+  currentQuestion?: string;
+  isInterviewActive?: boolean;
   avatarId?: string;
   voiceId?: string;
   className?: string;
@@ -21,7 +24,10 @@ interface HeyGenAvatarProps {
 const HeyGenAvatar: React.FC<HeyGenAvatarProps> = ({
   onAvatarSpeak,
   onUserResponse,
-  avatarId = "Josh_20230207_20230207_sam",
+  onSessionReady,
+  currentQuestion,
+  isInterviewActive = false,
+  avatarId = "Josh_20230207_20230207_sam", 
   voiceId = "1bd001e7e50f421d891986aad5158bc8",
   className = ""
 }) => {
@@ -36,6 +42,9 @@ const HeyGenAvatar: React.FC<HeyGenAvatarProps> = ({
   const [isUserTalking, setIsUserTalking] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
+  const [sessionReady, setSessionReady] = useState(false);
+  const [isAvatarSpeaking, setIsAvatarSpeaking] = useState(false);
+  const [lastQuestionAsked, setLastQuestionAsked] = useState<string>('');
 
   const mediaStream = useRef<HTMLVideoElement>(null);
 
@@ -43,18 +52,28 @@ const HeyGenAvatar: React.FC<HeyGenAvatarProps> = ({
     if (!avatar || !text.trim()) return;
     
     setIsLoadingRepeat(true);
+    setIsAvatarSpeaking(true);
     try {
       await avatar.speak({
         text: text,
         task_type: TaskType.REPEAT
       });
       onAvatarSpeak?.(text);
+      setLastQuestionAsked(text);
     } catch (error) {
       console.error('Error speaking:', error);
     } finally {
       setIsLoadingRepeat(false);
     }
-  }, [avatar, chatMode, onAvatarSpeak]);
+  }, [avatar, onAvatarSpeak]);
+
+  // Auto-ask question when currentQuestion changes
+  useEffect(() => {
+    if (avatar && currentQuestion && isInterviewActive && currentQuestion !== lastQuestionAsked) {
+      const questionText = `Hello, I'm Ahmed, your AI interview assistant. Here's your question: ${currentQuestion}. Please take your time to answer.`;
+      handleSpeak(questionText);
+    }
+  }, [currentQuestion, avatar, isInterviewActive, lastQuestionAsked, handleSpeak]);
 
   const startSession = useCallback(async () => {
     setIsLoadingSession(true);
@@ -95,15 +114,19 @@ const HeyGenAvatar: React.FC<HeyGenAvatarProps> = ({
 
       newAvatar.on(StreamingEvents.AVATAR_START_TALKING, (e) => {
         console.log("Avatar started talking", e);
+        setIsAvatarSpeaking(true);
       });
 
       newAvatar.on(StreamingEvents.AVATAR_STOP_TALKING, (e) => {
         console.log("Avatar stopped talking", e);
+        setIsAvatarSpeaking(false);
       });
 
       newAvatar.on(StreamingEvents.STREAM_READY, (event) => {
         console.log("Stream ready:", event.detail);
         setStream(event.detail);
+        setSessionReady(true);
+        onSessionReady?.();
       });
 
       newAvatar.on(StreamingEvents.STREAM_DISCONNECTED, () => {
@@ -224,10 +247,18 @@ const HeyGenAvatar: React.FC<HeyGenAvatarProps> = ({
             </div>
           )}
 
-          {/* Speaking Indicator */}
+          {/* Speaking Indicators */}
           {isUserTalking && (
-            <div className="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-medium animate-pulse">
+            <div className="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-medium animate-pulse flex items-center gap-2">
+              <Mic className="w-3 h-3" />
               You're speaking...
+            </div>
+          )}
+
+          {isAvatarSpeaking && (
+            <div className="absolute top-4 left-4 bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium animate-pulse flex items-center gap-2">
+              <Volume2 className="w-3 h-3" />
+              AI Speaking...
             </div>
           )}
 
@@ -235,6 +266,13 @@ const HeyGenAvatar: React.FC<HeyGenAvatarProps> = ({
           {isLoadingRepeat && (
             <div className="absolute top-4 right-4 bg-ai-primary text-white px-3 py-1 rounded-full text-sm font-medium animate-pulse">
               AI Responding...
+            </div>
+          )}
+
+          {/* Session Status */}
+          {sessionReady && (
+            <div className="absolute top-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-medium">
+              Connected
             </div>
           )}
 
