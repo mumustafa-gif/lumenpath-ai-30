@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import GlobalTalentMap from "@/components/GlobalTalentMap";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
@@ -42,7 +44,6 @@ import {
   PolarRadiusAxis,
   Radar
 } from 'recharts';
-import { useState } from "react";
 
 export const DeepAnalytics = () => {
   const [timeRange, setTimeRange] = useState("12months");
@@ -350,152 +351,7 @@ export const DeepAnalytics = () => {
         </TabsContent>
 
         <TabsContent value="globalmap" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <div className="p-2 bg-ai-primary/10 rounded-xl">
-                  <Globe className="w-5 h-5 text-ai-primary" />
-                </div>
-                UAE Talent & Skills Map
-              </CardTitle>
-              <CardDescription>Interactive visualization of talent distribution and skill gaps across UAE regions</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-6">
-                {/* UAE Map Dummy Implementation */}
-                <div className="relative h-96 bg-muted rounded-xl border border-border overflow-hidden">
-                  {/* Map SVG Background */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-blue-100">
-                    <svg viewBox="0 0 400 300" className="w-full h-full">
-                      {/* UAE Outline Simplified */}
-                      <path 
-                        d="M50 150 L100 120 L180 110 L250 125 L320 140 L350 160 L340 180 L280 200 L200 210 L120 195 L70 175 Z" 
-                        fill="hsl(var(--ai-primary))" 
-                        fillOpacity="0.1" 
-                        stroke="hsl(var(--ai-primary))" 
-                        strokeWidth="2"
-                      />
-                      
-                      {/* Dubai */}
-                      <circle cx="280" cy="160" r="8" fill="hsl(var(--ai-primary))" />
-                      <text x="295" y="165" className="text-xs fill-current font-medium">Dubai</text>
-                      
-                      {/* Abu Dhabi */}
-                      <circle cx="200" cy="180" r="6" fill="hsl(var(--ai-secondary))" />
-                      <text x="210" y="185" className="text-xs fill-current font-medium">Abu Dhabi</text>
-                      
-                      {/* Sharjah */}
-                      <circle cx="290" cy="150" r="4" fill="hsl(var(--ai-accent))" />
-                      <text x="300" y="155" className="text-xs fill-current font-medium">Sharjah</text>
-                      
-                      {/* Ajman */}
-                      <circle cx="295" cy="145" r="3" fill="hsl(var(--ai-success))" />
-                      <text x="305" y="150" className="text-xs fill-current font-medium">Ajman</text>
-                    </svg>
-                  </div>
-                  
-                  {/* Map Controls */}
-                  <div className="absolute top-4 right-4 bg-card rounded-lg p-2 shadow-lg border">
-                    <div className="text-xs font-medium mb-2">Talent Density</div>
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-ai-primary"></div>
-                        <span className="text-xs">High (500+)</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-ai-secondary"></div>
-                        <span className="text-xs">Medium (200-500)</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-ai-accent"></div>
-                        <span className="text-xs">Low (50-200)</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Regional Talent Stats */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {[
-                    { region: "Dubai", talent: 523, skills: "AI, Fintech", gap: "12%" },
-                    { region: "Abu Dhabi", talent: 387, skills: "Energy, Gov Tech", gap: "8%" },
-                    { region: "Sharjah", talent: 245, skills: "Manufacturing", gap: "15%" },
-                    { region: "Ajman", talent: 92, skills: "Tourism, Retail", gap: "22%" }
-                  ].map((region, index) => (
-                    <div key={index} className="p-4 rounded-lg border bg-gradient-to-br from-card to-ai-primary/5">
-                      <h4 className="font-semibold text-ai-primary mb-2">{region.region}</h4>
-                      <div className="space-y-2 text-sm">
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">Talent Pool:</span>
-                          <span className="font-medium">{region.talent}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">Top Skills:</span>
-                          <span className="font-medium text-right">{region.skills}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">Skill Gap:</span>
-                          <span className="font-medium text-destructive">{region.gap}</span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Skills Heat Map */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-sm">Skills Demand Heat Map</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-3">
-                        {[
-                          { skill: "AI/ML", demand: 95, regions: ["Dubai", "Abu Dhabi"] },
-                          { skill: "Cybersecurity", demand: 89, regions: ["Dubai", "Sharjah"] },
-                          { skill: "Data Science", demand: 84, regions: ["Abu Dhabi", "Dubai"] },
-                          { skill: "Cloud Computing", demand: 78, regions: ["Dubai", "Ajman"] },
-                          { skill: "Blockchain", demand: 72, regions: ["Dubai"] }
-                        ].map((item, index) => (
-                          <div key={index} className="flex items-center justify-between p-2 rounded border">
-                            <span className="font-medium">{item.skill}</span>
-                            <div className="flex items-center gap-2">
-                              <Progress value={item.demand} className="w-20 h-2" />
-                              <span className="text-sm text-muted-foreground w-8">{item.demand}%</span>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-sm">Regional Skill Distribution</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <ResponsiveContainer width="100%" height={200}>
-                        <BarChart data={[
-                          { region: "Dubai", tech: 45, business: 30, creative: 25 },
-                          { region: "Abu Dhabi", tech: 38, business: 35, creative: 27 },
-                          { region: "Sharjah", tech: 25, business: 40, creative: 35 },
-                          { region: "Others", tech: 20, business: 45, creative: 35 }
-                        ]}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                          <XAxis dataKey="region" stroke="hsl(var(--muted-foreground))" />
-                          <YAxis stroke="hsl(var(--muted-foreground))" />
-                          <Tooltip />
-                          <Bar dataKey="tech" stackId="a" fill="hsl(var(--ai-primary))" />
-                          <Bar dataKey="business" stackId="a" fill="hsl(var(--ai-secondary))" />
-                          <Bar dataKey="creative" stackId="a" fill="hsl(var(--ai-success))" />
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </CardContent>
-                  </Card>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <GlobalTalentMap />
         </TabsContent>
 
         <TabsContent value="intelligence" className="space-y-6">

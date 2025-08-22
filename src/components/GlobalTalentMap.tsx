@@ -9,139 +9,91 @@ const GlobalTalentMap = () => {
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
   const [hoveredRegion, setHoveredRegion] = useState<string | null>(null);
 
-  // Global talent data with dummy information
+  // UAE regional talent data
   const globalTalentData = [
     { 
-      region: "North America", 
-      country: "United States",
-      coordinates: { x: 240, y: 180 },
-      professionals: 125000, 
-      skillGap: 28, 
-      topSkills: ["AI/ML", "Cloud Computing", "Cybersecurity"], 
-      avgSalary: 95000, 
-      growth: "+22%",
+      region: "UAE", 
+      country: "Dubai",
+      coordinates: { x: 650, y: 200 },
+      professionals: 12500, 
+      skillGap: 32, 
+      topSkills: ["AI/ML", "Cloud Computing", "Fintech"], 
+      avgSalary: 115000, 
+      growth: "+18%",
       demandLevel: "Critical",
       color: "hsl(var(--ai-error))"
     },
     { 
-      region: "North America", 
-      country: "Canada",
-      coordinates: { x: 220, y: 140 },
-      professionals: 45000, 
-      skillGap: 32, 
-      topSkills: ["Data Science", "DevOps", "Full-Stack Development"], 
-      avgSalary: 78000, 
-      growth: "+18%",
-      demandLevel: "High",
-      color: "hsl(var(--ai-warning))"
-    },
-    { 
-      region: "Europe", 
-      country: "United Kingdom",
-      coordinates: { x: 480, y: 160 },
-      professionals: 89000, 
-      skillGap: 35, 
-      topSkills: ["Fintech", "AI Ethics", "Quantum Computing"], 
-      avgSalary: 72000, 
+      region: "UAE", 
+      country: "Abu Dhabi",
+      coordinates: { x: 580, y: 220 },
+      professionals: 8900, 
+      skillGap: 38, 
+      topSkills: ["Cybersecurity", "Data Science", "Gov Tech"], 
+      avgSalary: 108000, 
       growth: "+15%",
       demandLevel: "High",
       color: "hsl(var(--ai-warning))"
     },
     { 
-      region: "Europe", 
-      country: "Germany",
-      coordinates: { x: 510, y: 170 },
-      professionals: 78000, 
-      skillGap: 29, 
-      topSkills: ["Industry 4.0", "IoT", "Robotics"], 
-      avgSalary: 68000, 
-      growth: "+20%",
-      demandLevel: "Critical",
-      color: "hsl(var(--ai-error))"
-    },
-    { 
-      region: "Middle East", 
-      country: "UAE",
-      coordinates: { x: 560, y: 240 },
-      professionals: 34500, 
+      region: "UAE", 
+      country: "Sharjah",
+      coordinates: { x: 670, y: 190 },
+      professionals: 5200, 
       skillGap: 42, 
-      topSkills: ["Smart Cities", "Blockchain", "Green Tech"], 
-      avgSalary: 85000, 
-      growth: "+35%",
-      demandLevel: "Critical",
-      color: "hsl(var(--ai-error))"
-    },
-    { 
-      region: "Asia Pacific", 
-      country: "Singapore",
-      coordinates: { x: 680, y: 280 },
-      professionals: 67000, 
-      skillGap: 25, 
-      topSkills: ["Fintech", "Maritime Tech", "Supply Chain"], 
-      avgSalary: 76000, 
-      growth: "+28%",
-      demandLevel: "Medium",
-      color: "hsl(var(--ai-primary))"
-    },
-    { 
-      region: "Asia Pacific", 
-      country: "India",
-      coordinates: { x: 620, y: 260 },
-      professionals: 156000, 
-      skillGap: 18, 
-      topSkills: ["Software Development", "Data Analytics", "Mobile Apps"], 
-      avgSalary: 32000, 
-      growth: "+40%",
-      demandLevel: "Medium",
-      color: "hsl(var(--ai-primary))"
-    },
-    { 
-      region: "Asia Pacific", 
-      country: "Japan",
-      coordinates: { x: 740, y: 220 },
-      professionals: 98000, 
-      skillGap: 31, 
-      topSkills: ["Robotics", "Gaming Tech", "Manufacturing AI"], 
-      avgSalary: 65000, 
+      topSkills: ["Full-Stack Development", "Digital Marketing", "Manufacturing"], 
+      avgSalary: 95000, 
       growth: "+12%",
       demandLevel: "High",
       color: "hsl(var(--ai-warning))"
     },
     { 
-      region: "Asia Pacific", 
-      country: "Australia",
-      coordinates: { x: 720, y: 360 },
-      professionals: 52000, 
-      skillGap: 27, 
-      topSkills: ["Mining Tech", "Renewable Energy", "AgriTech"], 
-      avgSalary: 71000, 
-      growth: "+17%",
+      region: "UAE", 
+      country: "Ajman",
+      coordinates: { x: 680, y: 185 },
+      professionals: 3100, 
+      skillGap: 45, 
+      topSkills: ["Web Development", "Data Analysis", "Digital Design"], 
+      avgSalary: 88000, 
+      growth: "+10%",
       demandLevel: "Medium",
       color: "hsl(var(--ai-primary))"
     },
     { 
-      region: "South America", 
-      country: "Brazil",
-      coordinates: { x: 310, y: 320 },
-      professionals: 43000, 
-      skillGap: 38, 
-      topSkills: ["E-commerce", "Digital Banking", "Entertainment Tech"], 
-      avgSalary: 28000, 
-      growth: "+25%",
-      demandLevel: "High",
-      color: "hsl(var(--ai-warning))"
+      region: "UAE", 
+      country: "Ras Al Khaimah",
+      coordinates: { x: 690, y: 180 },
+      professionals: 2800, 
+      skillGap: 48, 
+      topSkills: ["Mobile Development", "E-commerce", "Tourism Tech"], 
+      avgSalary: 82000, 
+      growth: "+8%",
+      demandLevel: "Medium",
+      color: "hsl(var(--ai-primary))"
     },
     { 
-      region: "Africa", 
-      country: "South Africa",
-      coordinates: { x: 520, y: 340 },
-      professionals: 29000, 
-      skillGap: 45, 
-      topSkills: ["Mobile Development", "Digital Payments", "EdTech"], 
-      avgSalary: 22000, 
-      growth: "+30%",
-      demandLevel: "High",
-      color: "hsl(var(--ai-warning))"
+      region: "UAE", 
+      country: "Fujairah",
+      coordinates: { x: 720, y: 200 },
+      professionals: 1900, 
+      skillGap: 52, 
+      topSkills: ["Digital Marketing", "Basic Programming", "Logistics Tech"], 
+      avgSalary: 75000, 
+      growth: "+6%",
+      demandLevel: "Medium",
+      color: "hsl(var(--ai-primary))"
+    },
+    { 
+      region: "UAE", 
+      country: "Umm Al Quwain",
+      coordinates: { x: 675, y: 175 },
+      professionals: 1200, 
+      skillGap: 55, 
+      topSkills: ["Computer Literacy", "Digital Tools", "Basic Analytics"], 
+      avgSalary: 68000, 
+      growth: "+4%",
+      demandLevel: "Medium",
+      color: "hsl(var(--ai-primary))"
     },
   ];
 
@@ -167,20 +119,20 @@ const GlobalTalentMap = () => {
     <div className="space-y-6">
       <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Globe className="w-5 h-5 text-ai-primary" />
-            Global Talent & Skills Distribution
-          </CardTitle>
-          <CardDescription>
-            Interactive world map showing talent density, skill gaps, and demand levels across different regions
-          </CardDescription>
+            <CardTitle className="flex items-center gap-2">
+              <Globe className="w-5 h-5 text-ai-primary" />
+              UAE Talent & Skills Distribution
+            </CardTitle>
+            <CardDescription>
+              Interactive map showing talent density, skill gaps, and demand levels across UAE emirates
+            </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="relative">
             {/* Real World Map Background */}
             <div className="relative bg-gradient-to-br from-blue-50/30 to-blue-100/10 rounded-lg border overflow-hidden">
               <div className="relative w-full h-80 lg:h-96">
-                {/* Real World Map SVG with proper continent shapes */}
+                {/* UAE Map SVG */}
                 <svg
                   viewBox="0 0 800 400"
                   className="w-full h-full object-contain"
@@ -188,47 +140,38 @@ const GlobalTalentMap = () => {
                     filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))'
                   }}
                 >
-                  {/* Ocean background */}
-                  <rect width="800" height="400" fill="#e0f2fe" />
+                  {/* Ocean/Background */}
+                  <rect width="800" height="400" fill="#f0f9ff" />
                   
-                  {/* World continents with proper paths extracted from world-map.svg */}
-                  <g fill="#d1d5db" stroke="#94a3b8" strokeWidth="0.5">
+                  {/* UAE landmass with proper shape */}
+                  <g fill="#e2e8f0" stroke="#94a3b8" strokeWidth="1">
+                    {/* Main UAE outline - simplified but recognizable */}
+                    <path d="M550,180 L750,170 L780,190 L770,210 L760,230 L740,240 L720,245 L700,250 L680,245 L660,240 L640,235 L620,230 L600,225 L580,220 L560,215 L550,200 Z" />
                     
-                    {/* North America */}
-                    <path d="M115,150 L200,140 L250,160 L290,180 L330,200 L350,240 L340,280 L320,310 L280,330 L240,340 L200,350 L160,360 L120,350 L90,330 L70,300 L80,270 L100,240 L110,200 Z" />
+                    {/* Dubai region */}
+                    <path d="M640,195 L660,193 L670,200 L665,210 L650,208 L645,202 Z" />
                     
-                    {/* South America */}
-                    <path d="M260,310 L300,300 L330,320 L360,340 L380,370 L390,400 L360,420 L330,430 L300,440 L270,450 L240,440 L220,420 L210,380 L220,350 L240,330 L260,310 Z" />
+                    {/* Abu Dhabi region */}
+                    <path d="M570,215 L600,212 L610,220 L600,230 L580,228 L575,222 Z" />
                     
-                    {/* Europe */}
-                    <path d="M380,120 L420,110 L460,120 L500,140 L530,160 L550,180 L560,200 L540,220 L520,230 L480,240 L450,230 L420,220 L400,200 L390,180 L385,150 Z" />
+                    {/* Sharjah region */}
+                    <path d="M665,185 L685,183 L690,190 L685,195 L670,193 Z" />
                     
-                    {/* Africa */}
-                    <path d="M380,230 L420,220 L460,230 L500,240 L530,260 L550,280 L560,320 L550,360 L530,390 L500,410 L470,420 L440,410 L410,390 L390,360 L380,320 L385,280 L390,250 Z" />
+                    {/* Northern Emirates */}
+                    <path d="M690,175 L720,173 L730,180 L725,185 L695,187 Z" />
                     
-                    {/* Asia */}
-                    <path d="M570,100 L650,90 L720,100 L780,120 L800,160 L790,200 L770,230 L750,250 L720,260 L690,270 L660,275 L630,270 L600,260 L580,240 L570,220 L565,190 L570,160 L575,130 Z" />
-                    
-                    {/* Australia */}
-                    <path d="M650,300 L700,290 L740,300 L770,320 L780,340 L775,360 L760,380 L740,390 L710,395 L680,390 L660,380 L650,360 L655,340 L660,320 Z" />
-                    
-                    {/* Additional smaller landmasses */}
-                    <path d="M740,180 L760,175 L780,180 L785,190 L780,200 L760,205 L740,200 L735,190 Z" /> {/* Japan */}
-                    <path d="M320,120 L340,115 L360,120 L365,130 L360,140 L340,145 L320,140 L315,130 Z" /> {/* Greenland */}
-                    <path d="M450,100 L470,95 L480,100 L485,110 L480,120 L470,125 L450,120 L445,110 Z" /> {/* Scandinavia */}
-                    
+                    {/* Eastern Emirates */}
+                    <path d="M720,195 L740,193 L750,200 L745,210 L730,208 L725,202 Z" />
                   </g>
                   
-                  {/* Country borders for major regions */}
-                  <g fill="none" stroke="#6b7280" strokeWidth="0.3" opacity="0.6">
-                    {/* Major country divisions */}
-                    <path d="M200,180 L250,190" /> {/* US-Canada */}
-                    <path d="M450,160 L480,170" /> {/* Western Europe */}
-                    <path d="M520,180 L550,190" /> {/* Eastern Europe */}
-                    <path d="M450,280 L480,290" /> {/* North-Central Africa */}
-                    <path d="M600,200 L630,210" /> {/* Russia-China */}
-                    <path d="M620,240 L650,250" /> {/* India-China */}
-                  </g>
+                  {/* Water/Persian Gulf */}
+                  <path d="M500,150 Q600,140 700,150 Q750,160 800,170 L800,180 Q750,170 700,175 Q600,180 500,175 Z" 
+                        fill="#bfdbfe" opacity="0.6" />
+                  
+                  {/* Labels for regions */}
+                  <text x="520" y="140" className="text-xs font-medium fill-current" textAnchor="middle">Persian Gulf</text>
+                  <text x="550" y="280" className="text-xs font-medium fill-current" textAnchor="middle">Saudi Arabia</text>
+                  <text x="780" y="280" className="text-xs font-medium fill-current" textAnchor="middle">Oman</text>
                 </svg>
                 
                 {/* Overlay SVG for data points */}
@@ -337,7 +280,7 @@ const GlobalTalentMap = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <MapPin className="w-5 h-5 text-ai-primary" />
-              {globalTalentData.find(r => r.country === selectedRegion)?.country} Talent Insights
+              {globalTalentData.find(r => r.country === selectedRegion)?.country} Emirates Insights
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -409,11 +352,11 @@ const GlobalTalentMap = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Total Global Talent</CardTitle>
+            <CardTitle className="text-sm font-medium">Total UAE Talent</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{globalTalentData.reduce((sum, region) => sum + region.professionals, 0).toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">Across {globalTalentData.length} key markets</p>
+            <p className="text-xs text-muted-foreground">Across {globalTalentData.length} emirates</p>
           </CardContent>
         </Card>
         

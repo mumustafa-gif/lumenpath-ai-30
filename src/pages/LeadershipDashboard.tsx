@@ -44,7 +44,7 @@ import { LeadershipSidebar } from "@/components/LeadershipSidebar";
 import { ForecastReport } from "@/components/ForecastReport";
 import { StrategicPlanning } from "@/components/StrategicPlanning";
 import { DeepAnalytics } from "@/components/DeepAnalytics";
-import GlobalTalentMap from "@/components/GlobalTalentMap";
+
 
 const LeadershipDashboard = () => {
   const [showChartModal, setShowChartModal] = useState(false);
@@ -516,9 +516,6 @@ const LeadershipDashboard = () => {
           </CardContent>
         </Card>
       </div>
-
-      {/* Global Talent Map */}
-      <GlobalTalentMap />
 
       {/* UAE Regional Skills Demand */}
       <Card className="border-0 shadow-card bg-gradient-to-br from-card to-card/90">
