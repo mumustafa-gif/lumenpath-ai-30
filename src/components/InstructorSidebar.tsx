@@ -34,7 +34,7 @@ import {
 const mainNavItems = [
   { title: "My Courses", tabValue: "courses", icon: BookOpen },
   { title: "AI Course Creator", tabValue: "create", icon: Plus },
-  { title: "Curriculum Creator", tabValue: "curriculum", icon: GraduationCap },
+  { title: "AI Curriculum Creator", tabValue: "curriculum", icon: GraduationCap },
   { title: "Student Analytics", tabValue: "analytics", icon: BarChart3 },
 ];
 

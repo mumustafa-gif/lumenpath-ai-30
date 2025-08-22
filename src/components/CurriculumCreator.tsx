@@ -395,7 +395,7 @@ export const CurriculumCreator = () => {
         </TabsList>
 
         <TabsContent value="create" className="space-y-6">
-          <Card className="h-[600px] flex flex-col">
+          <Card className="h-[700px] flex flex-col">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Brain className="w-5 h-5 text-ai-primary" />
