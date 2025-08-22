@@ -180,12 +180,41 @@ const GlobalTalentMap = () => {
             {/* Real World Map Background */}
             <div className="relative bg-gradient-to-br from-blue-50/30 to-blue-100/10 rounded-lg border overflow-hidden">
               <div className="relative w-full h-80 lg:h-96">
-                {/* Real World Map SVG */}
-                <img 
-                  src={worldMapSvg} 
-                  alt="World Map" 
-                  className="w-full h-full object-contain opacity-60"
-                />
+                {/* Real World Map SVG with inline styling */}
+                <svg
+                  viewBox="0 0 950 620"
+                  className="w-full h-full object-contain"
+                  style={{
+                    filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))'
+                  }}
+                >
+                  {/* Background */}
+                  <rect width="950" height="620" fill="hsl(var(--background))" />
+                  
+                  {/* Use the world map as a background with proper styling */}
+                  <image 
+                    href={worldMapSvg}
+                    x="0" 
+                    y="0" 
+                    width="950" 
+                    height="620"
+                    opacity="0.4"
+                    style={{
+                      filter: 'sepia(20%) saturate(150%) hue-rotate(200deg) brightness(0.8)'
+                    }}
+                  />
+                  
+                  {/* Additional continent shapes for better visibility */}
+                  <g fill="hsl(var(--muted))" fillOpacity="0.3" stroke="hsl(var(--border))" strokeWidth="1">
+                    {/* Simplified continent outlines for visual reference */}
+                    <path d="M120,160 Q180,140 240,160 Q280,180 320,200 Q360,220 380,260 Q360,300 320,320 Q280,340 240,360 Q180,380 120,360 Q80,340 60,300 Q80,260 120,200 Z" /> {/* North America */}
+                    <path d="M280,320 Q340,300 400,320 Q440,340 460,380 Q440,420 400,440 Q340,460 280,440 Q240,420 220,380 Q240,340 280,320 Z" /> {/* South America */}
+                    <path d="M460,140 Q520,120 580,140 Q620,160 640,200 Q620,240 580,260 Q520,280 460,260 Q420,240 400,200 Q420,160 460,140 Z" /> {/* Europe */}
+                    <path d="M440,220 Q500,200 560,220 Q600,240 620,280 Q600,320 560,340 Q500,360 440,340 Q400,320 380,280 Q400,240 440,220 Z" /> {/* Africa */}
+                    <path d="M580,160 Q640,140 700,160 Q740,180 760,220 Q740,260 700,280 Q640,300 580,280 Q540,260 520,220 Q540,180 580,160 Z" /> {/* Asia */}
+                    <path d="M700,320 Q760,300 820,320 Q860,340 880,380 Q860,420 820,440 Q760,460 700,440 Q660,420 640,380 Q660,340 700,320 Z" /> {/* Australia */}
+                  </g>
+                </svg>
                 
                 {/* Overlay SVG for data points */}
                 <svg
