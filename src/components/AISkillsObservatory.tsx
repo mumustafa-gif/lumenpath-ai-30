@@ -37,17 +37,14 @@ export const AISkillsObservatory = () => {
     { skill: "UX/UI Design", supply: 45, demand: 76, gap: 31, trend: "Medium", growth: "+32%", category: "design", salary: 88000 },
   ];
 
-  const globalComparison = {
-    singapore: { aiTalent: 78, demandGrowth: "+35%", avgSalary: 98000 },
-    london: { aiTalent: 85, demandGrowth: "+28%", avgSalary: 105000 },
-    toronto: { aiTalent: 72, demandGrowth: "+32%", avgSalary: 88000 },
-    berlin: { aiTalent: 69, demandGrowth: "+30%", avgSalary: 82000 },
-    sydney: { aiTalent: 74, demandGrowth: "+31%", avgSalary: 92000 },
-    tokyo: { aiTalent: 81, demandGrowth: "+25%", avgSalary: 87000 },
-    newyork: { aiTalent: 89, demandGrowth: "+22%", avgSalary: 125000 },
-    sanfrancisco: { aiTalent: 92, demandGrowth: "+18%", avgSalary: 145000 },
-    zurich: { aiTalent: 83, demandGrowth: "+27%", avgSalary: 112000 },
-    amsterdam: { aiTalent: 77, demandGrowth: "+29%", avgSalary: 95000 },
+  const uaeRegionsComparison = {
+    dubai: { aiTalent: 85, demandGrowth: "+42%", avgSalary: 125000 },
+    abudhabi: { aiTalent: 78, demandGrowth: "+38%", avgSalary: 118000 },
+    sharjah: { aiTalent: 72, demandGrowth: "+35%", avgSalary: 98000 },
+    ajman: { aiTalent: 68, demandGrowth: "+32%", avgSalary: 88000 },
+    ras_al_khaimah: { aiTalent: 65, demandGrowth: "+28%", avgSalary: 85000 },
+    fujairah: { aiTalent: 62, demandGrowth: "+25%", avgSalary: 78000 },
+    umm_al_quwain: { aiTalent: 58, demandGrowth: "+22%", avgSalary: 72000 },
   };
 
   const filteredSkills = selectedSkillCategory === "all" 
@@ -103,16 +100,13 @@ export const AISkillsObservatory = () => {
                 </SelectTrigger>
                 <SelectContent className="max-h-60">
                   <SelectItem value="none">No Comparison</SelectItem>
-                  <SelectItem value="singapore">Singapore</SelectItem>
-                  <SelectItem value="london">London</SelectItem>
-                  <SelectItem value="toronto">Toronto</SelectItem>
-                  <SelectItem value="berlin">Berlin</SelectItem>
-                  <SelectItem value="sydney">Sydney</SelectItem>
-                  <SelectItem value="tokyo">Tokyo</SelectItem>
-                  <SelectItem value="newyork">New York</SelectItem>
-                  <SelectItem value="sanfrancisco">San Francisco</SelectItem>
-                  <SelectItem value="zurich">Zurich</SelectItem>
-                  <SelectItem value="amsterdam">Amsterdam</SelectItem>
+                  <SelectItem value="dubai">Dubai</SelectItem>
+                  <SelectItem value="abudhabi">Abu Dhabi</SelectItem>
+                  <SelectItem value="sharjah">Sharjah</SelectItem>
+                  <SelectItem value="ajman">Ajman</SelectItem>
+                  <SelectItem value="ras_al_khaimah">Ras Al Khaimah</SelectItem>
+                  <SelectItem value="fujairah">Fujairah</SelectItem>
+                  <SelectItem value="umm_al_quwain">Umm Al Quwain</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -232,13 +226,13 @@ export const AISkillsObservatory = () => {
         </CardContent>
       </Card>
 
-      {/* Global Comparison & Interactive World Map */}
-      {comparisonRegion !== "none" && globalComparison[comparisonRegion] && (
+      {/* UAE Regional Comparison & Interactive Map */}
+      {comparisonRegion !== "none" && uaeRegionsComparison[comparisonRegion] && (
         <Card className="border-0 bg-gradient-to-br from-card/50 via-card to-ai-accent/5 backdrop-blur-xl">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Globe className="w-5 h-5 text-ai-accent animate-pulse" />
-              Global Talent Intelligence: UAE vs {comparisonRegion.charAt(0).toUpperCase() + comparisonRegion.slice(1)}
+              UAE Regional Intelligence: Comparative Analysis - {comparisonRegion.charAt(0).toUpperCase() + comparisonRegion.slice(1).replace('_', ' ')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -249,12 +243,12 @@ export const AISkillsObservatory = () => {
                 <Badge variant="outline" className="text-xs border-ai-primary/30">Regional Leader</Badge>
               </div>
               <div className="text-center p-6 rounded-xl bg-gradient-to-br from-ai-secondary/10 to-transparent border border-ai-secondary/20">
-                <div className="text-3xl font-bold text-ai-secondary mb-2">{globalComparison[comparisonRegion].aiTalent}%</div>
-                <div className="text-sm font-medium mb-1">{comparisonRegion.charAt(0).toUpperCase() + comparisonRegion.slice(1)} AI Talent</div>
+                <div className="text-3xl font-bold text-ai-secondary mb-2">{uaeRegionsComparison[comparisonRegion].aiTalent}%</div>
+                <div className="text-sm font-medium mb-1">{comparisonRegion.charAt(0).toUpperCase() + comparisonRegion.slice(1).replace('_', ' ')} AI Talent</div>
                 <Badge variant="outline" className="text-xs border-ai-secondary/30">Global Benchmark</Badge>
               </div>
               <div className="text-center p-6 rounded-xl bg-gradient-to-br from-ai-success/10 to-transparent border border-ai-success/20">
-                <div className="text-3xl font-bold text-ai-success mb-2">{globalComparison[comparisonRegion].demandGrowth}</div>
+                <div className="text-3xl font-bold text-ai-success mb-2">{uaeRegionsComparison[comparisonRegion].demandGrowth}</div>
                 <div className="text-sm font-medium mb-1">Demand Growth Rate</div>
                 <Badge variant="outline" className="text-xs border-ai-success/30">6M Trend</Badge>
               </div>
@@ -270,9 +264,9 @@ export const AISkillsObservatory = () => {
                     <div className="absolute inset-0 bg-gradient-to-r from-ai-primary/20 to-ai-secondary/20 rounded-full blur-xl"></div>
                   </div>
                   <div className="space-y-2">
-                    <h3 className="text-lg font-bold text-ai-primary">Interactive Global Talent Map</h3>
+                    <h3 className="text-lg font-bold text-ai-primary">Interactive UAE Regional Map</h3>
                     <p className="text-sm text-muted-foreground max-w-md">
-                      Real-time visualization of skill gaps, talent distribution, and market opportunities across global regions
+                      Real-time visualization of skill gaps, talent distribution, and market opportunities across UAE emirates
                     </p>
                     <div className="flex justify-center gap-2 mt-4">
                       <Badge variant="outline" className="bg-ai-primary/10 text-ai-primary border-ai-primary/30">

@@ -87,13 +87,15 @@ export const WorkforceTrends = () => {
     { year: "2025*", remote: 31, hybrid: 54, onsite: 15, automation: 56 }
   ];
 
-  const industryTransformation = [
-    { industry: "Technology", adaptation: 89, automation: 67, growth: "+23%", jobs: "2.3M" },
-    { industry: "Healthcare", adaptation: 72, automation: 34, growth: "+31%", jobs: "1.8M" },
-    { industry: "Finance", adaptation: 84, automation: 78, growth: "+12%", jobs: "1.2M" },
-    { industry: "Manufacturing", adaptation: 65, automation: 89, growth: "-8%", jobs: "850K" },
-    { industry: "Education", adaptation: 58, automation: 23, growth: "+18%", jobs: "1.1M" },
-    { industry: "Retail", adaptation: 71, automation: 56, growth: "+7%", jobs: "920K" }
+  const uaeIndustryTransformation = [
+    { industry: "Technology & Innovation", adaptation: 92, automation: 71, growth: "+28%", jobs: "185K", region: "Dubai Tech City" },
+    { industry: "Oil & Gas", adaptation: 78, automation: 84, growth: "+15%", jobs: "320K", region: "Abu Dhabi" },
+    { industry: "Finance & Banking", adaptation: 89, automation: 82, growth: "+18%", jobs: "145K", region: "DIFC & ADGM" },
+    { industry: "Tourism & Hospitality", adaptation: 74, automation: 45, growth: "+22%", jobs: "280K", region: "Dubai & RAK" },
+    { industry: "Healthcare & Life Sciences", adaptation: 81, automation: 38, growth: "+25%", jobs: "120K", region: "UAE Wide" },
+    { industry: "Manufacturing", adaptation: 68, automation: 76, growth: "+12%", jobs: "95K", region: "Sharjah & Ajman" },
+    { industry: "Education", adaptation: 65, automation: 28, growth: "+20%", jobs: "85K", region: "UAE Wide" },
+    { industry: "Retail & E-commerce", adaptation: 79, automation: 62, growth: "+16%", jobs: "165K", region: "UAE Wide" }
   ];
 
   const generationalSkills = [
@@ -129,10 +131,10 @@ export const WorkforceTrends = () => {
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
         <div>
           <h2 className="text-2xl font-bold text-ai-primary mb-2">
-            Future Workforce Trends
+            UAE Future Workforce Trends
           </h2>
           <p className="text-muted-foreground">
-            Data-driven insights on emerging skills and workplace evolution
+            Data-driven insights on emerging skills and workplace evolution across UAE emirates
           </p>
         </div>
         <div className="flex gap-2 mt-4 lg:mt-0">
@@ -295,18 +297,18 @@ export const WorkforceTrends = () => {
 
       {/* Industry Transformation */}
       <Card className="border-0 shadow-card">
-        <CardHeader>
-          <CardTitle className="flex items-center">
-            <Building className="w-5 h-5 mr-2 text-ai-primary" />
-            Industry Digital Transformation
-          </CardTitle>
-          <CardDescription>
-            Sector-wise adaptation and automation readiness
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {industryTransformation.map((industry, index) => (
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <Building className="w-5 h-5 mr-2 text-ai-primary" />
+              UAE Industry Digital Transformation
+            </CardTitle>
+            <CardDescription>
+              Sector-wise adaptation and automation readiness across UAE emirates
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {uaeIndustryTransformation.map((industry, index) => (
               <div key={index} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-semibold">{industry.industry}</h3>
@@ -332,9 +334,15 @@ export const WorkforceTrends = () => {
                     <Progress value={industry.automation} className="h-2" />
                   </div>
                   
-                  <div className="flex justify-between items-center pt-2 border-t">
-                    <span className="text-sm text-muted-foreground">Job Market</span>
-                    <span className="text-sm font-semibold">{industry.jobs}</span>
+                  <div className="space-y-2 pt-2 border-t">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">Job Market</span>
+                      <span className="text-sm font-semibold">{industry.jobs}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">Key Region</span>
+                      <span className="text-sm font-medium text-ai-primary">{industry.region}</span>
+                    </div>
                   </div>
                 </div>
               </div>

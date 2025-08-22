@@ -33,7 +33,7 @@ const JobRecommendations = () => {
       experience: "3-5 years",
       matchPercentage: 85,
       growth: "High Demand",
-      region: "MENA",
+      region: "UAE - Dubai",
       requiredSkills: ["Python", "Machine Learning", "TensorFlow", "Deep Learning", "Data Analysis", "Statistics"],
       yourSkills: ["Python", "Machine Learning", "Data Analysis"],
       missingSkills: ["TensorFlow", "Deep Learning", "Statistics"],
@@ -56,7 +56,7 @@ const JobRecommendations = () => {
       experience: "2-4 years",
       matchPercentage: 78,
       growth: "Very High Demand",
-      region: "MENA",
+      region: "UAE - Abu Dhabi",
       requiredSkills: ["Python", "SQL", "Statistics", "Machine Learning", "Data Visualization", "R"],
       yourSkills: ["Python", "Statistics", "Data Visualization"],
       missingSkills: ["SQL", "Machine Learning", "R"],
@@ -79,7 +79,7 @@ const JobRecommendations = () => {
       experience: "5-7 years",
       matchPercentage: 65,
       growth: "Rapidly Growing",
-      region: "MENA",
+      region: "UAE - Dubai",
       requiredSkills: ["AWS", "Azure", "Docker", "Kubernetes", "DevOps", "System Design"],
       yourSkills: ["System Design"],
       missingSkills: ["AWS", "Azure", "Docker", "Kubernetes", "DevOps"],
@@ -102,7 +102,7 @@ const JobRecommendations = () => {
       experience: "4-6 years",
       matchPercentage: 72,
       growth: "High Demand",
-      region: "MENA",
+      region: "UAE - Sharjah",
       requiredSkills: ["Product Strategy", "Data Analysis", "User Research", "Agile", "Communication", "Business Analysis"],
       yourSkills: ["Data Analysis", "Communication", "Business Analysis"],
       missingSkills: ["Product Strategy", "User Research", "Agile"],
@@ -125,7 +125,7 @@ const JobRecommendations = () => {
       experience: "2-4 years",
       matchPercentage: 82,
       growth: "Steady Demand",
-      region: "MENA",
+      region: "UAE - Dubai",
       requiredSkills: ["JavaScript", "React", "Node.js", "Python", "SQL", "API Design"],
       yourSkills: ["JavaScript", "Python", "SQL"],
       missingSkills: ["React", "Node.js", "API Design"],
@@ -188,7 +188,7 @@ const JobRecommendations = () => {
           Future Career Opportunities
         </h2>
         <p className="text-muted-foreground max-w-2xl mx-auto">
-          Discover career paths aligned with your skills, market trends, and growth potential in the MENA region
+          Discover career paths aligned with your skills, market trends, and growth potential across UAE emirates
         </p>
       </div>
 
