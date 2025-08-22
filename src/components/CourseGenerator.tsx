@@ -621,8 +621,9 @@ export const CourseGenerator = () => {
         />
       )}
 
-      {showCoursePreview && (
+      {showCoursePreview && generatedCourse && (
         <CoursePreview 
+          course={generatedCourse}
           onClose={() => setShowCoursePreview(false)}
         />
       )}
