@@ -94,13 +94,13 @@ const MockHeyGenAvatar: React.FC<MockHeyGenAvatarProps> = ({
     };
   }, [isSessionActive]);
 
-  // Auto-ask question when currentQuestion changes
-  useEffect(() => {
-    if (isSessionActive && currentQuestion && isInterviewActive && currentQuestion !== lastQuestionAsked) {
+  // Manual question asking - only when user clicks speak button
+  const askCurrentQuestion = useCallback(() => {
+    if (isSessionActive && currentQuestion && isInterviewActive) {
       const questionText = `Hello, I'm Ahmed, your AI interview assistant. Here's your question: ${currentQuestion}. Please take your time to answer.`;
       handleSpeak(questionText);
     }
-  }, [currentQuestion, isSessionActive, isInterviewActive, lastQuestionAsked, handleSpeak]);
+  }, [currentQuestion, isSessionActive, isInterviewActive, handleSpeak]);
 
   const startSession = useCallback(async () => {
     setIsLoadingSession(true);
@@ -113,10 +113,8 @@ const MockHeyGenAvatar: React.FC<MockHeyGenAvatarProps> = ({
       setAvatarMoodState('idle');
       onSessionReady?.();
       
-      // Welcome message
-      setTimeout(() => {
-        handleSpeak("Hello! I'm Ahmed Al-Rashid, your AI interview assistant. I'm ready to begin your interview session. Let me know when you're ready to start!");
-      }, 1000);
+      // Welcome message - don't auto-speak, wait for user to click speaker
+      // User will manually trigger question by clicking the speaker button
     }, 2000);
   }, [onSessionReady, handleSpeak]);
 
@@ -338,6 +336,16 @@ const MockHeyGenAvatar: React.FC<MockHeyGenAvatarProps> = ({
                 title="Simulate speaking (for demo)"
               >
                 <Mic className="w-4 h-4" />
+              </Button>
+
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={askCurrentQuestion}
+                disabled={isAvatarSpeaking || !currentQuestion}
+                title="Ask current question"
+              >
+                <Volume2 className="w-4 h-4" />
               </Button>
 
               <Button
