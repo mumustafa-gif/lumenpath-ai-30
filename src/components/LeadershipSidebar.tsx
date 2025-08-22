@@ -58,7 +58,7 @@ export function LeadershipSidebar({ activeTab, onTabChange }: LeadershipSidebarP
             </Avatar>
             {state !== "collapsed" && (
               <div className="flex flex-col">
-                <span className="text-sm font-bold bg-gradient-to-r from-ai-primary to-ai-secondary bg-clip-text text-transparent">Leadership Control</span>
+                <span className="text-sm font-bold text-ai-primary">Leadership Control</span>
                 <span className="text-xs text-muted-foreground">System Leadership</span>
               </div>
             )}

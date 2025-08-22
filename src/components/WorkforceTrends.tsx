@@ -128,7 +128,7 @@ export const WorkforceTrends = () => {
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-ai-primary via-ai-secondary to-ai-accent bg-clip-text text-transparent mb-2">
+          <h2 className="text-2xl font-bold text-ai-primary mb-2">
             Future Workforce Trends
           </h2>
           <p className="text-muted-foreground">

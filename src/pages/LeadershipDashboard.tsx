@@ -181,7 +181,7 @@ const LeadershipDashboard = () => {
     }, 2500);
   };
 
-  const COLORS = ['hsl(var(--primary))', 'hsl(var(--secondary))', 'hsl(var(--accent))', 'hsl(var(--muted))'];
+  const COLORS = ['hsl(var(--ai-primary))', 'hsl(var(--ai-success))', 'hsl(var(--ai-warning))', 'hsl(var(--ai-error))', 'hsl(var(--ai-secondary))', '#8B5CF6', '#EC4899', '#10B981'];
 
   const renderChart = () => {
     switch (selectedChartType) {
@@ -282,8 +282,8 @@ const LeadershipDashboard = () => {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold bg-gradient-to-r from-ai-primary to-ai-secondary bg-clip-text text-transparent">{stats.totalLearners}</div>
-            <p className="text-xs text-ai-success flex items-center mt-1">
+            <div className="text-2xl font-bold text-foreground">{stats.totalLearners}</div>
+            <p className="text-xs text-ai-increase flex items-center mt-1">
               <TrendingUp className="w-3 h-3 mr-1" />
               +12% from last month
             </p>
@@ -298,8 +298,8 @@ const LeadershipDashboard = () => {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold bg-gradient-to-r from-ai-secondary to-ai-accent bg-clip-text text-transparent">{stats.activeCourses}</div>
-            <p className="text-xs text-muted-foreground mt-1">Across all instructors</p>
+            <div className="text-2xl font-bold text-foreground">{stats.activeCourses}</div>
+            <p className="text-xs text-muted-foreground mt-1">Across all faculty</p>
           </CardContent>
         </Card>
         
@@ -311,8 +311,8 @@ const LeadershipDashboard = () => {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold bg-gradient-to-r from-ai-accent to-ai-success bg-clip-text text-transparent">{stats.completionRate}%</div>
-            <p className="text-xs text-ai-success flex items-center mt-1">
+            <div className="text-2xl font-bold text-foreground">{stats.completionRate}%</div>
+            <p className="text-xs text-ai-increase flex items-center mt-1">
               <TrendingUp className="w-3 h-3 mr-1" />
               +5% improvement
             </p>
@@ -327,8 +327,8 @@ const LeadershipDashboard = () => {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold bg-gradient-to-r from-ai-success to-ai-primary bg-clip-text text-transparent">{stats.avgEngagement}%</div>
-            <p className="text-xs text-ai-success mt-1">Excellent performance</p>
+            <div className="text-2xl font-bold text-foreground">{stats.avgEngagement}%</div>
+            <p className="text-xs text-ai-increase mt-1">Excellent performance</p>
           </CardContent>
         </Card>
       </div>
@@ -352,7 +352,7 @@ const LeadershipDashboard = () => {
                       </div>
                       <div className="text-right">
                         <p className="text-ai-primary font-bold">{group.percentage}%</p>
-                        <p className="text-xs text-ai-success">{group.growth}</p>
+                        <p className="text-xs text-ai-increase">{group.growth}</p>
                       </div>
                     </div>
                   ))}
@@ -377,7 +377,7 @@ const LeadershipDashboard = () => {
                       </div>
                       <div className="text-right">
                         <p className="text-ai-secondary font-bold">{gender.percentage}%</p>
-                        <p className="text-xs text-ai-success">{gender.growth}</p>
+                        <p className="text-xs text-ai-increase">{gender.growth}</p>
                       </div>
                     </div>
                   ))}
@@ -429,8 +429,8 @@ const LeadershipDashboard = () => {
                 <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="enrolled" fill="hsl(var(--primary))" name="Enrolled" />
-                <Bar dataKey="completed" fill="hsl(var(--secondary))" name="Completed" />
+                <Bar dataKey="enrolled" fill="hsl(var(--ai-primary))" name="Enrolled" />
+                <Bar dataKey="completed" fill="hsl(var(--ai-success))" name="Completed" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -452,7 +452,7 @@ const LeadershipDashboard = () => {
                     <p className="text-sm text-muted-foreground">{course.enrolled} enrolled</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-ai-success font-medium">{course.growth}</p>
+                    <p className="text-ai-increase font-medium">{course.growth}</p>
                     <p className="text-sm">⭐ {course.satisfaction}</p>
                   </div>
                 </div>
@@ -478,8 +478,8 @@ const LeadershipDashboard = () => {
                 <XAxis dataKey="skill" angle={-45} textAnchor="end" height={80} />
                 <YAxis />
                 <Tooltip />
-                <Area type="monotone" dataKey="marketDemand" stackId="1" stroke="hsl(var(--primary))" fill="hsl(var(--primary))" name="Market Demand" />
-                <Area type="monotone" dataKey="currentSupply" stackId="2" stroke="hsl(var(--secondary))" fill="hsl(var(--secondary))" name="Current Supply" />
+                <Area type="monotone" dataKey="marketDemand" stackId="1" stroke="hsl(var(--ai-error))" fill="hsl(var(--ai-error))" name="Market Demand" />
+                <Area type="monotone" dataKey="currentSupply" stackId="2" stroke="hsl(var(--ai-success))" fill="hsl(var(--ai-success))" name="Current Supply" />
               </RechartsAreaChart>
             </ResponsiveContainer>
           </CardContent>
@@ -531,8 +531,8 @@ const LeadershipDashboard = () => {
               <XAxis dataKey="region" />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="demand" fill="hsl(var(--primary))" name="Demand %" />
-              <Bar dataKey="skillGap" fill="hsl(var(--destructive))" name="Skill Gap %" />
+              <Bar dataKey="demand" fill="hsl(var(--ai-primary))" name="Demand %" />
+              <Bar dataKey="skillGap" fill="hsl(var(--ai-error))" name="Skill Gap %" />
             </BarChart>
           </ResponsiveContainer>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
@@ -541,7 +541,7 @@ const LeadershipDashboard = () => {
                 <h4 className="font-semibold">{region.region}</h4>
                 <p className="text-sm text-muted-foreground">{region.professionals.toLocaleString()} professionals</p>
                 <p className="text-sm">Top Skills: {region.topSkills.slice(0, 2).join(', ')}</p>
-                <p className="text-sm text-ai-success">Growth: {region.growth}</p>
+                <p className="text-sm text-ai-increase">Growth: {region.growth}</p>
               </div>
             ))}
           </div>
@@ -558,7 +558,7 @@ const LeadershipDashboard = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-ai-primary">{talentDemographics.upskillSuccess.totalUpskilled}</div>
+            <div className="text-2xl font-bold text-foreground">{talentDemographics.upskillSuccess.totalUpskilled}</div>
             <p className="text-xs text-muted-foreground">Learners successfully upskilled</p>
           </CardContent>
         </Card>
@@ -571,7 +571,7 @@ const LeadershipDashboard = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-ai-secondary">{talentDemographics.upskillSuccess.careerAdvancement}</div>
+            <div className="text-2xl font-bold text-foreground">{talentDemographics.upskillSuccess.careerAdvancement}</div>
             <p className="text-xs text-muted-foreground">Got promoted or advanced</p>
           </CardContent>
         </Card>
@@ -584,7 +584,7 @@ const LeadershipDashboard = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-ai-accent">{talentDemographics.upskillSuccess.avgSalaryBoost}</div>
+            <div className="text-2xl font-bold text-ai-increase">{talentDemographics.upskillSuccess.avgSalaryBoost}</div>
             <p className="text-xs text-muted-foreground">Average salary boost</p>
           </CardContent>
         </Card>
@@ -597,7 +597,7 @@ const LeadershipDashboard = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-ai-success">{talentDemographics.upskillSuccess.jobPlacementRate}%</div>
+            <div className="text-2xl font-bold text-ai-increase">{talentDemographics.upskillSuccess.jobPlacementRate}%</div>
             <p className="text-xs text-muted-foreground">Successfully placed in jobs</p>
           </CardContent>
         </Card>
