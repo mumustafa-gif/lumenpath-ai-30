@@ -4,9 +4,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
-import AdminDashboard from "./pages/AdminDashboard";
-import InstructorDashboard from "./pages/InstructorDashboard";
-import LearnerDashboard from "./pages/LearnerDashboard";
+import LeadershipDashboard from "./pages/LeadershipDashboard";
+import FacultyDashboard from "./pages/FacultyDashboard";
+import StudentDashboard from "./pages/StudentDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -19,9 +19,13 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LoginPage />} />
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/instructor" element={<InstructorDashboard />} />
-          <Route path="/learner" element={<LearnerDashboard />} />
+          <Route path="/leadership" element={<LeadershipDashboard />} />
+          <Route path="/faculty" element={<FacultyDashboard />} />
+          <Route path="/student" element={<StudentDashboard />} />
+          {/* Legacy route redirects */}
+          <Route path="/admin" element={<LeadershipDashboard />} />
+          <Route path="/instructor" element={<FacultyDashboard />} />
+          <Route path="/learner" element={<StudentDashboard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

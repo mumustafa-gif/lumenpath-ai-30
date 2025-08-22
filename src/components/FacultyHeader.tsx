@@ -11,7 +11,7 @@ import { Bell, Settings, User, LogOut, GraduationCap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import inceptionIcon from "/lovable-uploads/2c76c7ae-2959-41c8-bfbb-ea45ef1e7044.png";
 
-export const InstructorHeader = () => {
+export const FacultyHeader = () => {
   const navigate = useNavigate();
   const [notifications] = useState(5);
 
@@ -28,7 +28,7 @@ export const InstructorHeader = () => {
           <div>
             <h1 className="text-xl font-bold">INCEPTION</h1>
             <p className="text-[10px] text-muted-foreground -mt-1">A G42 COMPANY</p>
-            <p className="text-sm text-muted-foreground">Instructor Portal</p>
+            <p className="text-sm text-muted-foreground">Faculty Portal</p>
           </div>
         </div>
 

@@ -11,7 +11,7 @@ import { Bell, Settings, User, LogOut, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import inceptionIcon from "/lovable-uploads/2c76c7ae-2959-41c8-bfbb-ea45ef1e7044.png";
 
-export const AdminHeader = () => {
+export const LeadershipHeader = () => {
   const navigate = useNavigate();
   const [notifications] = useState(3);
 
@@ -28,14 +28,14 @@ export const AdminHeader = () => {
           <div>
             <h1 className="text-xl font-bold">INCEPTION</h1>
             <p className="text-[10px] text-muted-foreground -mt-1">A G42 COMPANY</p>
-            <p className="text-sm text-muted-foreground">Admin Dashboard</p>
+            <p className="text-sm text-muted-foreground">Leadership Dashboard</p>
           </div>
         </div>
 
         <div className="flex items-center space-x-4">
           <Badge variant="secondary" className="flex items-center space-x-1">
             <Shield className="w-3 h-3" />
-            <span>Administrator</span>
+            <span>Leadership</span>
           </Badge>
           
           <Button variant="outline" size="icon" className="relative">

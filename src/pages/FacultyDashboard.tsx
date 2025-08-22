@@ -18,14 +18,14 @@ import {
   BarChart3,
   Sparkles
 } from "lucide-react";
-import { InstructorSidebar } from "@/components/InstructorSidebar";
+import { FacultySidebar } from "@/components/FacultySidebar";
 import { CourseGenerator } from "@/components/CourseGenerator";
 import { CurriculumCreator } from "@/components/CurriculumCreator";
-import { InstructorAIAssistant } from "@/components/InstructorAIAssistant";
+import { FacultyAIAssistant } from "@/components/FacultyAIAssistant";
 import { ManualCourseCreator } from "@/components/ManualCourseCreator";
 import { CourseViewer } from "@/components/CourseViewer";
 
-const InstructorDashboard = () => {
+const FacultyDashboard = () => {
   const [activeTab, setActiveTab] = useState("courses");
   const [viewingCourse, setViewingCourse] = useState<any>(null);
   const [editingCourse, setEditingCourse] = useState<any>(null);
@@ -137,14 +137,14 @@ const InstructorDashboard = () => {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-background">
-        <InstructorSidebar 
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-        />
+          <FacultySidebar 
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+          />
         <div className="flex-1 flex flex-col">
           <header className="h-16 flex items-center border-b px-6">
             <SidebarTrigger />
-            <h1 className="ml-4 text-xl font-semibold">Instructor Dashboard</h1>
+            <h1 className="ml-4 text-xl font-semibold">Faculty Dashboard</h1>
           </header>
           <main className="flex-1 p-6">
         {/* Stats Overview */}
@@ -368,11 +368,11 @@ const InstructorDashboard = () => {
         </div>
           </main>
           
-          <InstructorAIAssistant />
+          <FacultyAIAssistant />
         </div>
       </div>
     </SidebarProvider>
   );
 };
 
-export default InstructorDashboard;
+export default FacultyDashboard;

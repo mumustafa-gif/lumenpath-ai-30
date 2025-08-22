@@ -10,7 +10,7 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Toolti
 
 const COLORS = ['#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899'];
 
-export const LearnerAIAssistant = () => {
+export const StudentAIAssistant = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showVisualization, setShowVisualization] = useState(false);
   const [chartData, setChartData] = useState<any[]>([]);

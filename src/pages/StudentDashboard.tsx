@@ -20,7 +20,7 @@ import {
   Settings,
   X
 } from "lucide-react";
-import { LearnerSidebar } from "@/components/LearnerSidebar";
+import { StudentSidebar } from "@/components/StudentSidebar";
 import { ChatInterface } from "@/components/ChatInterface";
 import { StudyBuddyCard } from "@/components/StudyBuddyCard";
 import OnboardingFlow, { OnboardingData } from "@/components/OnboardingFlow";
@@ -36,11 +36,11 @@ import SkillsComparison from "@/components/SkillsComparison";
 import MarketSkillComparison from "@/components/MarketSkillComparison";
 import { AICareerCounselor } from "@/components/AICareerCounselor";
 import { AIEducationalCounselor } from "@/components/AIEducationalCounselor";
-import { LearnerAIAssistant } from "@/components/LearnerAIAssistant";
+import { StudentAIAssistant } from "@/components/StudentAIAssistant";
 import ResumeBuilder from "@/components/ResumeBuilder";
 import MockAssessments from "@/components/MockAssessments";
 
-const LearnerDashboard = () => {
+const StudentDashboard = () => {
   const [showOnboarding, setShowOnboarding] = useState(false); // Set to true for new users
   const [learnerProfile, setLearnerProfile] = useState<OnboardingData | null>(null);
   const [showCourseRecommendations, setShowCourseRecommendations] = useState(false);
@@ -251,7 +251,7 @@ const LearnerDashboard = () => {
     return (
       <SidebarProvider>
         <div className="min-h-screen flex w-full bg-background">
-          <LearnerSidebar 
+          <StudentSidebar 
             activeTab={activeTab}
             onTabChange={handleTabChange}
             onShowOnboarding={() => setShowOnboarding(true)}
@@ -281,7 +281,7 @@ const LearnerDashboard = () => {
     return (
       <SidebarProvider>
         <div className="min-h-screen flex w-full bg-background">
-          <LearnerSidebar 
+          <StudentSidebar 
             activeTab={activeTab}
             onTabChange={handleTabChange}
             onShowOnboarding={() => setShowOnboarding(true)}
@@ -313,7 +313,7 @@ const LearnerDashboard = () => {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-background">
-        <LearnerSidebar 
+        <StudentSidebar 
           activeTab={activeTab}
           onTabChange={handleTabChange}
           onShowOnboarding={() => setShowOnboarding(true)}
@@ -627,11 +627,11 @@ const LearnerDashboard = () => {
           </main>
           
           {/* AI Assistant */}
-          <LearnerAIAssistant />
+          <StudentAIAssistant />
         </div>
       </div>
     </SidebarProvider>
   );
 };
 
-export default LearnerDashboard;
+export default StudentDashboard;

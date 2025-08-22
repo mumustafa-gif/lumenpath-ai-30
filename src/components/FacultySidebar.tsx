@@ -38,12 +38,12 @@ const mainNavItems = [
   { title: "Student Analytics", tabValue: "analytics", icon: BarChart3 },
 ];
 
-interface InstructorSidebarProps {
+interface FacultySidebarProps {
   activeTab: string;
   onTabChange: (tabValue: string) => void;
 }
 
-export function InstructorSidebar({ activeTab, onTabChange }: InstructorSidebarProps) {
+export function FacultySidebar({ activeTab, onTabChange }: FacultySidebarProps) {
   const { state } = useSidebar();
   
   const isActive = (tabValue: string) => activeTab === tabValue;
@@ -63,7 +63,7 @@ export function InstructorSidebar({ activeTab, onTabChange }: InstructorSidebarP
             {state !== "collapsed" && (
               <div className="flex flex-col">
                 <span className="text-sm font-semibold">Dr. Sarah Ahmed</span>
-                <span className="text-xs text-muted-foreground">AI Instructor</span>
+                <span className="text-xs text-muted-foreground">AI Faculty</span>
               </div>
             )}
           </div>

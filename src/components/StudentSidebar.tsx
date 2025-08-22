@@ -56,13 +56,13 @@ const profileItems = [
   { title: "Resume Builder", tabValue: "resume-builder", icon: FileText },
 ];
 
-interface LearnerSidebarProps {
+interface StudentSidebarProps {
   activeTab: string;
   onTabChange: (tabValue: string) => void;
   onShowOnboarding: () => void;
 }
 
-export function LearnerSidebar({ activeTab, onTabChange, onShowOnboarding }: LearnerSidebarProps) {
+export function StudentSidebar({ activeTab, onTabChange, onShowOnboarding }: StudentSidebarProps) {
   const { state } = useSidebar();
 
   const isActive = (tabValue: string) => activeTab === tabValue;
@@ -82,7 +82,7 @@ export function LearnerSidebar({ activeTab, onTabChange, onShowOnboarding }: Lea
             {state !== "collapsed" && (
               <div className="flex flex-col">
                 <span className="text-sm font-semibold">Ahmad Hassan</span>
-                <span className="text-xs text-muted-foreground">AI Learner</span>
+                <span className="text-xs text-muted-foreground">AI Student</span>
               </div>
             )}
           </div>

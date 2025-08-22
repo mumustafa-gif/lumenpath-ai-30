@@ -32,12 +32,12 @@ const menuItems = [
   { title: "Deep Analytics", tabValue: "deep-analytics", icon: Target },
 ];
 
-interface AdminSidebarProps {
+interface LeadershipSidebarProps {
   activeTab: string;
   onTabChange: (tabValue: string) => void;
 }
 
-export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
+export function LeadershipSidebar({ activeTab, onTabChange }: LeadershipSidebarProps) {
   const { state } = useSidebar();
   
   const isActive = (tabValue: string) => activeTab === tabValue;
@@ -58,8 +58,8 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
             </Avatar>
             {state !== "collapsed" && (
               <div className="flex flex-col">
-                <span className="text-sm font-bold bg-gradient-to-r from-ai-primary to-ai-secondary bg-clip-text text-transparent">Admin Control</span>
-                <span className="text-xs text-muted-foreground">System Administrator</span>
+                <span className="text-sm font-bold bg-gradient-to-r from-ai-primary to-ai-secondary bg-clip-text text-transparent">Leadership Control</span>
+                <span className="text-xs text-muted-foreground">System Leadership</span>
               </div>
             )}
           </div>

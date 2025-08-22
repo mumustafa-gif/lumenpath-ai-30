@@ -20,8 +20,8 @@ All colors MUST be HSL.
     --primary: 221 83% 53%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 90%;
-    --secondary-foreground: 215 100% 0%;
+    --secondary: 221 83% 53%;
+    --secondary-foreground: 0 0% 100%;
 
     --muted: 0 0% 96%;
     --muted-foreground: 215 100% 30%;
@@ -38,10 +38,10 @@ All colors MUST be HSL.
 
     /* Blue, Black, White theme - Solid colors only */
     --ai-primary: 221 83% 53%;
-    --ai-secondary: 215 83% 67%;
-    --ai-accent: 215 100% 0%;
-    --ai-success: 142 76% 36%;
-    --ai-warning: 38 92% 50%;
+    --ai-secondary: 221 83% 53%;
+    --ai-accent: 221 83% 53%;
+    --ai-success: 221 83% 53%;
+    --ai-warning: 221 83% 53%;
     --ai-info: 221 83% 53%;
     
     /* Solid backgrounds instead of gradients */

@@ -8,7 +8,7 @@ import { X, Bot, TrendingUp, BarChart3, LineChart, PieChart, Minimize2, BookOpen
 import { ChatInterface } from "./ChatInterface";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, LineChart as RechartsLineChart, Line, PieChart as RechartsPieChart, Pie, Cell } from 'recharts';
 
-export const InstructorAIAssistant = () => {
+export const FacultyAIAssistant = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [showVisualization, setShowVisualization] = useState(false);

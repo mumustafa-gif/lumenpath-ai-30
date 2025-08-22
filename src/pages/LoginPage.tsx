@@ -22,28 +22,28 @@ const LoginPage = () => {
     localStorage.setItem("user", JSON.stringify({ 
       email, 
       role,
-      name: role === "admin" ? "Khalid Al-Mansouri" : role === "instructor" ? "Dr. Aisha Al-Maktoum" : "Ahmad Al-Rashid"
+      name: role === "leadership" ? "Khalid Al-Mansouri" : role === "faculty" ? "Dr. Aisha Al-Maktoum" : "Ahmad Al-Rashid"
     }));
     
     // Navigate based on role
     switch (role) {
-      case "admin":
-        navigate("/admin");
+      case "leadership":
+        navigate("/leadership");
         break;
-      case "instructor":
-        navigate("/instructor");
+      case "faculty":
+        navigate("/faculty");
         break;
-      case "learner":
-        navigate("/learner");
+      case "student":
+        navigate("/student");
         break;
     }
   };
 
   const getRoleIcon = (roleType: string) => {
     switch (roleType) {
-      case "admin": return <Settings className="w-5 h-5" />;
-      case "instructor": return <GraduationCap className="w-5 h-5" />;
-      case "learner": return <Users className="w-5 h-5" />;
+      case "leadership": return <Settings className="w-5 h-5" />;
+      case "faculty": return <GraduationCap className="w-5 h-5" />;
+      case "student": return <Users className="w-5 h-5" />;
       default: return null;
     }
   };
@@ -134,22 +134,22 @@ const LoginPage = () => {
                   <SelectValue placeholder="Choose your role" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="learner">
+                  <SelectItem value="student">
                     <div className="flex items-center">
-                      {getRoleIcon("learner")}
-                      <span className="ml-2">Learner - Access Training Content</span>
+                      {getRoleIcon("student")}
+                      <span className="ml-2">Student - Access Training Content</span>
                     </div>
                   </SelectItem>
-                  <SelectItem value="instructor">
+                  <SelectItem value="faculty">
                     <div className="flex items-center">
-                      {getRoleIcon("instructor")}
-                      <span className="ml-2">Instructor - Create & Manage Courses</span>
+                      {getRoleIcon("faculty")}
+                      <span className="ml-2">Faculty - Create & Manage Courses</span>
                     </div>
                   </SelectItem>
-                  <SelectItem value="admin">
+                  <SelectItem value="leadership">
                     <div className="flex items-center">
-                      {getRoleIcon("admin")}
-                      <span className="ml-2">Admin - System Management</span>
+                      {getRoleIcon("leadership")}
+                      <span className="ml-2">Leadership - System Management</span>
                     </div>
                   </SelectItem>
                 </SelectContent>

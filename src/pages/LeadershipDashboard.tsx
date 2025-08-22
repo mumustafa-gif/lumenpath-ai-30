@@ -37,15 +37,15 @@ import {
   Filter
 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart as RechartsLineChart, Line, PieChart as RechartsPieChart, Cell, AreaChart as RechartsAreaChart, Area, Pie } from 'recharts';
-import { AdminAIAssistant } from "@/components/AdminAIAssistant";
+import { LeadershipAIAssistant } from "@/components/LeadershipAIAssistant";
 import { AISkillsObservatory } from "@/components/AISkillsObservatory";
 import { WorkforceTrends } from "@/components/WorkforceTrends";
-import { AdminSidebar } from "@/components/AdminSidebar";
+import { LeadershipSidebar } from "@/components/LeadershipSidebar";
 import { ForecastReport } from "@/components/ForecastReport";
 import { StrategicPlanning } from "@/components/StrategicPlanning";
 import { DeepAnalytics } from "@/components/DeepAnalytics";
 
-const AdminDashboard = () => {
+const LeadershipDashboard = () => {
   const [showChartModal, setShowChartModal] = useState(false);
   const [selectedChartType, setSelectedChartType] = useState("bar");
   const [chartData, setChartData] = useState([]);
@@ -608,7 +608,7 @@ const AdminDashboard = () => {
   return (
     <SidebarProvider>
       <div className="min-h-screen w-full flex bg-gradient-to-br from-background via-background/95 to-ai-primary/5">
-        <AdminSidebar activeTab={activeTab} onTabChange={setActiveTab} />
+        <LeadershipSidebar activeTab={activeTab} onTabChange={setActiveTab} />
         
         <main className="flex-1 flex flex-col overflow-hidden">
           {/* Header Section */}
@@ -617,7 +617,7 @@ const AdminDashboard = () => {
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
                 <div>
                   <h1 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-ai-primary via-ai-secondary to-ai-accent bg-clip-text text-transparent mb-1">
-                    Admin Intelligence Hub
+                    Leadership Intelligence Hub
                   </h1>
                   <p className="text-muted-foreground text-sm lg:text-base">
                     Advanced analytics, insights, and strategic intelligence for UAE talent ecosystem
@@ -702,11 +702,11 @@ const AdminDashboard = () => {
           </DialogContent>
         </Dialog>
 
-        {/* Admin AI Assistant */}
-        {showAIAssistant && <AdminAIAssistant />}
+        {/* Leadership AI Assistant */}
+        {showAIAssistant && <LeadershipAIAssistant />}
       </div>
     </SidebarProvider>
   );
 };
 
-export default AdminDashboard;
+export default LeadershipDashboard;

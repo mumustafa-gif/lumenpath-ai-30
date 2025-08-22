@@ -10,7 +10,7 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Toolti
 
 const COLORS = ['hsl(var(--ai-primary))', 'hsl(var(--ai-secondary))', 'hsl(var(--ai-success))', 'hsl(var(--ai-warning))', 'hsl(var(--destructive))', 'hsl(var(--muted))'];
 
-export const AdminAIAssistant = () => {
+export const LeadershipAIAssistant = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showVisualization, setShowVisualization] = useState(false);
   const [chartData, setChartData] = useState<any[]>([]);

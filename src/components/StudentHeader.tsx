@@ -9,10 +9,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Bell, Settings, User, LogOut, BookOpen } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { LearnerAIAssistant } from "./LearnerAIAssistant";
+import { StudentAIAssistant } from "./StudentAIAssistant";
 import inceptionIcon from "/lovable-uploads/2c76c7ae-2959-41c8-bfbb-ea45ef1e7044.png";
 
-export const LearnerHeader = () => {
+export const StudentHeader = () => {
   const navigate = useNavigate();
   const [notifications] = useState(2);
 
@@ -30,7 +30,7 @@ export const LearnerHeader = () => {
             <div>
               <h1 className="text-xl font-bold">INCEPTION</h1>
               <p className="text-[10px] text-muted-foreground -mt-1">A G42 COMPANY</p>
-              <p className="text-sm text-muted-foreground">Learning Portal</p>
+              <p className="text-sm text-muted-foreground">Student Portal</p>
             </div>
           </div>
 
@@ -69,7 +69,7 @@ export const LearnerHeader = () => {
           </div>
         </div>
       </header>
-      <LearnerAIAssistant />
+      <StudentAIAssistant />
     </>
   );
 };
