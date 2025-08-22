@@ -17,16 +17,16 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 215 100% 0%;
 
-    --primary: 221 83% 53%;
+    --primary: 221 83% 45%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 221 83% 53%;
+    --secondary: 221 83% 45%;
     --secondary-foreground: 0 0% 100%;
 
     --muted: 0 0% 96%;
     --muted-foreground: 215 100% 30%;
 
-    --accent: 221 83% 53%;
+    --accent: 221 83% 45%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
@@ -34,15 +34,15 @@ All colors MUST be HSL.
 
     --border: 215 100% 85%;
     --input: 0 0% 95%;
-    --ring: 221 83% 53%;
+    --ring: 221 83% 45%;
 
     /* Blue, Black, White theme - Solid colors only */
-    --ai-primary: 221 83% 53%;
-    --ai-secondary: 221 83% 53%;
-    --ai-accent: 221 83% 53%;
-    --ai-success: 221 83% 53%;
-    --ai-warning: 221 83% 53%;
-    --ai-info: 221 83% 53%;
+    --ai-primary: 221 83% 45%;
+    --ai-secondary: 221 83% 45%;
+    --ai-accent: 221 83% 45%;
+    --ai-success: 221 83% 45%;
+    --ai-warning: 221 83% 45%;
+    --ai-info: 221 83% 45%;
     
     /* Solid backgrounds instead of gradients */
     --primary-bg: 221 83% 97%;
@@ -83,7 +83,7 @@ All colors MUST be HSL.
     --popover: 215 100% 5%;
     --popover-foreground: 0 0% 100%;
 
-    --primary: 221 83% 53%;
+    --primary: 221 83% 45%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 0 0% 15%;
@@ -92,7 +92,7 @@ All colors MUST be HSL.
     --muted: 0 0% 15%;
     --muted-foreground: 0 0% 70%;
 
-    --accent: 221 83% 53%;
+    --accent: 221 83% 45%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62.8% 30.6%;
@@ -100,7 +100,7 @@ All colors MUST be HSL.
 
     --border: 0 0% 20%;
     --input: 0 0% 20%;
-    --ring: 221 83% 53%;
+    --ring: 221 83% 45%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
