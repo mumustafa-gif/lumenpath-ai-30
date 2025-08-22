@@ -1,10 +1,7 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -18,13 +15,15 @@ import {
   Sparkles, 
   Brain, 
   FileText, 
-  Play,
   CheckCircle,
   Loader2,
   Download,
-  Share2,
-  Calendar
+  Send,
+  Bot,
+  User,
+  Share2
 } from "lucide-react";
+import { Play, Calendar } from "lucide-react";
 
 interface CurriculumModule {
   id: string;
@@ -43,21 +42,62 @@ interface GenerationProgress {
   status: string;
 }
 
+interface Message {
+  id: string;
+  text: string;
+  isBot: boolean;
+  timestamp: Date;
+}
+
+interface CurriculumData {
+  title?: string;
+  description?: string;
+  duration?: string;
+  level?: string;
+  field?: string;
+  prerequisites?: string;
+  objectives?: string;
+  targetAudience?: string;
+}
+
 export const CurriculumCreator = () => {
   const [activeTab, setActiveTab] = useState("create");
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: '1',
+      text: "Hello! I'm your AI Curriculum Creator. I'll help you design a comprehensive curriculum by asking you some questions. Let's start - what would you like to call your curriculum?",
+      isBot: true,
+      timestamp: new Date()
+    }
+  ]);
+  const [inputText, setInputText] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [curriculumData, setCurriculumData] = useState<CurriculumData>({});
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationProgress, setGenerationProgress] = useState<GenerationProgress[]>([]);
   const [generatedCurriculum, setGeneratedCurriculum] = useState<CurriculumModule[]>([]);
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    duration: "",
-    level: "",
-    field: "",
-    prerequisites: "",
-    objectives: "",
-    targetAudience: ""
-  });
+  
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const questions = [
+    "What would you like to call your curriculum?",
+    "What field of study is this curriculum for? (e.g., Computer Science, Data Science, Business Analytics)",
+    "What academic level should this be? (undergraduate, graduate, master's, PhD, certificate)",
+    "How long should the program duration be? (1 semester, 2 semesters, 1 year, 2 years, etc.)",
+    "Please provide a brief description of the program's purpose and scope.",
+    "What are the main learning objectives and outcomes you want to achieve?",
+    "What prerequisites or background knowledge should students have?",
+    "Who is the target audience for this curriculum?"
+  ];
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   const aiStages = [
     { stage: "Analyzing Educational Requirements", duration: 2000 },
@@ -69,10 +109,79 @@ export const CurriculumCreator = () => {
     { stage: "Finalizing Curriculum", duration: 1000 }
   ];
 
-  const handleGenerate = async () => {
+  const addMessage = (text: string, isBot: boolean) => {
+    const newMessage: Message = {
+      id: Date.now().toString(),
+      text,
+      isBot,
+      timestamp: new Date()
+    };
+    setMessages(prev => [...prev, newMessage]);
+  };
+
+  const handleSendMessage = async () => {
+    if (!inputText.trim()) return;
+
+    const userMessage = inputText.trim();
+    addMessage(userMessage, false);
+    setInputText("");
+    setIsTyping(true);
+
+    // Store the answer based on current question
+    const newCurriculumData = { ...curriculumData };
+    switch (currentQuestion) {
+      case 0:
+        newCurriculumData.title = userMessage;
+        break;
+      case 1:
+        newCurriculumData.field = userMessage;
+        break;
+      case 2:
+        newCurriculumData.level = userMessage;
+        break;
+      case 3:
+        newCurriculumData.duration = userMessage;
+        break;
+      case 4:
+        newCurriculumData.description = userMessage;
+        break;
+      case 5:
+        newCurriculumData.objectives = userMessage;
+        break;
+      case 6:
+        newCurriculumData.prerequisites = userMessage;
+        break;
+      case 7:
+        newCurriculumData.targetAudience = userMessage;
+        break;
+    }
+    setCurriculumData(newCurriculumData);
+
+    // Simulate AI typing delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    if (currentQuestion < questions.length - 1) {
+      const nextQuestion = currentQuestion + 1;
+      setCurrentQuestion(nextQuestion);
+      addMessage(questions[nextQuestion], true);
+    } else {
+      // All questions answered, start curriculum generation
+      addMessage("Excellent! I have all the information needed. Let me generate your comprehensive curriculum now...", true);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      handleGenerate(newCurriculumData);
+    }
+    
+    setIsTyping(false);
+  };
+
+  const handleGenerate = async (data?: CurriculumData) => {
     setIsGenerating(true);
     setGenerationProgress([]);
     setActiveTab("generate");
+    
+    if (data) {
+      addMessage("🚀 Starting curriculum generation process...", true);
+    }
 
     for (let i = 0; i < aiStages.length; i++) {
       const stage = aiStages[i];
@@ -82,6 +191,10 @@ export const CurriculumCreator = () => {
         ...prev,
         { stage: stage.stage, progress: 0, status: "processing" }
       ]);
+      
+      if (data) {
+        addMessage(`📊 ${stage.stage}`, true);
+      }
 
       // Simulate progress for current stage
       const progressInterval = setInterval(() => {
@@ -206,21 +319,28 @@ export const CurriculumCreator = () => {
     ];
 
     setGeneratedCurriculum(dummyCurriculum);
+    
+    if (data) {
+      addMessage("✅ Your curriculum has been successfully generated! Check out the comprehensive structure below.", true);
+    }
+    
     setIsGenerating(false);
     setActiveTab("result");
   };
 
   const resetForm = () => {
-    setFormData({
-      title: "",
-      description: "",
-      duration: "",
-      level: "",
-      field: "",
-      prerequisites: "",
-      objectives: "",
-      targetAudience: ""
-    });
+    setCurriculumData({});
+    setMessages([
+      {
+        id: '1',
+        text: "Hello! I'm your AI Curriculum Creator. I'll help you design a comprehensive curriculum by asking you some questions. Let's start - what would you like to call your curriculum?",
+        isBot: true,
+        timestamp: new Date()
+      }
+    ]);
+    setCurrentQuestion(0);
+    setInputText("");
+    setIsTyping(false);
     setGeneratedCurriculum([]);
     setGenerationProgress([]);
     setActiveTab("create");
@@ -275,138 +395,92 @@ export const CurriculumCreator = () => {
         </TabsList>
 
         <TabsContent value="create" className="space-y-6">
-          <Card>
+          <Card className="h-[600px] flex flex-col">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Brain className="w-5 h-5 text-ai-primary" />
-                Curriculum Specifications
+                AI Curriculum Creator Assistant
               </CardTitle>
               <CardDescription>
-                Provide details about your curriculum requirements for AI-powered generation
+                Let's create your comprehensive curriculum through conversation
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="title">Curriculum Title</Label>
-                    <Input
-                      id="title"
-                      placeholder="e.g., Advanced Machine Learning Engineering"
-                      value={formData.title}
-                      onChange={(e) => setFormData({...formData, title: e.target.value})}
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="field">Field of Study</Label>
-                    <Select value={formData.field} onValueChange={(value) => setFormData({...formData, field: value})}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select field" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="computer-science">Computer Science</SelectItem>
-                        <SelectItem value="artificial-intelligence">Artificial Intelligence</SelectItem>
-                        <SelectItem value="data-science">Data Science</SelectItem>
-                        <SelectItem value="software-engineering">Software Engineering</SelectItem>
-                        <SelectItem value="cybersecurity">Cybersecurity</SelectItem>
-                        <SelectItem value="digital-marketing">Digital Marketing</SelectItem>
-                        <SelectItem value="business-analytics">Business Analytics</SelectItem>
-                        <SelectItem value="information-systems">Information Systems</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="level">Academic Level</Label>
-                    <Select value={formData.level} onValueChange={(value) => setFormData({...formData, level: value})}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select level" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="undergraduate">Undergraduate</SelectItem>
-                        <SelectItem value="graduate">Graduate</SelectItem>
-                        <SelectItem value="masters">Master's Program</SelectItem>
-                        <SelectItem value="phd">PhD Program</SelectItem>
-                        <SelectItem value="certificate">Certificate Program</SelectItem>
-                        <SelectItem value="diploma">Diploma</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="duration">Program Duration</Label>
-                    <Select value={formData.duration} onValueChange={(value) => setFormData({...formData, duration: value})}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select duration" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="1-semester">1 Semester</SelectItem>
-                        <SelectItem value="2-semester">2 Semesters</SelectItem>
-                        <SelectItem value="1-year">1 Year</SelectItem>
-                        <SelectItem value="2-year">2 Years</SelectItem>
-                        <SelectItem value="3-year">3 Years</SelectItem>
-                        <SelectItem value="4-year">4 Years</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+            <CardContent className="flex-1 flex flex-col p-0">
+              <ScrollArea className="flex-1 px-6">
+                <div className="space-y-4 py-4">
+                  {messages.map((message) => (
+                    <div
+                      key={message.id}
+                      className={`flex ${message.isBot ? 'justify-start' : 'justify-end'}`}
+                    >
+                      <div
+                        className={`flex max-w-[80%] ${
+                          message.isBot ? 'flex-row' : 'flex-row-reverse'
+                        }`}
+                      >
+                        <div
+                          className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                            message.isBot
+                              ? 'bg-ai-primary text-white mr-3'
+                              : 'bg-muted text-foreground ml-3'
+                          }`}
+                        >
+                          {message.isBot ? <Bot className="w-4 h-4" /> : <User className="w-4 h-4" />}
+                        </div>
+                        <div
+                          className={`px-4 py-2 rounded-lg ${
+                            message.isBot
+                              ? 'bg-muted text-foreground'
+                              : 'bg-ai-primary text-white'
+                          }`}
+                        >
+                          <p className="text-sm">{message.text}</p>
+                          <span className="text-xs opacity-70">
+                            {message.timestamp.toLocaleTimeString([], { 
+                              hour: '2-digit', 
+                              minute: '2-digit' 
+                            })}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  {isTyping && (
+                    <div className="flex justify-start">
+                      <div className="flex">
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center bg-ai-primary text-white mr-3">
+                          <Bot className="w-4 h-4" />
+                        </div>
+                        <div className="bg-muted px-4 py-2 rounded-lg">
+                          <div className="flex space-x-1">
+                            <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" />
+                            <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
+                            <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  <div ref={messagesEndRef} />
                 </div>
-
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="description">Program Description</Label>
-                    <Textarea
-                      id="description"
-                      placeholder="Describe the program's purpose and scope..."
-                      className="h-24"
-                      value={formData.description}
-                      onChange={(e) => setFormData({...formData, description: e.target.value})}
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="objectives">Learning Objectives</Label>
-                    <Textarea
-                      id="objectives"
-                      placeholder="List key learning objectives and outcomes..."
-                      className="h-24"
-                      value={formData.objectives}
-                      onChange={(e) => setFormData({...formData, objectives: e.target.value})}
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="prerequisites">Prerequisites</Label>
-                    <Textarea
-                      id="prerequisites"
-                      placeholder="Required background knowledge or qualifications..."
-                      className="h-20"
-                      value={formData.prerequisites}
-                      onChange={(e) => setFormData({...formData, prerequisites: e.target.value})}
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="targetAudience">Target Audience</Label>
-                    <Input
-                      id="targetAudience"
-                      placeholder="e.g., Working professionals, Recent graduates"
-                      value={formData.targetAudience}
-                      onChange={(e) => setFormData({...formData, targetAudience: e.target.value})}
-                    />
-                  </div>
+              </ScrollArea>
+              <div className="border-t p-4">
+                <div className="flex space-x-2">
+                  <Input
+                    placeholder="Type your response..."
+                    value={inputText}
+                    onChange={(e) => setInputText(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                    disabled={isTyping}
+                  />
+                  <Button 
+                    onClick={handleSendMessage}
+                    disabled={!inputText.trim() || isTyping}
+                    className="bg-ai-primary hover:bg-ai-primary/90"
+                  >
+                    <Send className="w-4 h-4" />
+                  </Button>
                 </div>
-              </div>
-
-              <div className="flex justify-center pt-6">
-                <Button 
-                  onClick={handleGenerate}
-                  disabled={!formData.title || !formData.field || !formData.level}
-                  className="bg-ai-primary hover:bg-ai-primary/90 px-8 py-3"
-                >
-                  <Sparkles className="w-5 h-5 mr-2" />
-                  Generate Curriculum with AI
-                </Button>
               </div>
             </CardContent>
           </Card>
@@ -428,9 +502,9 @@ export const CurriculumCreator = () => {
                 <div className="w-20 h-20 mx-auto bg-ai-primary/10 rounded-full flex items-center justify-center">
                   <Loader2 className="w-10 h-10 text-ai-primary animate-spin" />
                 </div>
-                <p className="text-lg font-medium text-ai-primary">
-                  Creating your curriculum: {formData.title}
-                </p>
+              <p className="text-lg font-medium text-ai-primary">
+                Creating your curriculum: {curriculumData.title}
+              </p>
               </div>
 
               <div className="space-y-4">
@@ -471,20 +545,20 @@ export const CurriculumCreator = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <GraduationCap className="w-5 h-5 text-ai-primary" />
-                    {formData.title}
+                    {curriculumData.title}
                   </CardTitle>
-                  <CardDescription>{formData.description}</CardDescription>
+                  <CardDescription>{curriculumData.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div className="text-center p-4 border rounded-lg">
                       <Clock className="w-6 h-6 mx-auto mb-2 text-ai-primary" />
-                      <div className="font-semibold">{formData.duration}</div>
+                      <div className="font-semibold">{curriculumData.duration}</div>
                       <div className="text-sm text-muted-foreground">Duration</div>
                     </div>
                     <div className="text-center p-4 border rounded-lg">
                       <Target className="w-6 h-6 mx-auto mb-2 text-ai-secondary" />
-                      <div className="font-semibold">{formData.level}</div>
+                      <div className="font-semibold">{curriculumData.level}</div>
                       <div className="text-sm text-muted-foreground">Level</div>
                     </div>
                     <div className="text-center p-4 border rounded-lg">
@@ -494,7 +568,7 @@ export const CurriculumCreator = () => {
                     </div>
                     <div className="text-center p-4 border rounded-lg">
                       <Users className="w-6 h-6 mx-auto mb-2 text-ai-success" />
-                      <div className="font-semibold">{formData.targetAudience.split(',')[0] || 'Students'}</div>
+                      <div className="font-semibold">{curriculumData.targetAudience?.split(',')[0] || 'Students'}</div>
                       <div className="text-sm text-muted-foreground">Target</div>
                     </div>
                   </div>
