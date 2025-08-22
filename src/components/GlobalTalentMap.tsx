@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Globe, Users, TrendingUp, MapPin, Zap, Award, Target } from "lucide-react";
+import worldMapSvg from "@/assets/world-map.svg";
 
 const GlobalTalentMap = () => {
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
@@ -176,96 +177,109 @@ const GlobalTalentMap = () => {
         </CardHeader>
         <CardContent>
           <div className="relative">
-            {/* World Map SVG Background */}
-            <div className="relative bg-gradient-to-br from-muted/30 to-muted/10 rounded-lg border-2 border-dashed border-muted-foreground/20 overflow-hidden">
-              <svg
-                viewBox="0 0 800 400"
-                className="w-full h-80 lg:h-96"
-                style={{ background: 'linear-gradient(135deg, hsl(var(--muted)) 0%, hsl(var(--muted))/0.5 100%)' }}
-              >
-                {/* Simplified World Map Paths */}
-                <g fill="hsl(var(--muted-foreground))" fillOpacity="0.1" stroke="hsl(var(--muted-foreground))" strokeWidth="0.5">
-                  {/* North America */}
-                  <path d="M 50 50 L 300 50 L 320 120 L 280 180 L 200 200 L 100 190 L 80 140 Z" />
-                  {/* Europe */}
-                  <path d="M 400 50 L 580 60 L 590 120 L 560 160 L 480 150 L 420 120 Z" />
-                  {/* Asia */}
-                  <path d="M 580 50 L 780 70 L 770 200 L 720 280 L 600 250 L 590 120 Z" />
-                  {/* Africa */}
-                  <path d="M 420 160 L 580 170 L 590 280 L 560 380 L 480 390 L 430 320 L 420 200 Z" />
-                  {/* South America */}
-                  <path d="M 200 200 L 350 220 L 370 350 L 320 390 L 280 380 L 250 300 Z" />
-                  {/* Australia */}
-                  <path d="M 650 320 L 750 330 L 760 380 L 720 390 L 660 380 Z" />
-                </g>
+            {/* Real World Map Background */}
+            <div className="relative bg-gradient-to-br from-blue-50/30 to-blue-100/10 rounded-lg border overflow-hidden">
+              <div className="relative w-full h-80 lg:h-96">
+                {/* Real World Map SVG */}
+                <img 
+                  src={worldMapSvg} 
+                  alt="World Map" 
+                  className="w-full h-full object-contain opacity-60"
+                />
                 
-                {/* Talent Data Points */}
-                {globalTalentData.map((location, index) => (
-                  <g key={index}>
-                    {/* Connection lines for regional grouping */}
-                    <circle
-                      cx={location.coordinates.x}
-                      cy={location.coordinates.y}
-                      r={Math.sqrt(location.professionals / 1000) + 5}
-                      fill={getDemandColor(location.demandLevel)}
-                      fillOpacity={hoveredRegion === location.country ? 0.8 : 0.6}
-                      stroke="white"
-                      strokeWidth="2"
-                      className="cursor-pointer transition-all duration-300 hover:r-8"
-                      onMouseEnter={() => setHoveredRegion(location.country)}
-                      onMouseLeave={() => setHoveredRegion(null)}
-                      onClick={() => setSelectedRegion(selectedRegion === location.country ? null : location.country)}
-                      style={{
-                        filter: hoveredRegion === location.country ? 'drop-shadow(0 0 8px rgba(59, 130, 246, 0.6))' : 'none',
-                        transform: hoveredRegion === location.country ? 'scale(1.1)' : 'scale(1)',
-                        transformOrigin: `${location.coordinates.x}px ${location.coordinates.y}px`
-                      }}
-                    />
-                    
-                    {/* Country Labels */}
-                    <text
-                      x={location.coordinates.x}
-                      y={location.coordinates.y - Math.sqrt(location.professionals / 1000) - 12}
-                      textAnchor="middle"
-                      className="text-xs font-medium fill-foreground"
-                      style={{ userSelect: 'none' }}
-                    >
-                      {location.country}
-                    </text>
-                    
-                    {/* Professional count */}
-                    <text
-                      x={location.coordinates.x}
-                      y={location.coordinates.y + 4}
-                      textAnchor="middle"
-                      className="text-xs font-bold fill-white"
-                      style={{ userSelect: 'none' }}
-                    >
-                      {(location.professionals / 1000).toFixed(0)}k
-                    </text>
-                  </g>
-                ))}
-              </svg>
+                {/* Overlay SVG for data points */}
+                <svg
+                  viewBox="0 0 800 400"
+                  className="absolute inset-0 w-full h-full"
+                >
+                  {/* Talent Data Points */}
+                  {globalTalentData.map((location, index) => (
+                    <g key={index}>
+                      {/* Data Point Circles */}
+                      <circle
+                        cx={location.coordinates.x}
+                        cy={location.coordinates.y}
+                        r={Math.sqrt(location.professionals / 1000) + 6}
+                        fill={getDemandColor(location.demandLevel)}
+                        fillOpacity={hoveredRegion === location.country ? 0.9 : 0.8}
+                        stroke="white"
+                        strokeWidth="3"
+                        className="cursor-pointer transition-all duration-300 drop-shadow-lg"
+                        onMouseEnter={() => setHoveredRegion(location.country)}
+                        onMouseLeave={() => setHoveredRegion(null)}
+                        onClick={() => setSelectedRegion(selectedRegion === location.country ? null : location.country)}
+                        style={{
+                          filter: hoveredRegion === location.country ? 'drop-shadow(0 0 12px rgba(59, 130, 246, 0.8))' : 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))',
+                          transform: hoveredRegion === location.country ? 'scale(1.2)' : 'scale(1)',
+                          transformOrigin: `${location.coordinates.x}px ${location.coordinates.y}px`
+                        }}
+                      />
+                      
+                      {/* Pulsing Effect for Critical Demand */}
+                      {location.demandLevel === "Critical" && (
+                        <circle
+                          cx={location.coordinates.x}
+                          cy={location.coordinates.y}
+                          r={Math.sqrt(location.professionals / 1000) + 10}
+                          fill="none"
+                          stroke={getDemandColor(location.demandLevel)}
+                          strokeWidth="2"
+                          strokeOpacity="0.4"
+                          className="animate-ping"
+                        />
+                      )}
+                      
+                      {/* Country Labels */}
+                      <text
+                        x={location.coordinates.x}
+                        y={location.coordinates.y - Math.sqrt(location.professionals / 1000) - 15}
+                        textAnchor="middle"
+                        className="text-xs font-semibold fill-gray-800 drop-shadow-sm"
+                        style={{ userSelect: 'none' }}
+                      >
+                        {location.country}
+                      </text>
+                      
+                      {/* Professional count */}
+                      <text
+                        x={location.coordinates.x}
+                        y={location.coordinates.y + 4}
+                        textAnchor="middle"
+                        className="text-xs font-bold fill-white"
+                        style={{ userSelect: 'none' }}
+                      >
+                        {(location.professionals / 1000).toFixed(0)}k
+                      </text>
+                    </g>
+                  ))}
+                </svg>
+              </div>
               
-              {/* Legend */}
-              <div className="absolute top-4 right-4 bg-background/90 backdrop-blur-sm p-3 rounded-lg border shadow-lg">
-                <h4 className="text-sm font-semibold mb-2">Demand Levels</h4>
-                <div className="space-y-1 text-xs">
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full" style={{backgroundColor: 'hsl(var(--ai-error))'}}></div>
-                    <span>Critical</span>
+              {/* Enhanced Legend */}
+              <div className="absolute top-4 right-4 bg-background/95 backdrop-blur-md p-4 rounded-lg border shadow-xl">
+                <h4 className="text-sm font-semibold mb-3 text-gray-800">Talent Demand Levels</h4>
+                <div className="space-y-2 text-sm">
+                  <div className="flex items-center gap-3">
+                    <div className="w-4 h-4 rounded-full animate-pulse" style={{backgroundColor: 'hsl(var(--ai-error))'}}></div>
+                    <span className="font-medium">Critical</span>
+                    <span className="text-xs text-gray-600">({globalTalentData.filter(r => r.demandLevel === "Critical").length})</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full" style={{backgroundColor: 'hsl(var(--ai-warning))'}}></div>
-                    <span>High</span>
+                  <div className="flex items-center gap-3">
+                    <div className="w-4 h-4 rounded-full" style={{backgroundColor: 'hsl(var(--ai-warning))'}}></div>
+                    <span className="font-medium">High</span>
+                    <span className="text-xs text-gray-600">({globalTalentData.filter(r => r.demandLevel === "High").length})</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full" style={{backgroundColor: 'hsl(var(--ai-primary))'}}></div>
-                    <span>Medium</span>
+                  <div className="flex items-center gap-3">
+                    <div className="w-4 h-4 rounded-full" style={{backgroundColor: 'hsl(var(--ai-primary))'}}></div>
+                    <span className="font-medium">Medium</span>
+                    <span className="text-xs text-gray-600">({globalTalentData.filter(r => r.demandLevel === "Medium").length})</span>
                   </div>
                 </div>
-                <div className="mt-2 text-xs text-muted-foreground">
-                  Circle size = Talent pool
+                <div className="mt-3 pt-3 border-t border-gray-200">
+                  <div className="text-xs text-gray-600">
+                    <div>• Circle size = Talent pool</div>
+                    <div>• Pulsing = Critical demand</div>
+                  </div>
                 </div>
               </div>
             </div>
