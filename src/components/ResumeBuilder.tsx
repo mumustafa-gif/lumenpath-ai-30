@@ -443,8 +443,8 @@ const ResumeBuilder = () => {
 
       {/* AI Chat Assistant - Right Side */}
       {showChat && (
-        <div className="w-96 border-l bg-card flex flex-col">
-          <div className="p-4 border-b flex items-center justify-between">
+        <div className="w-96 border-l bg-card flex flex-col h-screen">
+          <div className="p-4 border-b flex items-center justify-between flex-shrink-0">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
                 <Sparkles className="w-4 h-4 text-primary" />
@@ -463,7 +463,7 @@ const ResumeBuilder = () => {
             </Button>
           </div>
 
-          <div className="flex-1 overflow-auto p-4 space-y-4">
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
             {messages.map((message) => (
               <div
                 key={message.id}
