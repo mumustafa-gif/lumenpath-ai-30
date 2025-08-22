@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Send, Bot, User, Lightbulb } from "lucide-react";
+import { Send, Bot, User, Lightbulb, Mic, MicOff, Volume2, VolumeX } from "lucide-react";
+import { useSpeech } from "@/hooks/useSpeech";
+import { toast } from "sonner";
 
 interface ChatMessage {
   id: string;
@@ -33,6 +35,39 @@ export const ChatInterface = ({
   ]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+
+  // Speech functionality
+  const {
+    isListening,
+    isSpeaking,
+    transcript,
+    startListening,
+    stopListening,
+    speak,
+    stopSpeaking,
+  } = useSpeech({
+    onTranscription: (text: string) => {
+      setInputValue(text);
+      toast.success("Speech recognized!");
+    },
+    onSpeechEnd: () => {
+      toast.info("Speech recognition ended");
+    },
+    onError: (error: string) => {
+      toast.error(`Speech error: ${error}`);
+    },
+  });
+
+  // Auto-speak AI responses
+  useEffect(() => {
+    if (messages.length > 0) {
+      const lastMessage = messages[messages.length - 1];
+      if (lastMessage.sender === "ai" && !isTyping) {
+        // Auto-speak the AI response
+        speak(lastMessage.content);
+      }
+    }
+  }, [messages, isTyping, speak]);
 
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
@@ -207,22 +242,65 @@ export const ChatInterface = ({
         )}
       </div>
 
-      {/* Input */}
-      <div className="flex space-x-2">
-        <Input
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          placeholder={placeholder}
-          onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-          className="flex-1"
-        />
-        <Button 
-          onClick={handleSendMessage} 
-          disabled={!inputValue.trim() || isTyping}
-          variant="ai"
-        >
-          <Send className="w-4 h-4" />
-        </Button>
+      {/* Input with Speech Controls */}
+      <div className="space-y-3">
+        {/* Speech Status */}
+        {(isListening || isSpeaking) && (
+          <div className="flex items-center justify-center space-x-2 p-2 bg-muted/50 rounded-lg">
+            {isListening && (
+              <div className="flex items-center space-x-2 text-red-600">
+                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                <span className="text-sm font-medium">Listening...</span>
+              </div>
+            )}
+            {isSpeaking && (
+              <div className="flex items-center space-x-2 text-blue-600">
+                <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                <span className="text-sm font-medium">Speaking...</span>
+              </div>
+            )}
+          </div>
+        )}
+        
+        {/* Input Row */}
+        <div className="flex space-x-2">
+          <Input
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            placeholder={placeholder}
+            onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+            className="flex-1"
+          />
+          
+          {/* Speech to Text Button */}
+          <Button
+            variant={isListening ? "destructive" : "outline"}
+            size="icon"
+            onClick={isListening ? stopListening : startListening}
+            title={isListening ? "Stop listening" : "Start voice input"}
+          >
+            {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+          </Button>
+          
+          {/* Text to Speech Toggle Button */}
+          <Button
+            variant={isSpeaking ? "destructive" : "outline"}
+            size="icon"
+            onClick={isSpeaking ? stopSpeaking : () => {}}
+            title={isSpeaking ? "Stop speaking" : "Speech enabled"}
+          >
+            {isSpeaking ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+          </Button>
+          
+          {/* Send Button */}
+          <Button 
+            onClick={handleSendMessage} 
+            disabled={!inputValue.trim() || isTyping}
+            variant="ai"
+          >
+            <Send className="w-4 h-4" />
+          </Button>
+        </div>
       </div>
     </div>
   );
