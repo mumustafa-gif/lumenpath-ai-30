@@ -37,6 +37,7 @@ import MarketSkillComparison from "@/components/MarketSkillComparison";
 import { AICareerCounselor } from "@/components/AICareerCounselor";
 import { AIEducationalCounselor } from "@/components/AIEducationalCounselor";
 import { LearnerAIAssistant } from "@/components/LearnerAIAssistant";
+import ResumeBuilder from "@/components/ResumeBuilder";
 
 const LearnerDashboard = () => {
   const [showOnboarding, setShowOnboarding] = useState(false); // Set to true for new users
@@ -612,6 +613,10 @@ const LearnerDashboard = () => {
 
               {activeTab === "profile" && (
                 <LearnerProfile onSave={handleProfileSave} />
+              )}
+
+              {activeTab === "resume-builder" && (
+                <ResumeBuilder />
               )}
             </div>
           </main>

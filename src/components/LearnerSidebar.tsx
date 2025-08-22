@@ -29,6 +29,7 @@ import {
   Trophy,
   User,
   LogOut,
+  FileText,
 } from "lucide-react";
 
 const mainNavItems = [
@@ -51,6 +52,7 @@ const counselorItems = [
 
 const profileItems = [
   { title: "Profile", tabValue: "profile", icon: User },
+  { title: "Resume Builder", tabValue: "resume-builder", icon: FileText },
 ];
 
 interface LearnerSidebarProps {
