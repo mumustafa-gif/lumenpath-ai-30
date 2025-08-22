@@ -19,7 +19,7 @@ import {
   CheckCircle,
   Lightbulb
 } from "lucide-react";
-import HeyGenAvatar from "./HeyGenAvatar";
+import MockHeyGenAvatar from "./MockHeyGenAvatar";
 
 const MockInterviews = () => {
   const [activeInterview, setActiveInterview] = useState<string | null>(null);
@@ -389,7 +389,7 @@ const MockInterviews = () => {
               </Card>
 
               {/* AI Avatar */}
-              <HeyGenAvatar
+              <MockHeyGenAvatar
                 onAvatarSpeak={handleAvatarSpeak}
                 onUserResponse={handleUserResponse}
                 onSessionReady={handleSessionReady}
