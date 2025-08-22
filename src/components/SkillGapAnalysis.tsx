@@ -51,37 +51,209 @@ const SkillGapAnalysis = ({ learnerProfile }: SkillGapAnalysisProps) => {
       domain: "AI & Machine Learning",
       growth: "+45%",
       color: "hsl(245, 82%, 67%)",
+      marketValue: "$2.8B",
+      jobOpenings: "3,200+",
+      avgSalary: "AED 180,000",
+      topCompanies: ["ADNOC", "Emirates NBD", "Careem", "Mashreq Bank"],
       inDemandSkills: [
-        { skill: "Python", demand: 95, learnerLevel: 75, gap: 20, courses: ["Python for AI - Coursera", "Advanced Python - edX"] },
-        { skill: "Machine Learning", demand: 90, learnerLevel: 45, gap: 45, courses: ["ML Course - Stanford", "Applied ML - Udacity"] },
-        { skill: "Deep Learning", demand: 85, learnerLevel: 20, gap: 65, courses: ["Deep Learning Specialization - Coursera", "Neural Networks - Udemy"] },
-        { skill: "TensorFlow", demand: 80, learnerLevel: 10, gap: 70, courses: ["TensorFlow Developer - Google", "TensorFlow Mastery - Pluralsight"] },
-        { skill: "Data Analysis", demand: 88, learnerLevel: 60, gap: 28, courses: ["Data Analysis with Python - IBM", "Statistical Analysis - MIT"] },
-        { skill: "Neural Networks", demand: 82, learnerLevel: 15, gap: 67, courses: ["Neural Networks Course - DeepLearning.AI", "CNNs Specialization - Coursera"] }
+        { 
+          skill: "Python", 
+          demand: 95, 
+          learnerLevel: 75, 
+          gap: 20, 
+          salaryImpact: "+35%",
+          jobCount: 1850,
+          difficulty: "Medium",
+          timeToMaster: "4-6 months",
+          courses: ["Python for AI - Coursera", "Advanced Python - edX"] 
+        },
+        { 
+          skill: "Machine Learning", 
+          demand: 90, 
+          learnerLevel: 45, 
+          gap: 45, 
+          salaryImpact: "+48%",
+          jobCount: 2100,
+          difficulty: "High",
+          timeToMaster: "8-12 months",
+          courses: ["ML Course - Stanford", "Applied ML - Udacity"] 
+        },
+        { 
+          skill: "Deep Learning", 
+          demand: 85, 
+          learnerLevel: 20, 
+          gap: 65, 
+          salaryImpact: "+52%",
+          jobCount: 1650,
+          difficulty: "Very High",
+          timeToMaster: "12-18 months",
+          courses: ["Deep Learning Specialization - Coursera", "Neural Networks - Udemy"] 
+        },
+        { 
+          skill: "TensorFlow", 
+          demand: 80, 
+          learnerLevel: 10, 
+          gap: 70, 
+          salaryImpact: "+42%",
+          jobCount: 1250,
+          difficulty: "High",
+          timeToMaster: "6-9 months",
+          courses: ["TensorFlow Developer - Google", "TensorFlow Mastery - Pluralsight"] 
+        },
+        { 
+          skill: "Data Analysis", 
+          demand: 88, 
+          learnerLevel: 60, 
+          gap: 28, 
+          salaryImpact: "+28%",
+          jobCount: 2800,
+          difficulty: "Medium",
+          timeToMaster: "3-5 months",
+          courses: ["Data Analysis with Python - IBM", "Statistical Analysis - MIT"] 
+        },
+        { 
+          skill: "Neural Networks", 
+          demand: 82, 
+          learnerLevel: 15, 
+          gap: 67, 
+          salaryImpact: "+45%",
+          jobCount: 980,
+          difficulty: "Very High",
+          timeToMaster: "10-15 months",
+          courses: ["Neural Networks Course - DeepLearning.AI", "CNNs Specialization - Coursera"] 
+        }
       ]
     },
     {
       domain: "Data Science",
       growth: "+38%",
       color: "hsl(15, 85%, 65%)",
+      marketValue: "$1.9B",
+      jobOpenings: "2,800+",
+      avgSalary: "AED 145,000",
+      topCompanies: ["Dubai Electricity", "Etisalat", "FAB", "Noon"],
       inDemandSkills: [
-        { skill: "Python", demand: 92, learnerLevel: 75, gap: 17, courses: ["Python for Data Science - IBM", "Python Programming - Michigan"] },
-        { skill: "SQL", demand: 88, learnerLevel: 50, gap: 38, courses: ["SQL for Data Science - UC Davis", "Advanced SQL - Udacity"] },
-        { skill: "Statistics", demand: 85, learnerLevel: 40, gap: 45, courses: ["Statistics for Data Science - Stanford", "Applied Statistics - Duke"] },
-        { skill: "R Programming", demand: 75, learnerLevel: 20, gap: 55, courses: ["R Programming - Johns Hopkins", "Data Science with R - Harvard"] },
-        { skill: "Data Visualization", demand: 80, learnerLevel: 55, gap: 25, courses: ["Data Visualization - Tableau", "Advanced Plotting - MIT"] }
+        { 
+          skill: "Python", 
+          demand: 92, 
+          learnerLevel: 75, 
+          gap: 17, 
+          salaryImpact: "+32%",
+          jobCount: 2200,
+          difficulty: "Medium",
+          timeToMaster: "4-6 months",
+          courses: ["Python for Data Science - IBM", "Python Programming - Michigan"] 
+        },
+        { 
+          skill: "SQL", 
+          demand: 88, 
+          learnerLevel: 50, 
+          gap: 38, 
+          salaryImpact: "+22%",
+          jobCount: 3100,
+          difficulty: "Low",
+          timeToMaster: "2-3 months",
+          courses: ["SQL for Data Science - UC Davis", "Advanced SQL - Udacity"] 
+        },
+        { 
+          skill: "Statistics", 
+          demand: 85, 
+          learnerLevel: 40, 
+          gap: 45, 
+          salaryImpact: "+38%",
+          jobCount: 1850,
+          difficulty: "High",
+          timeToMaster: "6-8 months",
+          courses: ["Statistics for Data Science - Stanford", "Applied Statistics - Duke"] 
+        },
+        { 
+          skill: "R Programming", 
+          demand: 75, 
+          learnerLevel: 20, 
+          gap: 55, 
+          salaryImpact: "+25%",
+          jobCount: 950,
+          difficulty: "Medium",
+          timeToMaster: "3-5 months",
+          courses: ["R Programming - Johns Hopkins", "Data Science with R - Harvard"] 
+        },
+        { 
+          skill: "Data Visualization", 
+          demand: 80, 
+          learnerLevel: 55, 
+          gap: 25, 
+          salaryImpact: "+18%",
+          jobCount: 1650,
+          difficulty: "Medium",
+          timeToMaster: "2-4 months",
+          courses: ["Data Visualization - Tableau", "Advanced Plotting - MIT"] 
+        }
       ]
     },
     {
       domain: "Cloud Computing",
       growth: "+42%",
       color: "hsl(142, 76%, 36%)",
+      marketValue: "$3.2B",
+      jobOpenings: "4,100+",
+      avgSalary: "AED 195,000",
+      topCompanies: ["Amazon Web Services", "Microsoft", "Google Cloud", "Oracle"],
       inDemandSkills: [
-        { skill: "AWS", demand: 90, learnerLevel: 30, gap: 60, courses: ["AWS Solutions Architect - Amazon", "Cloud Practitioner - AWS"] },
-        { skill: "Azure", demand: 85, learnerLevel: 25, gap: 60, courses: ["Azure Fundamentals - Microsoft", "Azure Developer - Pluralsight"] },
-        { skill: "Docker", demand: 78, learnerLevel: 20, gap: 58, courses: ["Docker Mastery - Udemy", "Containerization - Linux Foundation"] },
-        { skill: "Kubernetes", demand: 75, learnerLevel: 10, gap: 65, courses: ["Kubernetes for Developers - Linux Foundation", "K8s Administration - CNCF"] },
-        { skill: "DevOps", demand: 82, learnerLevel: 35, gap: 47, courses: ["DevOps Engineering - AWS", "CI/CD Pipeline - GitLab"] }
+        { 
+          skill: "AWS", 
+          demand: 90, 
+          learnerLevel: 30, 
+          gap: 60, 
+          salaryImpact: "+45%",
+          jobCount: 2850,
+          difficulty: "High",
+          timeToMaster: "6-9 months",
+          courses: ["AWS Solutions Architect - Amazon", "Cloud Practitioner - AWS"] 
+        },
+        { 
+          skill: "Azure", 
+          demand: 85, 
+          learnerLevel: 25, 
+          gap: 60, 
+          salaryImpact: "+42%",
+          jobCount: 2100,
+          difficulty: "High",
+          timeToMaster: "6-8 months",
+          courses: ["Azure Fundamentals - Microsoft", "Azure Developer - Pluralsight"] 
+        },
+        { 
+          skill: "Docker", 
+          demand: 78, 
+          learnerLevel: 20, 
+          gap: 58, 
+          salaryImpact: "+28%",
+          jobCount: 1850,
+          difficulty: "Medium",
+          timeToMaster: "3-4 months",
+          courses: ["Docker Mastery - Udemy", "Containerization - Linux Foundation"] 
+        },
+        { 
+          skill: "Kubernetes", 
+          demand: 75, 
+          learnerLevel: 10, 
+          gap: 65, 
+          salaryImpact: "+38%",
+          jobCount: 1450,
+          difficulty: "Very High",
+          timeToMaster: "8-12 months",
+          courses: ["Kubernetes for Developers - Linux Foundation", "K8s Administration - CNCF"] 
+        },
+        { 
+          skill: "DevOps", 
+          demand: 82, 
+          learnerLevel: 35, 
+          gap: 47, 
+          salaryImpact: "+35%",
+          jobCount: 2250,
+          difficulty: "High",
+          timeToMaster: "6-10 months",
+          courses: ["DevOps Engineering - AWS", "CI/CD Pipeline - GitLab"] 
+        }
       ]
     }
   ];
@@ -125,7 +297,7 @@ const SkillGapAnalysis = ({ learnerProfile }: SkillGapAnalysisProps) => {
           Market-Aligned Skill Assessment
         </h2>
         <p className="text-muted-foreground max-w-2xl mx-auto">
-          Advanced analytics comparing your skillset with MENA region market demands, powered by real-time industry data
+          Advanced analytics comparing your skillset with UAE market demands, powered by real-time industry data and salary insights
         </p>
       </div>
 
@@ -228,84 +400,132 @@ const SkillGapAnalysis = ({ learnerProfile }: SkillGapAnalysisProps) => {
             </Card>
           </div>
 
-          {/* Skill Distribution Chart */}
+          {/* Enhanced Skill Distribution and Market Analytics */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <PieChart className="w-5 h-5" />
-                  Skill Distribution
+                  Skill Distribution Analysis
                 </CardTitle>
-                <CardDescription>Your skill category breakdown</CardDescription>
+                <CardDescription>Detailed breakdown of your skill readiness</CardDescription>
               </CardHeader>
               <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="100%" height={350}>
                   <RechartsPieChart>
                     <Pie
                       data={pieData}
                       cx="50%"
                       cy="50%"
-                      innerRadius={60}
-                      outerRadius={100}
-                      paddingAngle={5}
+                      innerRadius={70}
+                      outerRadius={120}
+                      paddingAngle={8}
                       dataKey="value"
                     >
                       {pieData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
-                    <Tooltip />
+                    <Tooltip formatter={(value, name) => [`${value} skills`, name]} />
                     <Legend />
                   </RechartsPieChart>
                 </ResponsiveContainer>
+                
+                {/* Detailed breakdown */}
+                <div className="mt-4 space-y-3 border-t pt-4">
+                  <div className="flex items-center justify-between p-2 bg-green-50 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                      <span className="text-sm font-medium">Market-Ready Skills</span>
+                    </div>
+                    <Badge variant="outline" className="bg-green-100 text-green-700">
+                      {strongSkills.length} skills (Gap ≤ 20%)
+                    </Badge>
+                  </div>
+                  <div className="flex items-center justify-between p-2 bg-yellow-50 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                      <span className="text-sm font-medium">Enhancement Needed</span>
+                    </div>
+                    <Badge variant="outline" className="bg-yellow-100 text-yellow-700">
+                      {improvementSkills.length} skills (Gap 21-50%)
+                    </Badge>
+                  </div>
+                  <div className="flex items-center justify-between p-2 bg-red-50 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                      <span className="text-sm font-medium">Critical Development</span>
+                    </div>
+                    <Badge variant="outline" className="bg-red-100 text-red-700">
+                      {criticalGaps.length} skills (Gap &gt; 50%)
+                    </Badge>
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader>
-                <CardTitle>Market Insights</CardTitle>
-                <CardDescription>MENA region trends</CardDescription>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5 text-ai-primary" />
+                  UAE Market Intelligence
+                </CardTitle>
+                <CardDescription>Real-time market insights for {selectedDomain}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
+                {/* Market Overview */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="text-center p-3 bg-gradient-to-br from-ai-primary/10 to-ai-primary/5 rounded-lg border">
+                    <div className="text-lg font-bold text-ai-primary">{currentDomain?.marketValue}</div>
+                    <div className="text-xs text-muted-foreground">Market Size</div>
+                  </div>
+                  <div className="text-center p-3 bg-gradient-to-br from-ai-success/10 to-ai-success/5 rounded-lg border">
+                    <div className="text-lg font-bold text-ai-success">{currentDomain?.jobOpenings}</div>
+                    <div className="text-xs text-muted-foreground">Open Positions</div>
+                  </div>
+                </div>
+
+                <div className="text-center p-3 bg-gradient-to-br from-ai-accent/10 to-ai-accent/5 rounded-lg border">
+                  <div className="text-lg font-bold text-ai-accent">{currentDomain?.avgSalary}</div>
+                  <div className="text-xs text-muted-foreground">Average Salary</div>
+                </div>
+                
+                {/* Top Companies */}
                 <div>
                   <h4 className="font-medium mb-3 flex items-center gap-2">
-                    <TrendingUp className="w-4 h-4 text-green-600" />
-                    Fastest Growing Skills
+                    <Award className="w-4 h-4 text-ai-secondary" />
+                    Top Hiring Companies
                   </h4>
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">AI/ML Engineering</span>
-                      <Badge variant="default" className="bg-green-100 text-green-700 hover:bg-green-100">+52%</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Cloud Architecture</span>
-                      <Badge variant="default" className="bg-green-100 text-green-700 hover:bg-green-100">+48%</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Data Science</span>
-                      <Badge variant="default" className="bg-green-100 text-green-700 hover:bg-green-100">+41%</Badge>
-                    </div>
+                  <div className="flex flex-wrap gap-2">
+                    {currentDomain?.topCompanies.map((company, index) => (
+                      <Badge key={index} variant="outline" className="text-xs bg-ai-secondary/10 text-ai-secondary border-ai-secondary/30">
+                        {company}
+                      </Badge>
+                    ))}
                   </div>
                 </div>
                 
+                {/* High-Impact Skills */}
                 <div>
                   <h4 className="font-medium mb-3 flex items-center gap-2">
-                    <Award className="w-4 h-4 text-ai-primary" />
+                    <Lightbulb className="w-4 h-4 text-amber-500" />
                     High-Impact Skills
                   </h4>
                   <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Machine Learning</span>
-                      <span className="text-sm text-ai-primary font-medium">+35% salary impact</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">AWS Certification</span>
-                      <span className="text-sm text-ai-primary font-medium">+28% salary impact</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Deep Learning</span>
-                      <span className="text-sm text-ai-primary font-medium">+42% salary impact</span>
-                    </div>
+                    {currentDomain?.inDemandSkills
+                      .sort((a, b) => parseFloat(b.salaryImpact.replace('%', '').replace('+', '')) - parseFloat(a.salaryImpact.replace('%', '').replace('+', '')))
+                      .slice(0, 3)
+                      .map((skill, index) => (
+                        <div key={index} className="flex justify-between items-center p-2 bg-muted/30 rounded">
+                          <span className="text-sm font-medium">{skill.skill}</span>
+                          <div className="flex items-center gap-2">
+                            <Badge variant="secondary" className="text-xs bg-amber-100 text-amber-700">
+                              {skill.salaryImpact} salary
+                            </Badge>
+                            <span className="text-xs text-muted-foreground">{skill.jobCount} jobs</span>
+                          </div>
+                        </div>
+                      ))}
                   </div>
                 </div>
               </CardContent>
@@ -376,31 +596,75 @@ const SkillGapAnalysis = ({ learnerProfile }: SkillGapAnalysisProps) => {
           <div className="space-y-4">
             {currentDomain?.inDemandSkills.map((skill, index) => (
               <Card key={index} className="transition-all duration-200 hover:shadow-md">
-                <CardContent className="p-6">
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <h3 className="font-semibold text-lg">{skill.skill}</h3>
-                      <Badge 
-                        variant={skill.gap <= 20 ? "default" : skill.gap <= 50 ? "secondary" : "destructive"}
-                        className="text-sm px-3 py-1"
-                      >
-                        {skill.gap}% gap
-                      </Badge>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-3">
-                        <div className="flex justify-between text-sm font-medium">
-                          <span>Market Demand</span>
-                          <span>{skill.demand}%</span>
+                  <CardContent className="p-6">
+                    <div className="space-y-6">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="font-semibold text-xl">{skill.skill}</h3>
+                          <div className="flex items-center gap-2 mt-1">
+                            <Badge variant="outline" className="text-xs">
+                              {skill.difficulty} difficulty
+                            </Badge>
+                            <Badge variant="outline" className="text-xs">
+                              {skill.timeToMaster}
+                            </Badge>
+                          </div>
                         </div>
-                        <Progress value={skill.demand} className="h-3" />
-                        
-                        <div className="flex justify-between text-sm font-medium">
-                          <span>Your Level</span>
-                          <span>{skill.learnerLevel}%</span>
+                        <div className="text-right">
+                          <Badge 
+                            variant={skill.gap <= 20 ? "default" : skill.gap <= 50 ? "secondary" : "destructive"}
+                            className="text-sm px-3 py-1"
+                          >
+                            {skill.gap}% gap
+                          </Badge>
+                          <div className="text-sm text-ai-success font-medium mt-1">
+                            {skill.salaryImpact} salary boost
+                          </div>
                         </div>
-                        <Progress value={skill.learnerLevel} className="h-3" />
+                      </div>
+
+                      {/* Market Stats */}
+                      <div className="grid grid-cols-3 gap-3 p-3 bg-muted/20 rounded-lg">
+                        <div className="text-center">
+                          <div className="text-lg font-bold text-ai-primary">{skill.jobCount}</div>
+                          <div className="text-xs text-muted-foreground">Job Openings</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-lg font-bold text-ai-secondary">{skill.demand}%</div>
+                          <div className="text-xs text-muted-foreground">Market Demand</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-lg font-bold text-ai-accent">{skill.salaryImpact}</div>
+                          <div className="text-xs text-muted-foreground">Salary Impact</div>
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-4">
+                          <div className="space-y-2">
+                            <div className="flex justify-between text-sm font-medium">
+                              <span>Market Demand</span>
+                              <span className="text-red-600">{skill.demand}%</span>
+                            </div>
+                            <Progress value={skill.demand} className="h-3 bg-red-100" />
+                          </div>
+                          
+                          <div className="space-y-2">
+                            <div className="flex justify-between text-sm font-medium">
+                              <span>Your Current Level</span>
+                              <span className="text-ai-primary">{skill.learnerLevel}%</span>
+                            </div>
+                            <Progress value={skill.learnerLevel} className="h-3" />
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-sm font-medium">
+                            <span>Gap Analysis</span>
+                            <span className="text-red-600">{skill.gap}%</span>
+                          </div>
+                          <Progress value={skill.gap} className="h-3 bg-red-100" />
+                        </div>
                       </div>
 
                       {skill.gap > 20 && (
@@ -420,8 +684,7 @@ const SkillGapAnalysis = ({ learnerProfile }: SkillGapAnalysisProps) => {
                         </div>
                       )}
                     </div>
-                  </div>
-                </CardContent>
+                  </CardContent>
               </Card>
             ))}
           </div>

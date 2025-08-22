@@ -9,7 +9,7 @@ import { TrendingUp, TrendingDown, Target, Award, Briefcase, DollarSign, Users, 
 
 export default function MarketSkillComparison() {
   const [selectedRole, setSelectedRole] = useState("data-scientist");
-  const [selectedRegion, setSelectedRegion] = useState("uae");
+  const [selectedRegion, setSelectedRegion] = useState("dubai");
 
   const roles = [
     { value: "data-scientist", label: "Data Scientist" },
@@ -20,20 +20,82 @@ export default function MarketSkillComparison() {
   ];
 
   const regions = [
-    { value: "uae", label: "UAE" },
-    { value: "saudi", label: "Saudi Arabia" },
-    { value: "qatar", label: "Qatar" },
-    { value: "kuwait", label: "Kuwait" },
-    { value: "bahrain", label: "Bahrain" }
+    { value: "dubai", label: "Dubai" },
+    { value: "abudhabi", label: "Abu Dhabi" },
+    { value: "sharjah", label: "Sharjah" },
+    { value: "ajman", label: "Ajman" },
+    { value: "ras-al-khaimah", label: "Ras Al Khaimah" },
+    { value: "fujairah", label: "Fujairah" },
+    { value: "umm-al-quwain", label: "Umm Al Quwain" }
   ];
 
   const userSkills = [
-    { skill: "Python", userLevel: 75, marketAvg: 85, demand: "High", trend: "+15%" },
-    { skill: "Machine Learning", userLevel: 60, marketAvg: 80, demand: "Critical", trend: "+25%" },
-    { skill: "Data Visualization", userLevel: 70, marketAvg: 75, demand: "High", trend: "+12%" },
-    { skill: "SQL", userLevel: 80, marketAvg: 85, demand: "Essential", trend: "+8%" },
-    { skill: "Deep Learning", userLevel: 45, marketAvg: 70, demand: "Growing", trend: "+30%" },
-    { skill: "Cloud Platforms", userLevel: 55, marketAvg: 75, demand: "Critical", trend: "+20%" }
+    { 
+      skill: "Python", 
+      userLevel: 75, 
+      marketAvg: 85, 
+      demand: "High", 
+      trend: "+15%", 
+      salaryImpact: "+32%",
+      jobOpenings: 1850,
+      companies: ["Careem", "Noon", "Emirates NBD"],
+      difficulty: "Medium"
+    },
+    { 
+      skill: "Machine Learning", 
+      userLevel: 60, 
+      marketAvg: 80, 
+      demand: "Critical", 
+      trend: "+25%", 
+      salaryImpact: "+48%",
+      jobOpenings: 2100,
+      companies: ["ADNOC", "Mashreq", "Etisalat"],
+      difficulty: "High"
+    },
+    { 
+      skill: "Data Visualization", 
+      userLevel: 70, 
+      marketAvg: 75, 
+      demand: "High", 
+      trend: "+12%", 
+      salaryImpact: "+18%",
+      jobOpenings: 1650,
+      companies: ["Dubai Electricity", "FAB", "Emaar"],
+      difficulty: "Medium"
+    },
+    { 
+      skill: "SQL", 
+      userLevel: 80, 
+      marketAvg: 85, 
+      demand: "Essential", 
+      trend: "+8%", 
+      salaryImpact: "+22%",
+      jobOpenings: 3100,
+      companies: ["All Major Banks", "Government", "Telecom"],
+      difficulty: "Low"
+    },
+    { 
+      skill: "Deep Learning", 
+      userLevel: 45, 
+      marketAvg: 70, 
+      demand: "Growing", 
+      trend: "+30%", 
+      salaryImpact: "+52%",
+      jobOpenings: 980,
+      companies: ["Google", "Microsoft", "Careem AI"],
+      difficulty: "Very High"
+    },
+    { 
+      skill: "Cloud Platforms", 
+      userLevel: 55, 
+      marketAvg: 75, 
+      demand: "Critical", 
+      trend: "+20%", 
+      salaryImpact: "+42%",
+      jobOpenings: 2850,
+      companies: ["AWS", "Microsoft Azure", "Google Cloud"],
+      difficulty: "High"
+    }
   ];
 
   const marketData = [
@@ -93,8 +155,10 @@ export default function MarketSkillComparison() {
     <div className="space-y-6">
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold">Market Skill Comparison</h2>
-          <p className="text-muted-foreground">Compare your skills with market standards and industry benchmarks</p>
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-ai-primary to-ai-accent bg-clip-text text-transparent">
+            UAE Market Skill Analysis
+          </h2>
+          <p className="text-muted-foreground">Advanced comparison with UAE market standards, salary insights, and career opportunities</p>
         </div>
         <div className="flex gap-4">
           <Select value={selectedRole} onValueChange={setSelectedRole}>
@@ -110,8 +174,8 @@ export default function MarketSkillComparison() {
             </SelectContent>
           </Select>
           <Select value={selectedRegion} onValueChange={setSelectedRegion}>
-            <SelectTrigger className="w-32">
-              <SelectValue placeholder="Region" />
+            <SelectTrigger className="w-48">
+              <SelectValue placeholder="UAE Emirates" />
             </SelectTrigger>
             <SelectContent>
               {regions.map((region) => (
@@ -212,44 +276,132 @@ export default function MarketSkillComparison() {
         </Card>
       </div>
 
-      {/* Detailed Skills Analysis */}
+      {/* Enhanced Detailed Skills Analysis */}
       <Card>
         <CardHeader>
-          <CardTitle>Detailed Skills Analysis</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <BarChart className="w-5 h-5 text-ai-primary" />
+            Comprehensive Skills Analysis - {selectedRegion.charAt(0).toUpperCase() + selectedRegion.slice(1)}
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-6">
-            {userSkills.map((skill, index) => (
-              <div key={index} className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <h4 className="font-medium">{skill.skill}</h4>
-                    <Badge variant={skill.demand === "Critical" ? "destructive" : skill.demand === "High" ? "default" : "secondary"}>
-                      {skill.demand}
-                    </Badge>
-                    <div className="flex items-center gap-1 text-sm text-ai-success">
-                      <TrendingUp className="w-3 h-3" />
-                      {skill.trend}
+          <div className="space-y-8">
+            {userSkills.map((skill, index) => {
+              const gap = skill.marketAvg - skill.userLevel;
+              const gapStatus = gap <= 5 ? 'excellent' : gap <= 15 ? 'good' : gap <= 25 ? 'moderate' : 'critical';
+              
+              return (
+                <div key={index} className={`p-6 border-2 rounded-xl transition-all duration-300 hover:shadow-lg ${
+                  gapStatus === 'excellent' ? 'border-green-200 bg-green-50/30' :
+                  gapStatus === 'good' ? 'border-blue-200 bg-blue-50/30' :
+                  gapStatus === 'moderate' ? 'border-yellow-200 bg-yellow-50/30' :
+                  'border-red-200 bg-red-50/30'
+                }`}>
+                  <div className="space-y-6">
+                    {/* Header Section */}
+                    <div className="flex justify-between items-start">
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-3">
+                          <h3 className="text-xl font-bold">{skill.skill}</h3>
+                          <Badge variant={skill.demand === "Critical" ? "destructive" : skill.demand === "High" ? "default" : "secondary"}>
+                            {skill.demand}
+                          </Badge>
+                          <Badge variant="outline" className="text-xs">
+                            {skill.difficulty}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                          <span className="flex items-center gap-1">
+                            <TrendingUp className="w-3 h-3 text-green-600" />
+                            Market Growth: {skill.trend}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <DollarSign className="w-3 h-3 text-ai-accent" />
+                            Salary Impact: {skill.salaryImpact}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className={`text-2xl font-bold ${
+                          gapStatus === 'excellent' ? 'text-green-600' :
+                          gapStatus === 'good' ? 'text-blue-600' :
+                          gapStatus === 'moderate' ? 'text-yellow-600' :
+                          'text-red-600'
+                        }`}>
+                          {gap > 0 ? `-${gap}%` : `+${Math.abs(gap)}%`}
+                        </div>
+                        <p className="text-xs text-muted-foreground">vs Market Avg</p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    Your: {skill.userLevel}% | Market: {skill.marketAvg}%
+
+                    {/* Market Intelligence */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-white/50 rounded-lg border">
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-ai-primary">{skill.jobOpenings}</div>
+                        <div className="text-xs text-muted-foreground">Open Positions</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-ai-success">{skill.salaryImpact}</div>
+                        <div className="text-xs text-muted-foreground">Salary Boost</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-ai-accent">{skill.companies.length}+</div>
+                        <div className="text-xs text-muted-foreground">Top Companies</div>
+                      </div>
+                    </div>
+
+                    {/* Progress Comparison */}
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm font-semibold">Your Current Level</span>
+                            <span className="font-bold text-ai-primary">{skill.userLevel}%</span>
+                          </div>
+                          <Progress value={skill.userLevel} className="h-4 bg-gray-100" />
+                        </div>
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm font-semibold">Market Average</span>
+                            <span className="font-bold text-ai-secondary">{skill.marketAvg}%</span>
+                          </div>
+                          <Progress value={skill.marketAvg} className="h-4 bg-gray-100" />
+                        </div>
+                      </div>
+
+                      {/* Gap Analysis */}
+                      {gap > 0 && (
+                        <div className="p-4 bg-gradient-to-r from-red-50 to-orange-50 rounded-lg border border-red-200">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Target className="w-4 h-4 text-red-600" />
+                            <span className="font-semibold text-red-700">Development Recommendation</span>
+                          </div>
+                          <p className="text-sm text-red-700">
+                            Bridge the {gap}% gap to reach market standards. This could increase your salary by {skill.salaryImpact} 
+                            and open access to {skill.jobOpenings} positions in UAE.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Top Hiring Companies */}
+                    <div>
+                      <h4 className="font-semibold mb-2 flex items-center gap-2">
+                        <Briefcase className="w-4 h-4 text-ai-secondary" />
+                        Top Hiring Companies for {skill.skill}
+                      </h4>
+                      <div className="flex flex-wrap gap-2">
+                        {skill.companies.map((company, idx) => (
+                          <Badge key={idx} variant="outline" className="bg-ai-secondary/10 text-ai-secondary border-ai-secondary/30">
+                            {company}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div className="space-y-1">
-                  <div className="flex gap-2">
-                    <div className="flex-1">
-                      <Progress value={skill.userLevel} className="h-2" />
-                      <p className="text-xs text-muted-foreground mt-1">Your Level</p>
-                    </div>
-                    <div className="flex-1">
-                      <Progress value={skill.marketAvg} className="h-2" />
-                      <p className="text-xs text-muted-foreground mt-1">Market Average</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </CardContent>
       </Card>
