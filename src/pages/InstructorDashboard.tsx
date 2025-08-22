@@ -22,35 +22,104 @@ import { InstructorSidebar } from "@/components/InstructorSidebar";
 import { CourseGenerator } from "@/components/CourseGenerator";
 import { CurriculumCreator } from "@/components/CurriculumCreator";
 import { InstructorAIAssistant } from "@/components/InstructorAIAssistant";
+import { ManualCourseCreator } from "@/components/ManualCourseCreator";
+import { CourseViewer } from "@/components/CourseViewer";
 
 const InstructorDashboard = () => {
   const [activeTab, setActiveTab] = useState("courses");
-  const [courses] = useState([
+  const [viewingCourse, setViewingCourse] = useState<any>(null);
+  const [editingCourse, setEditingCourse] = useState<any>(null);
+  const [courses, setCourses] = useState([
     { 
       id: 1, 
       title: "AI Fundamentals", 
+      description: "Comprehensive introduction to artificial intelligence concepts and applications",
       students: 234, 
       progress: 78, 
       engagement: 92,
-      status: "active"
+      status: "active",
+      difficulty: "beginner",
+      duration: "6-8 hours",
+      targetAudience: "Professionals new to AI",
+      createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+      modules: [
+        { 
+          id: 1, 
+          title: "Introduction to AI", 
+          lessons: [
+            { title: "What is Artificial Intelligence?", duration: "15 min", type: "video" },
+            { title: "History of AI", duration: "12 min", type: "reading" },
+            { title: "AI Applications Today", duration: "18 min", type: "video" }
+          ] 
+        },
+        { 
+          id: 2, 
+          title: "Machine Learning Basics", 
+          lessons: [
+            { title: "Introduction to ML", duration: "20 min", type: "video" },
+            { title: "Types of Learning", duration: "15 min", type: "interactive" },
+            { title: "First ML Project", duration: "30 min", type: "exercise" }
+          ] 
+        }
+      ]
     },
     { 
       id: 2, 
       title: "Machine Learning Basics", 
+      description: "Learn the fundamentals of machine learning algorithms and implementation",
       students: 189, 
       progress: 65, 
       engagement: 88,
-      status: "active"
+      status: "active",
+      difficulty: "intermediate",
+      duration: "8-12 hours",
+      targetAudience: "Data analysts and developers",
+      createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
+      modules: [
+        { 
+          id: 1, 
+          title: "ML Foundations", 
+          lessons: [
+            { title: "Statistical Learning Theory", duration: "25 min", type: "video" },
+            { title: "Data Preprocessing", duration: "30 min", type: "exercise" }
+          ] 
+        }
+      ]
     },
     { 
       id: 3, 
       title: "Neural Networks Deep Dive", 
+      description: "Advanced exploration of neural network architectures and deep learning",
       students: 156, 
       progress: 45, 
       engagement: 95,
-      status: "draft"
+      status: "draft",
+      difficulty: "advanced", 
+      duration: "12-16 hours",
+      targetAudience: "ML engineers and researchers",
+      createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+      modules: [
+        { 
+          id: 1, 
+          title: "Deep Learning Fundamentals", 
+          lessons: [
+            { title: "Neural Network Architecture", duration: "35 min", type: "video" },
+            { title: "Backpropagation Algorithm", duration: "45 min", type: "video" },
+            { title: "Building Your First Network", duration: "60 min", type: "exercise" }
+          ] 
+        }
+      ]
     },
   ]);
+
+  // Load courses from localStorage on component mount
+  useState(() => {
+    const storedCourses = localStorage.getItem('instructorCourses');
+    if (storedCourses) {
+      const parsedCourses = JSON.parse(storedCourses);
+      setCourses(prev => [...prev, ...parsedCourses]);
+    }
+  });
 
   const [recentUploads] = useState([
     { id: 1, name: "Introduction to Neural Networks.mp4", size: "245 MB", status: "Processing", tags: ["AI", "Neural Networks", "Beginner"] },
@@ -132,7 +201,7 @@ const InstructorDashboard = () => {
               <h2 className="text-2xl font-bold">My Courses</h2>
               <Button 
                 variant="ai"
-                onClick={() => setActiveTab("create")}
+                onClick={() => setActiveTab("manual-create")}
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Create New Course
@@ -169,11 +238,21 @@ const InstructorDashboard = () => {
                     </div>
                     
                     <div className="flex space-x-2">
-                      <Button size="sm" variant="outline" className="flex-1">
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="flex-1"
+                        onClick={() => setViewingCourse(course)}
+                      >
                         <Eye className="w-4 h-4 mr-1" />
                         View
                       </Button>
-                      <Button size="sm" variant="outline" className="flex-1">
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="flex-1"
+                        onClick={() => setEditingCourse(course)}
+                      >
                         <FileText className="w-4 h-4 mr-1" />
                         Edit
                       </Button>
@@ -191,6 +270,27 @@ const InstructorDashboard = () => {
 
           {activeTab === "curriculum" && (
             <CurriculumCreator />
+          )}
+
+          {activeTab === "manual-create" && (
+            <ManualCourseCreator onBack={() => setActiveTab("courses")} />
+          )}
+
+          {viewingCourse && (
+            <CourseViewer 
+              course={viewingCourse} 
+              onBack={() => setViewingCourse(null)}
+              onEdit={() => {
+                setEditingCourse(viewingCourse);
+                setViewingCourse(null);
+              }}
+            />
+          )}
+
+          {editingCourse && (
+            <ManualCourseCreator 
+              onBack={() => setEditingCourse(null)}
+            />
           )}
 
           {activeTab === "analytics" && (

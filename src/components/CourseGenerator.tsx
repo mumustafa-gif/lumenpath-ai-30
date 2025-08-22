@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Progress } from "@/components/ui/progress";
@@ -20,7 +21,8 @@ import {
   User,
   Zap,
   Upload,
-  Eye
+  Eye,
+  Plus
 } from "lucide-react";
 
 interface Message {
@@ -64,6 +66,16 @@ export const CourseGenerator = () => {
   const [courseCreated, setCourseCreated] = useState(false);
   const [coverImage, setCoverImage] = useState<string | null>(null);
   const [isGeneratingCoverImage, setIsGeneratingCoverImage] = useState(false);
+  const [editingCourse, setEditingCourse] = useState<any>(null);
+  const [manualCourseData, setManualCourseData] = useState({
+    title: '',
+    description: '',
+    difficulty: 'beginner',
+    duration: '4-8 hours',
+    targetAudience: '',
+    learningObjectives: '',
+    modules: [{ id: 1, title: '', lessons: [{ title: '', duration: '', type: 'video' }] }]
+  });
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -1030,17 +1042,186 @@ export const CourseGenerator = () => {
                   Preview Course
                 </Button>
                 <Button 
-                  onClick={handleCreateCourse}
-                  disabled={isCreatingCourse}
+                  onClick={() => setCurrentStep("editCourse")}
                   className="bg-ai-primary hover:bg-ai-primary/90"
                 >
-                  {isCreatingCourse ? <Sparkles className="w-4 h-4 mr-2 animate-spin" /> : <CheckCircle className="w-4 h-4 mr-2" />}
-                  {generatedCourse.fullContent ? "Publish Course" : "Create Course"}
+                  <FileText className="w-4 h-4 mr-2" />
+                  Edit Course
                 </Button>
               </div>
             </CardContent>
           </Card>
         </div>
+      )}
+
+      {currentStep === "editCourse" && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <FileText className="w-5 h-5 mr-2 text-ai-primary" />
+              Edit Course Manually
+            </CardTitle>
+            <CardDescription>
+              Customize and modify your generated course content
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium">Course Title</label>
+                  <Input 
+                    value={editingCourse?.title || generatedCourse?.title || ''}
+                    onChange={(e) => setEditingCourse({...editingCourse, title: e.target.value})}
+                    placeholder="Enter course title"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium">Description</label>
+                  <Textarea 
+                    value={editingCourse?.description || generatedCourse?.description || ''}
+                    onChange={(e) => setEditingCourse({...editingCourse, description: e.target.value})}
+                    placeholder="Enter course description"
+                    rows={3}
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium">Difficulty</label>
+                    <select className="w-full p-2 border rounded-md" 
+                      value={editingCourse?.difficulty || courseData.difficulty || 'beginner'}
+                      onChange={(e) => setEditingCourse({...editingCourse, difficulty: e.target.value})}
+                    >
+                      <option value="beginner">Beginner</option>
+                      <option value="intermediate">Intermediate</option>
+                      <option value="advanced">Advanced</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Duration</label>
+                    <select className="w-full p-2 border rounded-md"
+                      value={editingCourse?.duration || courseData.duration || '4-8 hours'}
+                      onChange={(e) => setEditingCourse({...editingCourse, duration: e.target.value})}
+                    >
+                      <option value="2-4 hours">2-4 hours</option>
+                      <option value="4-8 hours">4-8 hours</option>
+                      <option value="8-16 hours">8-16 hours</option>
+                      <option value="16+ hours">16+ hours</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label className="text-sm font-medium">Target Audience</label>
+                  <Input 
+                    value={editingCourse?.targetAudience || courseData.targetAudience || ''}
+                    onChange={(e) => setEditingCourse({...editingCourse, targetAudience: e.target.value})}
+                    placeholder="e.g., Software developers, Marketing professionals"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium">Learning Objectives</label>
+                  <Textarea 
+                    value={editingCourse?.learningObjectives || courseData.learningObjectives || ''}
+                    onChange={(e) => setEditingCourse({...editingCourse, learningObjectives: e.target.value})}
+                    placeholder="What will students learn from this course?"
+                    rows={3}
+                  />
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Course Modules</label>
+                  <ScrollArea className="h-[400px] border rounded-md p-4">
+                    {generatedCourse?.modules?.map((module: any, moduleIndex: number) => (
+                      <div key={module.id} className="mb-4 p-4 border rounded-lg">
+                        <div className="mb-2">
+                          <Input 
+                            value={module.title}
+                            onChange={(e) => {
+                              const updatedModules = [...generatedCourse.modules];
+                              updatedModules[moduleIndex].title = e.target.value;
+                              setGeneratedCourse({...generatedCourse, modules: updatedModules});
+                            }}
+                            className="font-medium"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          {module.lessons.map((lesson: any, lessonIndex: number) => (
+                            <div key={lessonIndex} className="flex gap-2">
+                              <Input 
+                                value={lesson.title}
+                                onChange={(e) => {
+                                  const updatedModules = [...generatedCourse.modules];
+                                  updatedModules[moduleIndex].lessons[lessonIndex].title = e.target.value;
+                                  setGeneratedCourse({...generatedCourse, modules: updatedModules});
+                                }}
+                                placeholder="Lesson title"
+                                className="flex-1"
+                              />
+                              <Input 
+                                value={lesson.duration}
+                                onChange={(e) => {
+                                  const updatedModules = [...generatedCourse.modules];
+                                  updatedModules[moduleIndex].lessons[lessonIndex].duration = e.target.value;
+                                  setGeneratedCourse({...generatedCourse, modules: updatedModules});
+                                }}
+                                placeholder="Duration"
+                                className="w-24"
+                              />
+                            </div>
+                          ))}
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => {
+                              const updatedModules = [...generatedCourse.modules];
+                              updatedModules[moduleIndex].lessons.push({ title: '', duration: '10 min', type: 'video' });
+                              setGeneratedCourse({...generatedCourse, modules: updatedModules});
+                            }}
+                          >
+                            <Plus className="w-4 h-4 mr-1" />
+                            Add Lesson
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                    <Button 
+                      variant="outline"
+                      onClick={() => {
+                        const newModule = {
+                          id: generatedCourse.modules.length + 1,
+                          title: 'New Module',
+                          duration: '60 min',
+                          lessons: [{ title: 'Introduction', duration: '10 min', type: 'video' }]
+                        };
+                        setGeneratedCourse({...generatedCourse, modules: [...generatedCourse.modules, newModule]});
+                      }}
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Module
+                    </Button>
+                  </ScrollArea>
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-center space-x-4">
+              <Button 
+                onClick={() => setCurrentStep("completed")}
+                variant="outline"
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleCreateCourse}
+                disabled={isCreatingCourse}
+                className="bg-ai-primary hover:bg-ai-primary/90"
+              >
+                {isCreatingCourse ? <Sparkles className="w-4 h-4 mr-2 animate-spin" /> : <CheckCircle className="w-4 h-4 mr-2" />}
+                Save & Publish Course
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       {currentStep === "courseCreated" && (
