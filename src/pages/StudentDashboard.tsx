@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -41,13 +42,18 @@ import ResumeBuilder from "@/components/ResumeBuilder";
 import MockAssessments from "@/components/MockAssessments";
 
 const StudentDashboard = () => {
+  const [searchParams] = useSearchParams();
   const [showOnboarding, setShowOnboarding] = useState(false); // Set to true for new users
   const [learnerProfile, setLearnerProfile] = useState<OnboardingData | null>(null);
   const [showCourseRecommendations, setShowCourseRecommendations] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [activeCourse, setActiveCourse] = useState<any>(null);
   const [showBuddyFinder, setShowBuddyFinder] = useState(false);
-  const [activeTab, setActiveTab] = useState("dashboard");
+  const [activeTab, setActiveTab] = useState(() => {
+    // Check for tab parameter in URL
+    const tabParam = searchParams.get('tab');
+    return tabParam || "dashboard";
+  });
   const [showAICareerPath, setShowAICareerPath] = useState(true); // Auto-show on login
   
   const [currentCourses] = useState([

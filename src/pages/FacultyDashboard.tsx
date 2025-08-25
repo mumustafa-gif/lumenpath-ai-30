@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,7 +27,13 @@ import { ManualCourseCreator } from "@/components/ManualCourseCreator";
 import { CourseViewer } from "@/components/CourseViewer";
 
 const FacultyDashboard = () => {
-  const [activeTab, setActiveTab] = useState("courses");
+  const [searchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState(() => {
+    // Check for tab parameter in URL
+    const tabParam = searchParams.get('tab');
+    const validTabs = ['courses', 'create', 'curriculum', 'analytics'];
+    return validTabs.includes(tabParam || '') ? tabParam : "courses";
+  });
   const [viewingCourse, setViewingCourse] = useState<any>(null);
   const [editingCourse, setEditingCourse] = useState<any>(null);
   const [courses, setCourses] = useState([

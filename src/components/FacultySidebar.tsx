@@ -29,6 +29,7 @@ import {
   Target,
   LogOut,
   GraduationCap,
+  HelpCircle,
 } from "lucide-react";
 
 const mainNavItems = [
@@ -127,7 +128,16 @@ export function FacultySidebar({ activeTab, onTabChange }: FacultySidebarProps) 
         )}
 
         {/* Logout Button */}
-        <div className="p-4 border-t">
+        <div className="p-4 border-t space-y-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            className={`w-full ${state === "collapsed" ? 'px-2' : 'justify-start'} text-muted-foreground hover:text-foreground`}
+            onClick={() => window.open('/help/system-flow', '_blank')}
+          >
+            <HelpCircle className="h-4 w-4" />
+            {state !== "collapsed" && <span className="ml-2">System Flow</span>}
+          </Button>
           <Button
             variant="ghost"
             size="sm"

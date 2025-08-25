@@ -22,7 +22,8 @@ import {
   LogOut,
   Brain,
   Sparkles,
-  Calendar
+  Calendar,
+  HelpCircle,
 } from "lucide-react";
 
 const menuItems = [
@@ -128,7 +129,16 @@ export function LeadershipSidebar({ activeTab, onTabChange }: LeadershipSidebarP
         )}
 
         {/* Logout Button */}
-        <div className="p-4 border-t border-ai-primary/20">
+        <div className="p-4 border-t border-ai-primary/20 space-y-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            className={`w-full ${state === "collapsed" ? 'px-2' : 'justify-start'} text-muted-foreground hover:text-ai-primary hover:bg-ai-primary/10`}
+            onClick={() => window.open('/help/system-flow', '_blank')}
+          >
+            <HelpCircle className="h-4 w-4" />
+            {state !== "collapsed" && <span className="ml-2">System Flow</span>}
+          </Button>
           <Button
             variant="ghost"
             size="sm"

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -47,6 +48,7 @@ import { DeepAnalytics } from "@/components/DeepAnalytics";
 
 
 const LeadershipDashboard = () => {
+  const [searchParams] = useSearchParams();
   const [showChartModal, setShowChartModal] = useState(false);
   const [selectedChartType, setSelectedChartType] = useState("bar");
   const [chartData, setChartData] = useState([]);
@@ -54,7 +56,12 @@ const LeadershipDashboard = () => {
   const [isGeneratingChart, setIsGeneratingChart] = useState(false);
   const [generationProgress, setGenerationProgress] = useState(0);
   const [showAIAssistant, setShowAIAssistant] = useState(false);
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useState(() => {
+    // Check for tab parameter in URL
+    const tabParam = searchParams.get('tab');
+    const validTabs = ['overview', 'skills-observatory', 'workforce-trends', 'deep-analytics', 'strategic-planning'];
+    return validTabs.includes(tabParam || '') ? tabParam : "overview";
+  });
   const [selectedCategory, setSelectedCategory] = useState("all");
   
   const stats = {

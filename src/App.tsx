@@ -7,6 +7,7 @@ import LoginPage from "./pages/LoginPage";
 import LeadershipDashboard from "./pages/LeadershipDashboard";
 import FacultyDashboard from "./pages/FacultyDashboard";
 import StudentDashboard from "./pages/StudentDashboard";
+import SystemFlowPage from "./pages/SystemFlowPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ const App = () => (
           <Route path="/leadership" element={<LeadershipDashboard />} />
           <Route path="/faculty" element={<FacultyDashboard />} />
           <Route path="/student" element={<StudentDashboard />} />
+          <Route path="/help/system-flow" element={<SystemFlowPage />} />
           {/* Legacy route redirects */}
           <Route path="/admin" element={<LeadershipDashboard />} />
           <Route path="/instructor" element={<FacultyDashboard />} />
