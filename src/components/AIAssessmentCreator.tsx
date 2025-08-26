@@ -561,8 +561,8 @@ export const AIAssessmentCreator = () => {
               </CardDescription>
             </CardHeader>
             
-            <ScrollArea className="flex-1 p-4">
-              <div className="space-y-4">
+            <ScrollArea className="flex-1 p-4 max-h-[400px]">
+              <div className="space-y-4 pr-4">
                 {messages.map((message) => (
                   <div
                     key={message.id}
@@ -570,7 +570,7 @@ export const AIAssessmentCreator = () => {
                       message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''
                     }`}
                   >
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
                       message.sender === 'bot' 
                         ? 'bg-ai-primary/10 text-ai-primary' 
                         : 'bg-ai-secondary/10 text-ai-secondary'
@@ -582,7 +582,10 @@ export const AIAssessmentCreator = () => {
                         ? 'bg-muted'
                         : 'bg-ai-primary text-primary-foreground'
                     }`}>
-                      <p className="text-sm">{message.text}</p>
+                      <p className="text-sm whitespace-pre-wrap leading-relaxed">{message.text}</p>
+                      <div className="text-xs opacity-70 mt-1">
+                        {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </div>
                     </div>
                   </div>
                 ))}
