@@ -32,6 +32,20 @@ interface Message {
   timestamp: Date;
 }
 
+interface AssessmentData {
+  topic: string;
+  description: string;
+  type: string;
+  difficulty: string;
+  mcqCount: number;
+  shortCount: number;
+  essayCount: number;
+  timeLimit: string;
+  instructions: string;
+}
+
+type ConversationStep = 'topic' | 'description' | 'type' | 'difficulty' | 'questions' | 'timeLimit' | 'instructions' | 'complete';
+
 interface SavedAssessment {
   id: string;
   title: string;
@@ -77,6 +91,10 @@ export const AIAssessmentCreator = () => {
   const [showStudentSelection, setShowStudentSelection] = useState(false);
   const [showInsights, setShowInsights] = useState(false);
   const [selectedAssessment, setSelectedAssessment] = useState<SavedAssessment | null>(null);
+  
+  // Conversational flow state
+  const [currentStep, setCurrentStep] = useState<ConversationStep>('topic');
+  const [assessmentData, setAssessmentData] = useState<Partial<AssessmentData>>({});
   
   const [students] = useState<Student[]>([
     { id: '1', name: 'Alex Johnson', email: 'alex.j@university.edu', avatar: '👨‍🎓', enrolled: true },
@@ -179,6 +197,100 @@ export const AIAssessmentCreator = () => {
   ]);
   const [activeView, setActiveView] = useState<'create' | 'my-assessments'>('create');
 
+  const getStepPrompt = (step: ConversationStep): string => {
+    switch (step) {
+      case 'topic':
+        return "Great! What topic would you like to create an assessment for? (e.g., Machine Learning, Data Structures, Mathematics, etc.)";
+      case 'description':
+        return "Perfect! Now, please provide a brief description of what this assessment should cover. What specific concepts or skills should it evaluate?";
+      case 'type':
+        return "Excellent! What type of assessment would you like to create?\n\n📝 **Quiz** - Quick knowledge check\n📋 **Exam** - Comprehensive evaluation\n🔬 **Lab Assessment** - Practical skills test\n📊 **Project Review** - Creative/applied work\n\nJust tell me which type you prefer!";
+      case 'difficulty':
+        return "Great choice! What difficulty level should this assessment be?\n\n🟢 **Beginner** - Basic concepts and definitions\n🟡 **Intermediate** - Applied knowledge and analysis\n🔴 **Advanced** - Complex problem-solving and synthesis\n\nWhich level fits your students?";
+      case 'questions':
+        return "Perfect! Now let's determine the question structure. Please tell me:\n\n• How many **multiple choice** questions?\n• How many **short answer** questions?\n• How many **essay/long answer** questions?\n\nFor example: '10 MCQ, 5 short answer, 2 essays' or just let me know your preferences!";
+      case 'timeLimit':
+        return "Excellent! How much time should students have to complete this assessment? (e.g., 30 minutes, 1 hour, 2 hours)";
+      case 'instructions':
+        return "Almost done! Any special instructions or guidelines for students? (e.g., 'Open book allowed', 'Calculator permitted', 'No collaboration', etc.) Or just say 'standard' for default instructions.";
+      default:
+        return "I'm ready to create your assessment! Let me generate it now...";
+    }
+  };
+
+  const processUserResponse = (response: string, step: ConversationStep) => {
+    const lowerResponse = response.toLowerCase();
+    
+    switch (step) {
+      case 'topic':
+        setAssessmentData(prev => ({ ...prev, topic: response }));
+        setCurrentStep('description');
+        break;
+      case 'description':
+        setAssessmentData(prev => ({ ...prev, description: response }));
+        setCurrentStep('type');
+        break;
+      case 'type':
+        let type = 'Quiz';
+        if (lowerResponse.includes('exam')) type = 'Exam';
+        else if (lowerResponse.includes('lab')) type = 'Lab Assessment';
+        else if (lowerResponse.includes('project')) type = 'Project Review';
+        setAssessmentData(prev => ({ ...prev, type }));
+        setCurrentStep('difficulty');
+        break;
+      case 'difficulty':
+        let difficulty = 'Intermediate';
+        if (lowerResponse.includes('beginner') || lowerResponse.includes('basic')) difficulty = 'Beginner';
+        else if (lowerResponse.includes('advanced') || lowerResponse.includes('hard')) difficulty = 'Advanced';
+        setAssessmentData(prev => ({ ...prev, difficulty }));
+        setCurrentStep('questions');
+        break;
+      case 'questions':
+        // Parse question counts from response
+        const mcqMatch = response.match(/(\d+).*mcq|(\d+).*multiple/i);
+        const shortMatch = response.match(/(\d+).*short/i);
+        const essayMatch = response.match(/(\d+).*essay|(\d+).*long/i);
+        
+        const mcqCount = mcqMatch ? parseInt(mcqMatch[1] || mcqMatch[2]) : 10;
+        const shortCount = shortMatch ? parseInt(shortMatch[1]) : 5;
+        const essayCount = essayMatch ? parseInt(essayMatch[1]) : 0;
+        
+        setAssessmentData(prev => ({ 
+          ...prev, 
+          mcqCount,
+          shortCount,
+          essayCount
+        }));
+        setCurrentStep('timeLimit');
+        break;
+      case 'timeLimit':
+        const timeMatch = response.match(/(\d+)/);
+        const timeLimit = timeMatch ? `${timeMatch[1]} minutes` : '45 minutes';
+        setAssessmentData(prev => ({ ...prev, timeLimit }));
+        setCurrentStep('instructions');
+        break;
+      case 'instructions':
+        const instructions = lowerResponse === 'standard' ? 'Follow standard academic integrity guidelines' : response;
+        setAssessmentData(prev => ({ ...prev, instructions }));
+        setCurrentStep('complete');
+        break;
+    }
+  };
+
+  const resetConversation = () => {
+    setMessages([
+      {
+        id: '1',
+        text: "Welcome to AI Assessment Creator! I'll help you create comprehensive assessments for your students. What topic would you like to create an assessment for?",
+        sender: 'bot',
+        timestamp: new Date()
+      }
+    ]);
+    setCurrentStep('topic');
+    setAssessmentData({});
+    setInputText("");
+  };
+
   const handleSendMessage = async () => {
     if (!inputText.trim()) return;
 
@@ -190,33 +302,58 @@ export const AIAssessmentCreator = () => {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    const currentInput = inputText;
     setInputText("");
     setIsGenerating(true);
 
     // Simulate AI processing
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, 1500));
 
-    // Create a new assessment based on user input
-    const newAssessment: SavedAssessment = {
-      id: Date.now().toString(),
-      title: `${inputText} Assessment`,
-      description: `Comprehensive assessment covering ${inputText} concepts and applications`,
-      difficulty: ['Beginner', 'Intermediate', 'Advanced'][Math.floor(Math.random() * 3)],
-      mcqCount: Math.floor(Math.random() * 10) + 10,
-      shortCount: Math.floor(Math.random() * 5) + 3,
-      totalPoints: Math.floor(Math.random() * 50) + 50,
-      estimatedTime: `${Math.floor(Math.random() * 30) + 30} minutes`,
-      createdAt: new Date(),
-      assignedStudents: 0,
-      completedAttempts: 0,
-      avgScore: 0
-    };
+    let botResponseText = "";
+    
+    if (currentStep === 'complete') {
+      // Create the assessment
+      const finalAssessmentData = assessmentData as AssessmentData;
+      const totalPoints = (finalAssessmentData.mcqCount * 2) + (finalAssessmentData.shortCount * 5) + (finalAssessmentData.essayCount * 10);
+      
+      const newAssessment: SavedAssessment = {
+        id: Date.now().toString(),
+        title: `${finalAssessmentData.topic} ${finalAssessmentData.type}`,
+        description: finalAssessmentData.description,
+        difficulty: finalAssessmentData.difficulty,
+        mcqCount: finalAssessmentData.mcqCount,
+        shortCount: finalAssessmentData.shortCount,
+        totalPoints,
+        estimatedTime: finalAssessmentData.timeLimit,
+        createdAt: new Date(),
+        assignedStudents: 0,
+        completedAttempts: 0,
+        avgScore: 0
+      };
 
-    setSavedAssessments(prev => [newAssessment, ...prev]);
+      setSavedAssessments(prev => [newAssessment, ...prev]);
+      
+      botResponseText = `🎉 **Assessment Created Successfully!**\n\n✅ **${newAssessment.title}**\n📝 ${newAssessment.description}\n🎯 Difficulty: ${newAssessment.difficulty}\n📊 Questions: ${newAssessment.mcqCount} MCQ + ${finalAssessmentData.shortCount} Short Answer + ${finalAssessmentData.essayCount} Essays\n⏱️ Time Limit: ${newAssessment.estimatedTime}\n🏆 Total Points: ${newAssessment.totalPoints}\n\nYour assessment has been saved to **My Assessments**! You can now assign it to students and track their progress. Would you like to create another assessment?`;
+      
+      // Reset for next assessment
+      setTimeout(() => {
+        setCurrentStep('topic');
+        setAssessmentData({});
+      }, 2000);
+    } else {
+      // Process current step and move to next
+      processUserResponse(currentInput, currentStep);
+      botResponseText = getStepPrompt(currentStep === 'topic' ? 'description' : 
+                                    currentStep === 'description' ? 'type' :
+                                    currentStep === 'type' ? 'difficulty' :
+                                    currentStep === 'difficulty' ? 'questions' :
+                                    currentStep === 'questions' ? 'timeLimit' :
+                                    currentStep === 'timeLimit' ? 'instructions' : 'complete');
+    }
 
     const botMessage: Message = {
       id: (Date.now() + 1).toString(),
-      text: `✅ Perfect! I've created a comprehensive "${newAssessment.title}" with ${newAssessment.mcqCount} multiple choice questions and ${newAssessment.shortCount} short answer questions (${newAssessment.totalPoints} points total, estimated ${newAssessment.estimatedTime}). The assessment has been saved to your My Assessments! You can now assign it to students and track their progress.`,
+      text: botResponseText,
       sender: 'bot',
       timestamp: new Date()
     };
@@ -497,7 +634,7 @@ export const AIAssessmentCreator = () => {
               <Button 
                 className="w-full justify-start" 
                 variant="outline"
-                onClick={() => setInputText("Create a new assessment")}
+                onClick={resetConversation}
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Create New Assessment
