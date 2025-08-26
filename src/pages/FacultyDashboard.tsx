@@ -22,6 +22,7 @@ import {
 import { FacultySidebar } from "@/components/FacultySidebar";
 import { CourseGenerator } from "@/components/CourseGenerator";
 import { CurriculumCreator } from "@/components/CurriculumCreator";
+import { AIAssessmentCreator } from "@/components/AIAssessmentCreator";
 import { FacultyAIAssistant } from "@/components/FacultyAIAssistant";
 import { ManualCourseCreator } from "@/components/ManualCourseCreator";
 import { CourseViewer } from "@/components/CourseViewer";
@@ -31,7 +32,7 @@ const FacultyDashboard = () => {
   const [activeTab, setActiveTab] = useState(() => {
     // Check for tab parameter in URL
     const tabParam = searchParams.get('tab');
-    const validTabs = ['courses', 'create', 'curriculum', 'analytics'];
+    const validTabs = ['courses', 'create', 'curriculum', 'assessments', 'analytics'];
     return validTabs.includes(tabParam || '') ? tabParam : "courses";
   });
   const [viewingCourse, setViewingCourse] = useState<any>(null);
@@ -277,6 +278,10 @@ const FacultyDashboard = () => {
 
           {activeTab === "curriculum" && (
             <CurriculumCreator />
+          )}
+
+          {activeTab === "assessments" && (
+            <AIAssessmentCreator />
           )}
 
           {activeTab === "manual-create" && (

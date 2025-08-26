@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
   Brain, 
   Send, 
@@ -14,7 +15,8 @@ import {
   HelpCircle,
   Clock,
   Target,
-  MessageSquare
+  MessageSquare,
+  BookOpen
 } from "lucide-react";
 
 interface Message {
@@ -202,6 +204,96 @@ export const AssessmentGenerator = ({
     }
   };
 
+  // Component for Use Assessment Button with Module Selection
+  const UseAssessmentButton = ({ assessment, moduleTitle, onAssessmentUsed }: {
+    assessment: GeneratedAssessment;
+    moduleTitle?: string;
+    onAssessmentUsed: () => void;
+  }) => {
+    const [showModuleSelector, setShowModuleSelector] = useState(false);
+    const [selectedModule, setSelectedModule] = useState("");
+
+    // Mock course modules - in real app, this would come from context or props
+    const availableModules = [
+      { id: '1', title: 'Introduction to AI', course: 'AI Fundamentals' },
+      { id: '2', title: 'Machine Learning Basics', course: 'AI Fundamentals' },
+      { id: '3', title: 'Neural Networks', course: 'Deep Learning Course' },
+      { id: '4', title: 'Data Preprocessing', course: 'ML Basics' },
+      { id: '5', title: 'Model Evaluation', course: 'ML Basics' }
+    ];
+
+    const handleUseAssessment = () => {
+      if (moduleTitle) {
+        // Direct assignment when called from module
+        onAssessmentUsed();
+      } else {
+        setShowModuleSelector(true);
+      }
+    };
+
+    const handleModuleSelection = () => {
+      if (selectedModule) {
+        // Save assessment to selected module
+        const moduleData = availableModules.find(m => m.id === selectedModule);
+        console.log(`Assessment "${assessment.title}" assigned to module "${moduleData?.title}"`);
+        setShowModuleSelector(false);
+        onAssessmentUsed();
+      }
+    };
+
+    if (showModuleSelector) {
+      return (
+        <div className="space-y-3 w-full">
+          <div className="text-sm font-medium">Select Module:</div>
+          <Select value={selectedModule} onValueChange={setSelectedModule}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Choose a module" />
+            </SelectTrigger>
+            <SelectContent>
+              {availableModules.map((module) => (
+                <SelectItem key={module.id} value={module.id}>
+                  <div className="flex flex-col">
+                    <span>{module.title}</span>
+                    <span className="text-xs text-muted-foreground">{module.course}</span>
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <div className="flex space-x-2">
+            <Button 
+              size="sm" 
+              className="flex-1 bg-ai-primary hover:bg-ai-primary/90"
+              onClick={handleModuleSelection}
+              disabled={!selectedModule}
+            >
+              <CheckCircle className="w-3 h-3 mr-1" />
+              Add to Module
+            </Button>
+            <Button 
+              size="sm" 
+              variant="outline" 
+              onClick={() => setShowModuleSelector(false)}
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <Button 
+        size="sm" 
+        className="flex-1 bg-ai-primary hover:bg-ai-primary/90"
+        onClick={handleUseAssessment}
+      >
+        <CheckCircle className="w-3 h-3 mr-1" />
+        Use Assessment
+      </Button>
+    );
+  };
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-card rounded-lg shadow-xl w-full max-w-4xl h-[80vh] flex flex-col">
@@ -281,7 +373,7 @@ export const AssessmentGenerator = ({
             )}
           </div>
 
-          {/* Generated Assessment Preview */}
+            {/* Generated Assessment Preview */}
           {generatedAssessment && (
             <div className="w-96 border-l bg-muted/30 flex flex-col h-full">
               <div className="p-4 border-b">
@@ -290,7 +382,7 @@ export const AssessmentGenerator = ({
                   Generated Assessment
                 </h3>
               </div>
-              <ScrollArea className="flex-1 p-4">
+              <ScrollArea className="flex-1 p-4 max-h-[60vh]">
                 <div className="space-y-4">
                   <Card>
                     <CardHeader className="pb-2">
@@ -346,19 +438,16 @@ export const AssessmentGenerator = ({
                   </div>
 
                   <div className="flex space-x-2 pt-4">
-                    <Button 
-                      size="sm" 
-                      className="flex-1 bg-ai-primary hover:bg-ai-primary/90"
-                      onClick={() => {
+                    <UseAssessmentButton 
+                      assessment={generatedAssessment}
+                      moduleTitle={moduleTitle}
+                      onAssessmentUsed={() => {
                         if (onAssessmentGenerated && generatedAssessment) {
                           onAssessmentGenerated(generatedAssessment);
                           onClose();
                         }
                       }}
-                    >
-                      <CheckCircle className="w-3 h-3 mr-1" />
-                      Use Assessment
-                    </Button>
+                    />
                     <Button 
                       size="sm" 
                       variant="outline" 

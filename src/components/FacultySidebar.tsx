@@ -36,6 +36,7 @@ const mainNavItems = [
   { title: "My Courses", tabValue: "courses", icon: BookOpen },
   { title: "AI Course Creator", tabValue: "create", icon: Plus },
   { title: "AI Curriculum Creator", tabValue: "curriculum", icon: GraduationCap },
+  { title: "AI Assessment Creator", tabValue: "assessments", icon: FileText },
   { title: "Student Analytics", tabValue: "analytics", icon: BarChart3 },
 ];
 

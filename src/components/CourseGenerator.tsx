@@ -1037,7 +1037,7 @@ export const CourseGenerator = () => {
                   <Button 
                     onClick={handleGenerateFullContent}
                     disabled={isGeneratingContent}
-                    className="bg-ai-primary hover:bg-ai-primary/90"
+                    variant="ai"
                   >
                     {isGeneratingContent ? <Sparkles className="w-4 h-4 mr-2 animate-spin" /> : <Zap className="w-4 h-4 mr-2" />}
                     Generate Full Content
@@ -1070,17 +1070,38 @@ export const CourseGenerator = () => {
                 <Button 
                   onClick={async () => {
                     setIsCreatingCourse(true);
-                    addMessage("📚 Saving and publishing course to marketplace...", true);
+                    addMessage("📚 Saving and publishing course to My Courses...", true);
+                    
+                    // Save course to localStorage and My Courses
+                    const courseToSave = {
+                      id: Date.now(),
+                      title: generatedCourse?.title || "Generated Course",
+                      description: generatedCourse?.description || "AI Generated Course",
+                      students: 0,
+                      progress: 0,
+                      engagement: 0,
+                      status: "draft",
+                      difficulty: generatedCourse?.difficulty || "intermediate",
+                      duration: generatedCourse?.duration || "6-8 hours",
+                      targetAudience: generatedCourse?.targetAudience || "General",
+                      createdAt: new Date().toISOString(),
+                      modules: generatedCourse?.modules || []
+                    };
+                    
+                    // Get existing courses from localStorage
+                    const existingCourses = JSON.parse(localStorage.getItem('instructorCourses') || '[]');
+                    const updatedCourses = [courseToSave, ...existingCourses];
+                    localStorage.setItem('instructorCourses', JSON.stringify(updatedCourses));
+                    
                     await new Promise(resolve => setTimeout(resolve, 2000));
-                    addMessage("✅ Course successfully saved and published!", true);
+                    addMessage(`✅ Course "${courseToSave.title}" successfully saved to My Courses!`, true);
                     setIsCreatingCourse(false);
-                    // Navigate to My Courses or show success message
                   }}
-                  className="bg-ai-primary hover:bg-ai-primary/90"
+                  variant="ai"
                   disabled={isCreatingCourse}
                 >
-                  {isCreatingCourse ? <Sparkles className="w-4 h-4 mr-2 animate-spin" /> : <CheckCircle className="w-4 h-4 mr-2" />}
-                  Save and Publish
+                  {isCreatingCourse ? <Sparkles className="w-4 h-4 mr-2 animate-spin" /> : <BookmarkCheck className="w-4 h-4 mr-2" />}
+                  Save & Publish
                 </Button>
               </div>
             </CardContent>
