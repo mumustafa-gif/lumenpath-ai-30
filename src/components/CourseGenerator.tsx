@@ -8,6 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Progress } from "@/components/ui/progress";
 import { AssessmentGenerator } from "./AssessmentGenerator";
 import { CoursePreview } from "./CoursePreview";
+import { FullCourseView } from "./FullCourseView";
 import { 
   Brain, 
   Sparkles, 
@@ -61,6 +62,7 @@ export const CourseGenerator = () => {
   const [generationPhase, setGenerationPhase] = useState("");
   const [showAssessmentGenerator, setShowAssessmentGenerator] = useState(false);
   const [showCoursePreview, setShowCoursePreview] = useState(false);
+  const [showFullCourseView, setShowFullCourseView] = useState(false);
   const [isGeneratingContent, setIsGeneratingContent] = useState(false);
   const [isCreatingCourse, setIsCreatingCourse] = useState(false);
   const [courseCreated, setCourseCreated] = useState(false);
@@ -1032,7 +1034,7 @@ export const CourseGenerator = () => {
                   <Button 
                     onClick={handleGenerateFullContent}
                     disabled={isGeneratingContent}
-                    className="bg-ai-secondary hover:bg-ai-secondary/90"
+                    className="bg-ai-primary hover:bg-ai-primary/90"
                   >
                     {isGeneratingContent ? <Sparkles className="w-4 h-4 mr-2 animate-spin" /> : <Zap className="w-4 h-4 mr-2" />}
                     Generate Full Content
@@ -1331,6 +1333,13 @@ export const CourseGenerator = () => {
         {showAssessmentGenerator && (
           <AssessmentGenerator 
             onClose={() => setShowAssessmentGenerator(false)}
+          />
+        )}
+
+        {showFullCourseView && generatedCourse && (
+          <FullCourseView 
+            course={generatedCourse}
+            onClose={() => setShowFullCourseView(false)}
           />
         )}
     </div>

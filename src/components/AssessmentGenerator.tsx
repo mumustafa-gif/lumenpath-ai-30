@@ -192,7 +192,7 @@ export const AssessmentGenerator = ({ onClose }: { onClose: () => void }) => {
         <div className="flex-1 flex">
           {/* Chat Interface */}
           <div className="flex-1 flex flex-col">
-            <ScrollArea className="flex-1 p-4">
+            <ScrollArea className="flex-1 p-4 max-h-[60vh]">
               <div className="space-y-4">
                 {messages.map((message) => (
                   <div
@@ -264,7 +264,7 @@ export const AssessmentGenerator = ({ onClose }: { onClose: () => void }) => {
                   Generated Assessment
                 </h3>
               </div>
-              <ScrollArea className="h-full p-4">
+              <ScrollArea className="max-h-[60vh] p-4">
                 <div className="space-y-4">
                   <Card>
                     <CardHeader className="pb-2">
