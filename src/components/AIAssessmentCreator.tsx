@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Textarea } from "@/components/ui/textarea";
 import { 
   Brain, 
   Send, 
@@ -22,7 +23,15 @@ import {
   UserCheck,
   BarChart3,
   TrendingUp,
-  Award
+  Award,
+  Edit,
+  Save,
+  Loader2,
+  Wand2,
+  BookOpen,
+  HelpCircle,
+  PenTool,
+  FileText
 } from "lucide-react";
 
 interface Message {
@@ -77,6 +86,27 @@ interface AssessmentInsight {
   attempts: number;
 }
 
+interface GeneratedQuestion {
+  id: string;
+  type: 'mcq' | 'short' | 'essay';
+  question: string;
+  options?: string[];
+  correctAnswer?: string;
+  points: number;
+  explanation?: string;
+}
+
+interface GeneratedAssessment {
+  id: string;
+  title: string;
+  description: string;
+  instructions: string;
+  timeLimit: string;
+  difficulty: string;
+  questions: GeneratedQuestion[];
+  totalPoints: number;
+}
+
 export const AIAssessmentCreator = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -91,6 +121,10 @@ export const AIAssessmentCreator = () => {
   const [showStudentSelection, setShowStudentSelection] = useState(false);
   const [showInsights, setShowInsights] = useState(false);
   const [selectedAssessment, setSelectedAssessment] = useState<SavedAssessment | null>(null);
+  const [aiStage, setAiStage] = useState<string>("");
+  const [generatedAssessment, setGeneratedAssessment] = useState<GeneratedAssessment | null>(null);
+  const [showAssessmentView, setShowAssessmentView] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
   
   // Conversational flow state
   const [currentStep, setCurrentStep] = useState<ConversationStep>('topic');
@@ -306,40 +340,46 @@ export const AIAssessmentCreator = () => {
     setInputText("");
     setIsGenerating(true);
 
-    // Simulate AI processing
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
     let botResponseText = "";
     
     if (currentStep === 'complete') {
-      // Create the assessment
+      // Show AI generation stages
+      const stages = [
+        "🤖 Analyzing your assessment requirements...",
+        "📚 Researching topic and generating content framework...",
+        "🎯 Creating targeted questions based on difficulty level...",
+        "✅ Generating multiple choice questions...",
+        "📝 Crafting short answer questions...",
+        "💡 Adding explanations and feedback...",
+        "🔍 Reviewing and optimizing assessment structure...",
+        "🎉 Finalizing your assessment!"
+      ];
+
+      for (let i = 0; i < stages.length; i++) {
+        setAiStage(stages[i]);
+        await new Promise(resolve => setTimeout(resolve, 800));
+      }
+
+      // Generate the actual assessment
       const finalAssessmentData = assessmentData as AssessmentData;
-      const totalPoints = (finalAssessmentData.mcqCount * 2) + (finalAssessmentData.shortCount * 5) + (finalAssessmentData.essayCount * 10);
+      const generatedQuestions = generateAssessmentQuestions(finalAssessmentData);
       
-      const newAssessment: SavedAssessment = {
+      const assessment: GeneratedAssessment = {
         id: Date.now().toString(),
         title: `${finalAssessmentData.topic} ${finalAssessmentData.type}`,
         description: finalAssessmentData.description,
+        instructions: finalAssessmentData.instructions,
+        timeLimit: finalAssessmentData.timeLimit,
         difficulty: finalAssessmentData.difficulty,
-        mcqCount: finalAssessmentData.mcqCount,
-        shortCount: finalAssessmentData.shortCount,
-        totalPoints,
-        estimatedTime: finalAssessmentData.timeLimit,
-        createdAt: new Date(),
-        assignedStudents: 0,
-        completedAttempts: 0,
-        avgScore: 0
+        questions: generatedQuestions,
+        totalPoints: generatedQuestions.reduce((sum, q) => sum + q.points, 0)
       };
 
-      setSavedAssessments(prev => [newAssessment, ...prev]);
-      
-      botResponseText = `🎉 **Assessment Created Successfully!**\n\n✅ **${newAssessment.title}**\n📝 ${newAssessment.description}\n🎯 Difficulty: ${newAssessment.difficulty}\n📊 Questions: ${newAssessment.mcqCount} MCQ + ${finalAssessmentData.shortCount} Short Answer + ${finalAssessmentData.essayCount} Essays\n⏱️ Time Limit: ${newAssessment.estimatedTime}\n🏆 Total Points: ${newAssessment.totalPoints}\n\nYour assessment has been saved to **My Assessments**! You can now assign it to students and track their progress. Would you like to create another assessment?`;
-      
-      // Reset for next assessment
-      setTimeout(() => {
-        setCurrentStep('topic');
-        setAssessmentData({});
-      }, 2000);
+      setGeneratedAssessment(assessment);
+      setShowAssessmentView(true);
+      setAiStage("");
+      setIsGenerating(false);
+      return;
     } else {
       // Process current step and move to next
       processUserResponse(currentInput, currentStep);
@@ -350,6 +390,9 @@ export const AIAssessmentCreator = () => {
                                     currentStep === 'questions' ? 'timeLimit' :
                                     currentStep === 'timeLimit' ? 'instructions' : 'complete');
     }
+
+    // Simulate AI thinking time
+    await new Promise(resolve => setTimeout(resolve, 1200));
 
     const botMessage: Message = {
       id: (Date.now() + 1).toString(),
@@ -362,8 +405,86 @@ export const AIAssessmentCreator = () => {
     setIsGenerating(false);
   };
 
+  const generateAssessmentQuestions = (data: AssessmentData): GeneratedQuestion[] => {
+    const questions: GeneratedQuestion[] = [];
+    let questionId = 1;
+
+    // Generate MCQ questions
+    for (let i = 0; i < data.mcqCount; i++) {
+      questions.push({
+        id: questionId.toString(),
+        type: 'mcq',
+        question: `Which of the following best describes ${data.topic.toLowerCase()} concept ${i + 1}?`,
+        options: [
+          `Option A related to ${data.topic}`,
+          `Option B explaining ${data.topic} principles`,
+          `Option C about ${data.topic} applications`,
+          `Option D concerning ${data.topic} methodology`
+        ],
+        correctAnswer: 'A',
+        points: 2,
+        explanation: `This question tests understanding of fundamental ${data.topic} concepts.`
+      });
+      questionId++;
+    }
+
+    // Generate short answer questions
+    for (let i = 0; i < data.shortCount; i++) {
+      questions.push({
+        id: questionId.toString(),
+        type: 'short',
+        question: `Explain the key principles of ${data.topic} and provide an example of its practical application.`,
+        points: 5,
+        explanation: `This question evaluates comprehension and application skills in ${data.topic}.`
+      });
+      questionId++;
+    }
+
+    // Generate essay questions
+    for (let i = 0; i < data.essayCount; i++) {
+      questions.push({
+        id: questionId.toString(),
+        type: 'essay',
+        question: `Critically analyze the impact of ${data.topic} on modern practices. Discuss advantages, limitations, and future prospects.`,
+        points: 10,
+        explanation: `This question assesses analytical thinking and comprehensive understanding of ${data.topic}.`
+      });
+      questionId++;
+    }
+
+    return questions;
+  };
+
+  const saveAssessment = () => {
+    if (!generatedAssessment) return;
+
+    const newSavedAssessment: SavedAssessment = {
+      id: generatedAssessment.id,
+      title: generatedAssessment.title,
+      description: generatedAssessment.description,
+      difficulty: generatedAssessment.difficulty,
+      mcqCount: generatedAssessment.questions.filter(q => q.type === 'mcq').length,
+      shortCount: generatedAssessment.questions.filter(q => q.type === 'short').length,
+      totalPoints: generatedAssessment.totalPoints,
+      estimatedTime: generatedAssessment.timeLimit,
+      createdAt: new Date(),
+      assignedStudents: 0,
+      completedAttempts: 0,
+      avgScore: 0
+    };
+
+    setSavedAssessments(prev => [newSavedAssessment, ...prev]);
+    
+    // Reset and go back to chat
+    setGeneratedAssessment(null);
+    setShowAssessmentView(false);
+    setIsEditMode(false);
+    resetConversation();
+  };
+
   const handleAssignStudents = (assessment: SavedAssessment) => {
     setSelectedAssessment(assessment);
+    setSelectedStudents([]);
     setShowStudentSelection(true);
   };
 
@@ -402,16 +523,196 @@ export const AIAssessmentCreator = () => {
     }
   };
 
-  const assignToStudents = (assessmentId: string) => {
-    // Mock assignment functionality
-    setSavedAssessments(prev => 
-      prev.map(assessment => 
-        assessment.id === assessmentId 
-          ? { ...assessment, assignedStudents: assessment.assignedStudents + 15 }
-          : assessment
-      )
+  // Show generated assessment view
+  if (showAssessmentView && generatedAssessment) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setShowAssessmentView(false);
+                setGeneratedAssessment(null);
+                setIsEditMode(false);
+              }}
+              className="text-ai-primary"
+            >
+              ← Back to Creator
+            </Button>
+            <div>
+              <h2 className="text-2xl font-bold flex items-center">
+                <FileText className="w-6 h-6 mr-2 text-ai-primary" />
+                Generated Assessment
+              </h2>
+              <p className="text-muted-foreground">Review and edit your AI-generated assessment</p>
+            </div>
+          </div>
+          <div className="flex space-x-2">
+            <Button
+              variant="outline"
+              onClick={() => setIsEditMode(!isEditMode)}
+            >
+              <Edit className="w-4 h-4 mr-2" />
+              {isEditMode ? 'View Mode' : 'Edit Mode'}
+            </Button>
+            <Button
+              variant="ai"
+              onClick={saveAssessment}
+            >
+              <Save className="w-4 h-4 mr-2" />
+              Save to My Assessments
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                {isEditMode ? (
+                  <Input
+                    value={generatedAssessment.title}
+                    onChange={(e) => setGeneratedAssessment(prev => prev ? {...prev, title: e.target.value} : null)}
+                    className="text-2xl font-bold"
+                  />
+                ) : (
+                  <CardTitle className="text-2xl">{generatedAssessment.title}</CardTitle>
+                )}
+                {isEditMode ? (
+                  <Textarea
+                    value={generatedAssessment.description}
+                    onChange={(e) => setGeneratedAssessment(prev => prev ? {...prev, description: e.target.value} : null)}
+                    className="mt-2"
+                  />
+                ) : (
+                  <CardDescription className="mt-2">{generatedAssessment.description}</CardDescription>
+                )}
+              </div>
+              <Badge variant="outline" className="text-lg px-4 py-2">
+                {generatedAssessment.difficulty}
+              </Badge>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+              <div className="flex items-center space-x-2">
+                <Clock className="w-5 h-5 text-ai-primary" />
+                <span className="font-medium">{generatedAssessment.timeLimit}</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <HelpCircle className="w-5 h-5 text-ai-primary" />
+                <span className="font-medium">{generatedAssessment.questions.length} Questions</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Award className="w-5 h-5 text-ai-primary" />
+                <span className="font-medium">{generatedAssessment.totalPoints} Points</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Target className="w-5 h-5 text-ai-primary" />
+                <span className="font-medium">{generatedAssessment.difficulty} Level</span>
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-2">Instructions</h3>
+              {isEditMode ? (
+                <Textarea
+                  value={generatedAssessment.instructions}
+                  onChange={(e) => setGeneratedAssessment(prev => prev ? {...prev, instructions: e.target.value} : null)}
+                  rows={3}
+                />
+              ) : (
+                <p className="text-muted-foreground bg-muted p-3 rounded-lg">{generatedAssessment.instructions}</p>
+              )}
+            </div>
+
+            <ScrollArea className="h-[600px]">
+              <div className="space-y-6">
+                {generatedAssessment.questions.map((question, index) => (
+                  <Card key={question.id} className="border-l-4 border-l-ai-primary">
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="text-lg flex items-center">
+                          <span className="bg-ai-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center text-sm mr-3">
+                            {index + 1}
+                          </span>
+                          {question.type === 'mcq' && <HelpCircle className="w-5 h-5 mr-2" />}
+                          {question.type === 'short' && <PenTool className="w-5 h-5 mr-2" />}
+                          {question.type === 'essay' && <BookOpen className="w-5 h-5 mr-2" />}
+                          {question.type.toUpperCase()} Question
+                        </CardTitle>
+                        <Badge variant="secondary">{question.points} pts</Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        {isEditMode ? (
+                          <Textarea
+                            value={question.question}
+                            onChange={(e) => {
+                              const updatedQuestions = generatedAssessment.questions.map(q =>
+                                q.id === question.id ? {...q, question: e.target.value} : q
+                              );
+                              setGeneratedAssessment(prev => prev ? {...prev, questions: updatedQuestions} : null);
+                            }}
+                            rows={2}
+                          />
+                        ) : (
+                          <p className="text-lg">{question.question}</p>
+                        )}
+                        
+                        {question.type === 'mcq' && question.options && (
+                          <div className="space-y-2">
+                            {question.options.map((option, optionIndex) => (
+                              <div key={optionIndex} className="flex items-center space-x-2">
+                                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm ${
+                                  String.fromCharCode(65 + optionIndex) === question.correctAnswer 
+                                    ? 'bg-green-100 text-green-800 border-2 border-green-300' 
+                                    : 'bg-muted text-muted-foreground'
+                                }`}>
+                                  {String.fromCharCode(65 + optionIndex)}
+                                </div>
+                                {isEditMode ? (
+                                  <Input
+                                    value={option}
+                                    onChange={(e) => {
+                                      const updatedQuestions = generatedAssessment.questions.map(q =>
+                                        q.id === question.id ? {
+                                          ...q, 
+                                          options: q.options?.map((opt, i) => i === optionIndex ? e.target.value : opt)
+                                        } : q
+                                      );
+                                      setGeneratedAssessment(prev => prev ? {...prev, questions: updatedQuestions} : null);
+                                    }}
+                                    className="flex-1"
+                                  />
+                                ) : (
+                                  <span>{option}</span>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        
+                        {question.explanation && (
+                          <div className="bg-blue-50 border-l-4 border-blue-200 p-3 rounded">
+                            <p className="text-sm text-blue-800">
+                              <strong>Explanation:</strong> {question.explanation}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </ScrollArea>
+          </CardContent>
+        </Card>
+      </div>
     );
-  };
+  }
 
   if (activeView === 'my-assessments') {
     return (
@@ -590,15 +891,28 @@ export const AIAssessmentCreator = () => {
                   </div>
                 ))}
                 {isGenerating && (
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 rounded-full bg-ai-primary/10 text-ai-primary flex items-center justify-center">
-                      <Bot className="w-4 h-4" />
+                  <div className="flex items-center space-x-3 text-muted-foreground">
+                    <div className="w-8 h-8 rounded-full bg-ai-primary/10 flex items-center justify-center">
+                      <Bot className="w-4 h-4 text-ai-primary animate-pulse" />
                     </div>
-                    <div className="bg-muted p-3 rounded-lg">
-                      <div className="flex items-center space-x-2">
-                        <Sparkles className="w-4 h-4 animate-spin" />
-                        <p className="text-sm">AI is thinking...</p>
+                    <div className="bg-muted px-4 py-2 rounded-lg max-w-md">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <Loader2 className="w-4 h-4 text-ai-primary animate-spin" />
+                        <span className="text-sm font-medium">AI Assessment Generator</span>
                       </div>
+                      {aiStage && (
+                        <div className="text-sm text-muted-foreground">
+                          {aiStage}
+                        </div>
+                      )}
+                      {!aiStage && (
+                        <div className="flex items-center space-x-2">
+                          <div className="w-2 h-2 bg-ai-primary rounded-full animate-bounce"></div>
+                          <div className="w-2 h-2 bg-ai-primary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                          <div className="w-2 h-2 bg-ai-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                          <span className="text-sm ml-2">AI is thinking...</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
@@ -685,115 +999,214 @@ export const AIAssessmentCreator = () => {
         </div>
       </div>
 
-      {/* Student Selection Modal */}
-      <Dialog open={showStudentSelection} onOpenChange={setShowStudentSelection}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>Assign Assessment to Students</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <p className="text-sm text-muted-foreground">
-              Select students to assign "{selectedAssessment?.title}"
-            </p>
-            <ScrollArea className="h-64">
-              <div className="space-y-2">
-                {students.filter(s => s.enrolled).map((student) => (
-                  <div key={student.id} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted">
+        {/* Student Assignment Dialog */}
+        <Dialog open={showStudentSelection} onOpenChange={setShowStudentSelection}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle className="flex items-center">
+                <Users className="w-5 h-5 mr-2 text-ai-primary" />
+                Assign Assessment to Students
+              </DialogTitle>
+            </DialogHeader>
+            {selectedAssessment && (
+              <div className="mb-4 p-3 bg-muted rounded-lg">
+                <p className="font-medium">{selectedAssessment.title}</p>
+                <p className="text-sm text-muted-foreground">{selectedAssessment.description}</p>
+              </div>
+            )}
+            <ScrollArea className="max-h-96">
+              <div className="space-y-4">
+                {students.filter(student => student.enrolled).map((student) => (
+                  <div key={student.id} className="flex items-center space-x-3 p-3 border rounded-lg hover:bg-muted/50 transition-colors">
                     <Checkbox
                       checked={selectedStudents.includes(student.id)}
-                      onCheckedChange={(checked) => handleStudentSelection(student.id, checked as boolean)}
+                      onCheckedChange={(checked) => handleStudentSelection(student.id, !!checked)}
                     />
-                    <div className="text-2xl">{student.avatar}</div>
-                    <div className="flex-1">
-                      <p className="font-medium">{student.name}</p>
-                      <p className="text-xs text-muted-foreground">{student.email}</p>
+                    <div className="flex items-center space-x-3 flex-1">
+                      <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                        <span className="text-sm font-medium">{student.name.charAt(0)}</span>
+                      </div>
+                      <div>
+                        <p className="font-medium">{student.name}</p>
+                        <p className="text-sm text-muted-foreground">{student.email}</p>
+                      </div>
                     </div>
+                    <Badge variant="secondary">Enrolled</Badge>
                   </div>
                 ))}
               </div>
             </ScrollArea>
-            <div className="flex justify-between">
-              <Button variant="outline" onClick={() => setShowStudentSelection(false)}>
-                Cancel
-              </Button>
-              <Button 
-                onClick={confirmAssignment}
-                disabled={selectedStudents.length === 0}
-                variant="ai"
-              >
-                Assign to {selectedStudents.length} students
-              </Button>
+            <div className="flex justify-between items-center mt-4">
+              <p className="text-sm text-muted-foreground">
+                {selectedStudents.length} of {students.filter(s => s.enrolled).length} students selected
+              </p>
+              <div className="flex space-x-2">
+                <Button variant="outline" onClick={() => setShowStudentSelection(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={confirmAssignment} disabled={selectedStudents.length === 0}>
+                  <UserCheck className="w-4 h-4 mr-2" />
+                  Assign to {selectedStudents.length} Student{selectedStudents.length !== 1 ? 's' : ''}
+                </Button>
+              </div>
             </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+          </DialogContent>
+        </Dialog>
 
-      {/* Insights Modal */}
-      <Dialog open={showInsights} onOpenChange={setShowInsights}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle className="flex items-center">
-              <BarChart3 className="w-5 h-5 mr-2" />
-              Assessment Insights: {selectedAssessment?.title}
-            </DialogTitle>
-          </DialogHeader>
-          <div className="space-y-6">
-            {/* Overview Stats */}
-            <div className="grid grid-cols-3 gap-4">
-              <Card>
-                <CardContent className="p-4 text-center">
-                  <div className="text-2xl font-bold text-ai-primary">{selectedAssessment?.assignedStudents}</div>
-                  <div className="text-sm text-muted-foreground">Assigned</div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-4 text-center">
-                  <div className="text-2xl font-bold text-ai-success">{selectedAssessment?.completedAttempts}</div>
-                  <div className="text-sm text-muted-foreground">Completed</div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-4 text-center">
-                  <div className="text-2xl font-bold text-ai-warning">{selectedAssessment?.avgScore}%</div>
-                  <div className="text-sm text-muted-foreground">Avg Score</div>
-                </CardContent>
-              </Card>
-            </div>
+        {/* Assessment Insights Dialog */}
+        <Dialog open={showInsights} onOpenChange={setShowInsights}>
+          <DialogContent className="max-w-4xl max-h-[80vh]">
+            <DialogHeader>
+              <DialogTitle className="flex items-center">
+                <BarChart3 className="w-5 h-5 mr-2 text-ai-primary" />
+                Assessment Insights & Analytics
+              </DialogTitle>
+            </DialogHeader>
+            {selectedAssessment && (
+              <ScrollArea className="max-h-[60vh]">
+                <div className="space-y-6">
+                  {/* Assessment Overview */}
+                  <div className="p-4 bg-muted rounded-lg">
+                    <h3 className="font-semibold text-lg mb-2">{selectedAssessment.title}</h3>
+                    <p className="text-muted-foreground">{selectedAssessment.description}</p>
+                    <div className="flex items-center space-x-4 mt-2">
+                      <Badge variant="outline">{selectedAssessment.difficulty}</Badge>
+                      <span className="text-sm text-muted-foreground">
+                        Created {selectedAssessment.createdAt.toLocaleDateString()}
+                      </span>
+                    </div>
+                  </div>
 
-            {/* Student Performance */}
-            {selectedAssessment && assessmentInsights[selectedAssessment.id] && (
-              <div>
-                <h3 className="font-semibold mb-3 flex items-center">
-                  <Award className="w-4 h-4 mr-2" />
-                  Student Performance
-                </h3>
-                <ScrollArea className="h-48">
-                  <div className="space-y-2">
-                    {assessmentInsights[selectedAssessment.id].map((insight, index) => (
-                      <div key={index} className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                        <div>
-                          <p className="font-medium">{insight.studentName}</p>
-                          <p className="text-xs text-muted-foreground">
-                            Completed {insight.completedAt.toLocaleDateString()} • {insight.timeSpent} • {insight.attempts} attempt(s)
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <div className={`text-lg font-bold ${
-                            insight.score >= 90 ? 'text-ai-success' :
-                            insight.score >= 70 ? 'text-ai-warning' : 'text-ai-error'
-                          }`}>
-                            {insight.score}%
+                  {/* Key Metrics */}
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <Card>
+                      <CardContent className="p-4">
+                        <div className="flex items-center space-x-2">
+                          <Users className="w-5 h-5 text-blue-500" />
+                          <div>
+                            <p className="text-2xl font-bold">{selectedAssessment.assignedStudents}</p>
+                            <p className="text-sm text-muted-foreground">Students Assigned</p>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardContent className="p-4">
+                        <div className="flex items-center space-x-2">
+                          <CheckCircle className="w-5 h-5 text-green-500" />
+                          <div>
+                            <p className="text-2xl font-bold">{selectedAssessment.completedAttempts}</p>
+                            <p className="text-sm text-muted-foreground">Completed</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardContent className="p-4">
+                        <div className="flex items-center space-x-2">
+                          <TrendingUp className="w-5 h-5 text-purple-500" />
+                          <div>
+                            <p className="text-2xl font-bold">{selectedAssessment.avgScore.toFixed(1)}%</p>
+                            <p className="text-sm text-muted-foreground">Average Score</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardContent className="p-4">
+                        <div className="flex items-center space-x-2">
+                          <Award className="w-5 h-5 text-yellow-500" />
+                          <div>
+                            <p className="text-2xl font-bold">
+                              {selectedAssessment.assignedStudents > 0 
+                                ? Math.round((selectedAssessment.completedAttempts / selectedAssessment.assignedStudents) * 100)
+                                : 0}%
+                            </p>
+                            <p className="text-sm text-muted-foreground">Completion Rate</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
                   </div>
-                </ScrollArea>
-              </div>
+
+                  {/* Student Performance Details */}
+                  {assessmentInsights[selectedAssessment.id] && (
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Individual Student Performance</CardTitle>
+                        <CardDescription>
+                          Detailed breakdown of student scores and completion times
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-3">
+                          {assessmentInsights[selectedAssessment.id].map((insight, index) => (
+                            <div key={index} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors">
+                              <div className="flex items-center space-x-3">
+                                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                                  <span className="font-medium">{insight.studentName.charAt(0)}</span>
+                                </div>
+                                <div>
+                                  <p className="font-medium">{insight.studentName}</p>
+                                  <p className="text-sm text-muted-foreground">
+                                    Completed on {insight.completedAt.toLocaleDateString()} • 
+                                    Time spent: {insight.timeSpent}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <div className="flex items-center space-x-2">
+                                  <Badge 
+                                    variant={insight.score >= 80 ? "default" : insight.score >= 60 ? "secondary" : "destructive"}
+                                    className="text-lg px-3 py-1"
+                                  >
+                                    {insight.score}%
+                                  </Badge>
+                                </div>
+                                <p className="text-sm text-muted-foreground mt-1">
+                                  {insight.attempts} attempt{insight.attempts !== 1 ? 's' : ''}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
+
+                  {/* Performance Summary */}
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Performance Summary</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="p-3 bg-green-50 rounded-lg border border-green-200">
+                          <p className="text-sm font-medium text-green-800">Excellent (80-100%)</p>
+                          <p className="text-2xl font-bold text-green-600">
+                            {assessmentInsights[selectedAssessment.id]?.filter(i => i.score >= 80).length || 0}
+                          </p>
+                        </div>
+                        <div className="p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                          <p className="text-sm font-medium text-yellow-800">Good (60-79%)</p>
+                          <p className="text-2xl font-bold text-yellow-600">
+                            {assessmentInsights[selectedAssessment.id]?.filter(i => i.score >= 60 && i.score < 80).length || 0}
+                          </p>
+                        </div>
+                        <div className="p-3 bg-red-50 rounded-lg border border-red-200">
+                          <p className="text-sm font-medium text-red-800">Needs Improvement (0-59%)</p>
+                          <p className="text-2xl font-bold text-red-600">
+                            {assessmentInsights[selectedAssessment.id]?.filter(i => i.score < 60).length || 0}
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </ScrollArea>
             )}
-          </div>
-        </DialogContent>
-      </Dialog>
+          </DialogContent>
+        </Dialog>
     </div>
   );
 };
