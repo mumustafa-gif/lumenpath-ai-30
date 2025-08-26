@@ -300,6 +300,10 @@ export const CourseGenerator = () => {
     setIsGenerating(false);
   };
 
+  const handleGenerateAssessments = async () => {
+    setShowAssessmentGenerator(true);
+  };
+
   const handleGenerateFullContent = async () => {
     setIsGeneratingContent(true);
     setCurrentStep("generating");
@@ -1023,7 +1027,7 @@ export const CourseGenerator = () => {
                 </div>
               )}
 
-              <div className="flex justify-center space-x-4">
+              <div className="flex justify-center space-x-4 mb-4">
                 {!generatedCourse.fullContent && (
                   <Button 
                     onClick={handleGenerateFullContent}
@@ -1040,6 +1044,24 @@ export const CourseGenerator = () => {
                 >
                   <Eye className="w-4 h-4 mr-2" />
                   Preview Course
+                </Button>
+              </div>
+              
+              <div className="flex justify-center space-x-4">
+                <Button 
+                  onClick={handleGenerateAssessments}
+                  className="bg-ai-primary hover:bg-ai-primary/90"
+                >
+                  <Brain className="w-4 h-4 mr-2" />
+                  Create AI Assessments
+                </Button>
+                <Button 
+                  onClick={handleGenerateCoverImage}
+                  variant="outline"
+                  disabled={isGeneratingCoverImage}
+                >
+                  {isGeneratingCoverImage ? <Sparkles className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}
+                  Generate Cover
                 </Button>
                 <Button 
                   onClick={() => setCurrentStep("editCourse")}
@@ -1299,12 +1321,18 @@ export const CourseGenerator = () => {
         />
       )}
 
-      {showCoursePreview && generatedCourse && (
-        <CoursePreview 
-          course={generatedCourse}
-          onClose={() => setShowCoursePreview(false)}
-        />
-      )}
+        {showCoursePreview && generatedCourse && (
+          <CoursePreview 
+            course={generatedCourse} 
+            onClose={() => setShowCoursePreview(false)}
+          />
+        )}
+
+        {showAssessmentGenerator && (
+          <AssessmentGenerator 
+            onClose={() => setShowAssessmentGenerator(false)}
+          />
+        )}
     </div>
   );
 };
