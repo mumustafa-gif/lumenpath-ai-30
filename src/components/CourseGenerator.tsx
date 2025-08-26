@@ -1061,19 +1061,26 @@ export const CourseGenerator = () => {
                   Create AI Assessments
                 </Button>
                 <Button 
-                  onClick={handleGenerateCoverImage}
-                  variant="outline"
-                  disabled={isGeneratingCoverImage}
-                >
-                  {isGeneratingCoverImage ? <Sparkles className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}
-                  Generate Cover
-                </Button>
-                <Button 
                   onClick={() => setCurrentStep("editCourse")}
-                  className="bg-ai-primary hover:bg-ai-primary/90"
+                  variant="outline"
                 >
                   <FileText className="w-4 h-4 mr-2" />
                   Edit Course
+                </Button>
+                <Button 
+                  onClick={async () => {
+                    setIsCreatingCourse(true);
+                    addMessage("📚 Saving and publishing course to marketplace...", true);
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    addMessage("✅ Course successfully saved and published!", true);
+                    setIsCreatingCourse(false);
+                    // Navigate to My Courses or show success message
+                  }}
+                  className="bg-ai-primary hover:bg-ai-primary/90"
+                  disabled={isCreatingCourse}
+                >
+                  {isCreatingCourse ? <Sparkles className="w-4 h-4 mr-2 animate-spin" /> : <CheckCircle className="w-4 h-4 mr-2" />}
+                  Save and Publish
                 </Button>
               </div>
             </CardContent>

@@ -282,33 +282,7 @@ export const CoursePreview = ({ course, onClose }: CoursePreviewProps) => {
                   <h3 className="font-semibold">Module {currentModule + 1}: {mockFullContent.modules[currentModule]?.title}</h3>
                   <p className="text-sm text-muted-foreground">{mockFullContent.modules[currentModule]?.duration} • {mockFullContent.modules[currentModule]?.lessons.length} lessons</p>
                 </div>
-                <Dialog open={aiTutorOpen} onOpenChange={setAiTutorOpen}>
-                  <DialogTrigger asChild>
-                    <Button size="sm" variant="ai">
-                      <MessageSquare className="w-4 h-4 mr-1" />
-                      Ask AI Tutor
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-4xl h-[80vh]">
-                    <DialogHeader>
-                      <DialogTitle className="flex items-center">
-                        <Brain className="w-5 h-5 mr-2 text-ai-primary" />
-                        AI Learning Assistant
-                      </DialogTitle>
-                    </DialogHeader>
-                    <div className="flex-1 overflow-hidden">
-                      <ChatInterface 
-                        placeholder="Ask about this module, concepts, or get study help..."
-                        suggestions={[
-                          `Explain key concepts in ${mockFullContent.modules[currentModule]?.title}`,
-                          "What are the main learning objectives?",
-                          "Give me practice questions for this module",
-                          "How does this relate to real-world applications?"
-                        ]}
-                      />
-                    </div>
-                  </DialogContent>
-                </Dialog>
+                {/* Removed AI Tutor button for instructor view */}
               </div>
             </div>
 

@@ -283,14 +283,14 @@ export const AssessmentGenerator = ({
 
           {/* Generated Assessment Preview */}
           {generatedAssessment && (
-            <div className="w-96 border-l bg-muted/30">
+            <div className="w-96 border-l bg-muted/30 flex flex-col h-full">
               <div className="p-4 border-b">
                 <h3 className="font-semibold flex items-center">
                   <CheckCircle className="w-4 h-4 mr-2 text-ai-success" />
                   Generated Assessment
                 </h3>
               </div>
-              <ScrollArea className="max-h-[60vh] p-4">
+              <ScrollArea className="flex-1 p-4">
                 <div className="space-y-4">
                   <Card>
                     <CardHeader className="pb-2">
@@ -352,13 +352,39 @@ export const AssessmentGenerator = ({
                       onClick={() => {
                         if (onAssessmentGenerated && generatedAssessment) {
                           onAssessmentGenerated(generatedAssessment);
+                          onClose();
                         }
                       }}
                     >
                       <CheckCircle className="w-3 h-3 mr-1" />
                       Use Assessment
                     </Button>
-                    <Button size="sm" variant="outline" className="flex-1">
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="flex-1"
+                      onClick={async () => {
+                        setGeneratedAssessment(null);
+                        setCurrentStep(0);
+                        setAssessmentData(moduleTitle ? { topic: moduleTitle } : {});
+                        setMessages([
+                          {
+                            id: '1',
+                            text: `Hello! I'm your AI Assessment Generator. ${moduleTitle ? `I'll help you create detailed assessments for "${moduleTitle}".` : "I'll help you create detailed assessments with MCQs and short questions."} Let's start with some questions about your assessment needs.`,
+                            sender: 'bot',
+                            timestamp: new Date()
+                          },
+                          {
+                            id: '2',
+                            text: moduleTitle ? 
+                              `For the module "${moduleTitle}", what difficulty level should this assessment be? (Beginner, Intermediate, Advanced)` :
+                              "What topic or subject should this assessment cover?",
+                            sender: 'bot',
+                            timestamp: new Date()
+                          }
+                        ]);
+                      }}
+                    >
                       <MessageSquare className="w-3 h-3 mr-1" />
                       Regenerate
                     </Button>
