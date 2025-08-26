@@ -351,8 +351,66 @@ export const AIAssessmentCreator = () => {
         const instructions = lowerResponse === 'standard' ? 'Follow standard academic integrity guidelines' : response;
         setAssessmentData(prev => ({ ...prev, instructions }));
         setCurrentStep('complete');
+        
+        // Immediately trigger AI generation after setting complete step
+        setTimeout(() => {
+          triggerAIGeneration();
+        }, 100);
         break;
     }
+  };
+
+  const triggerAIGeneration = async () => {
+    // Trigger AI loader modal
+    setShowAILoader(true);
+    
+    // Show AI generation stages
+    const stages = [
+      "🤖 Analyzing your assessment requirements...",
+      "📚 Researching topic and generating content framework...", 
+      "🎯 Creating targeted questions based on difficulty level...",
+      "✅ Generating multiple choice questions...",
+      "📝 Crafting short answer questions...",
+      "💡 Adding explanations and feedback...",
+      "🔍 Reviewing and optimizing assessment structure...",
+      "🎉 Finalizing your assessment!"
+    ];
+
+    for (let i = 0; i < stages.length; i++) {
+      setAiStage(stages[i]);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+
+    // Generate the actual assessment with complete dummy data
+    const finalAssessmentData: AssessmentData = {
+      topic: assessmentData.topic || 'Machine Learning',
+      description: assessmentData.description || 'Comprehensive assessment covering fundamental ML concepts and practical applications',
+      type: assessmentData.type || 'Quiz',
+      difficulty: assessmentData.difficulty || 'Intermediate',
+      mcqCount: assessmentData.mcqCount || 10,
+      shortCount: assessmentData.shortCount || 5,
+      essayCount: assessmentData.essayCount || 2,
+      timeLimit: assessmentData.timeLimit || '60 minutes',
+      instructions: assessmentData.instructions || 'Follow standard academic integrity guidelines. Use your own knowledge and reasoning.'
+    };
+    
+    const generatedQuestions = generateAssessmentQuestions(finalAssessmentData);
+    
+    const assessment: GeneratedAssessment = {
+      id: Date.now().toString(),
+      title: `${finalAssessmentData.topic} ${finalAssessmentData.type}`,
+      description: finalAssessmentData.description,
+      instructions: finalAssessmentData.instructions,
+      timeLimit: finalAssessmentData.timeLimit,
+      difficulty: finalAssessmentData.difficulty,
+      questions: generatedQuestions,
+      totalPoints: generatedQuestions.reduce((sum, q) => sum + q.points, 0)
+    };
+
+    setGeneratedAssessment(assessment);
+    setShowAILoader(false);
+    setShowGeneratedAssessment(true);
+    setAiStage("");
   };
 
   const resetConversation = () => {
@@ -386,70 +444,31 @@ export const AIAssessmentCreator = () => {
 
     let botResponseText = "";
     
-    if (currentStep === 'complete') {
-      // Trigger AI loader modal
-      setShowAILoader(true);
-      setIsGenerating(false);
-      
-      // Show AI generation stages
-      const stages = [
-        "🤖 Analyzing your assessment requirements...",
-        "📚 Researching topic and generating content framework...",
-        "🎯 Creating targeted questions based on difficulty level...",
-        "✅ Generating multiple choice questions...",
-        "📝 Crafting short answer questions...",
-        "💡 Adding explanations and feedback...",
-        "🔍 Reviewing and optimizing assessment structure...",
-        "🎉 Finalizing your assessment!"
-      ];
-
-      for (let i = 0; i < stages.length; i++) {
-        setAiStage(stages[i]);
-        await new Promise(resolve => setTimeout(resolve, 1000));
-      }
-
-      // Generate the actual assessment
-      const finalAssessmentData = assessmentData as AssessmentData;
-      const generatedQuestions = generateAssessmentQuestions(finalAssessmentData);
-      
-      const assessment: GeneratedAssessment = {
-        id: Date.now().toString(),
-        title: `${finalAssessmentData.topic} ${finalAssessmentData.type}`,
-        description: finalAssessmentData.description,
-        instructions: finalAssessmentData.instructions,
-        timeLimit: finalAssessmentData.timeLimit,
-        difficulty: finalAssessmentData.difficulty,
-        questions: generatedQuestions,
-        totalPoints: generatedQuestions.reduce((sum, q) => sum + q.points, 0)
-      };
-
-      setGeneratedAssessment(assessment);
-      setShowAILoader(false);
-      setShowGeneratedAssessment(true);
-      setAiStage("");
-      return;
-    } else {
-      // Process current step and move to next
-      processUserResponse(currentInput, currentStep);
+    // Process current step and move to next
+    processUserResponse(currentInput, currentStep);
+    
+    // Get next step response (unless we just completed)
+    if (currentStep !== 'complete') {
       botResponseText = getStepPrompt(currentStep === 'topic' ? 'description' : 
                                     currentStep === 'description' ? 'type' :
                                     currentStep === 'type' ? 'difficulty' :
                                     currentStep === 'difficulty' ? 'questions' :
                                     currentStep === 'questions' ? 'timeLimit' :
                                     currentStep === 'timeLimit' ? 'instructions' : 'complete');
+
+      // Simulate AI thinking time
+      await new Promise(resolve => setTimeout(resolve, 1200));
+
+      const botMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        text: botResponseText,
+        sender: 'bot',
+        timestamp: new Date()
+      };
+
+      setMessages(prev => [...prev, botMessage]);
     }
-
-    // Simulate AI thinking time
-    await new Promise(resolve => setTimeout(resolve, 1200));
-
-    const botMessage: Message = {
-      id: (Date.now() + 1).toString(),
-      text: botResponseText,
-      sender: 'bot',
-      timestamp: new Date()
-    };
-
-    setMessages(prev => [...prev, botMessage]);
+    
     setIsGenerating(false);
   };
 
@@ -457,45 +476,77 @@ export const AIAssessmentCreator = () => {
     const questions: GeneratedQuestion[] = [];
     let questionId = 1;
 
-    // Generate MCQ questions
-    for (let i = 0; i < data.mcqCount; i++) {
+    // Generate comprehensive MCQ questions with realistic content
+    const mcqTopics = [
+      "fundamental concepts and definitions",
+      "practical applications and use cases", 
+      "theoretical frameworks and models",
+      "best practices and methodologies",
+      "problem-solving approaches",
+      "implementation strategies",
+      "performance optimization techniques",
+      "security considerations",
+      "future trends and developments",
+      "industry standards and protocols"
+    ];
+
+    for (let i = 0; i < (data.mcqCount || 10); i++) {
+      const topicIndex = i % mcqTopics.length;
       questions.push({
         id: questionId.toString(),
         type: 'mcq',
-        question: `Which of the following best describes ${data.topic.toLowerCase()} concept ${i + 1}?`,
+        question: `Which of the following best describes ${mcqTopics[topicIndex]} in ${data.topic || 'the given subject'}?`,
         options: [
-          `Option A related to ${data.topic}`,
-          `Option B explaining ${data.topic} principles`,
-          `Option C about ${data.topic} applications`,
-          `Option D concerning ${data.topic} methodology`
+          `A comprehensive approach that emphasizes ${data.topic || 'core'} principles and systematic implementation`,
+          `A methodology focusing on ${data.topic || 'practical'} applications with measurable outcomes`,
+          `An advanced technique that combines ${data.topic || 'theoretical'} knowledge with hands-on experience`,
+          `A standard framework used in ${data.topic || 'modern'} industry practices and protocols`
         ],
         correctAnswer: 'A',
         points: 2,
-        explanation: `This question tests understanding of fundamental ${data.topic} concepts.`
+        explanation: `This question evaluates understanding of ${mcqTopics[topicIndex]} in ${data.topic || 'the subject area'}, testing both conceptual knowledge and practical application.`
       });
       questionId++;
     }
 
-    // Generate short answer questions
-    for (let i = 0; i < data.shortCount; i++) {
+    // Generate comprehensive short answer questions
+    const shortAnswerPrompts = [
+      "Explain the key principles and provide a practical example",
+      "Compare and contrast different approaches, highlighting advantages",
+      "Describe the implementation process with specific steps",
+      "Analyze potential challenges and propose solutions",
+      "Evaluate the effectiveness and suggest improvements"
+    ];
+
+    for (let i = 0; i < (data.shortCount || 5); i++) {
+      const promptIndex = i % shortAnswerPrompts.length;
       questions.push({
         id: questionId.toString(),
         type: 'short',
-        question: `Explain the key principles of ${data.topic} and provide an example of its practical application.`,
+        question: `${shortAnswerPrompts[promptIndex]} related to ${data.topic || 'the subject area'}. Support your answer with relevant examples and justify your reasoning.`,
         points: 5,
-        explanation: `This question evaluates comprehension and application skills in ${data.topic}.`
+        explanation: `This question assesses comprehension, analysis, and application skills in ${data.topic || 'the subject'}, requiring students to demonstrate both theoretical knowledge and practical understanding.`
       });
       questionId++;
     }
 
-    // Generate essay questions
-    for (let i = 0; i < data.essayCount; i++) {
+    // Generate comprehensive essay questions
+    const essayTopics = [
+      "impact on modern practices and future implications",
+      "evolution, current state, and predicted developments", 
+      "advantages, limitations, and optimization strategies",
+      "role in solving complex real-world problems",
+      "ethical considerations and responsible implementation"
+    ];
+
+    for (let i = 0; i < (data.essayCount || 3); i++) {
+      const topicIndex = i % essayTopics.length;
       questions.push({
         id: questionId.toString(),
         type: 'essay',
-        question: `Critically analyze the impact of ${data.topic} on modern practices. Discuss advantages, limitations, and future prospects.`,
+        question: `Critically analyze the ${essayTopics[topicIndex]} of ${data.topic || 'the subject area'}. In your response, discuss relevant theories, provide concrete examples, evaluate different perspectives, and present a well-reasoned conclusion about its significance in the field.`,
         points: 10,
-        explanation: `This question assesses analytical thinking and comprehensive understanding of ${data.topic}.`
+        explanation: `This essay question requires advanced analytical thinking, comprehensive understanding of ${data.topic || 'the subject'}, and the ability to synthesize information from multiple sources to form coherent arguments.`
       });
       questionId++;
     }
@@ -1205,6 +1256,14 @@ export const AIAssessmentCreator = () => {
               <CardTitle className="text-lg">Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
+              <Button 
+                className="w-full justify-start" 
+                variant="outline"
+                onClick={triggerAIGeneration}
+              >
+                <Wand2 className="w-4 h-4 mr-2" />
+                Test AI Generation
+              </Button>
               <Button 
                 className="w-full justify-start" 
                 variant="outline"
