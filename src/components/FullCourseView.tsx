@@ -23,8 +23,11 @@ import {
   ChevronRight,
   Lightbulb,
   PenTool,
-  MessageSquare
+  MessageSquare,
+  Plus,
+  Sparkles
 } from "lucide-react";
+import { AssessmentGenerator } from "./AssessmentGenerator";
 
 interface ModuleContent {
   id: string;
@@ -58,6 +61,11 @@ interface FullCourseViewProps {
 export const FullCourseView = ({ course, onClose }: FullCourseViewProps) => {
   const [selectedModule, setSelectedModule] = useState<ModuleContent | null>(null);
   const [activeTab, setActiveTab] = useState("overview");
+  const [showAssessmentGenerator, setShowAssessmentGenerator] = useState(false);
+  const [selectedModuleForAssessment, setSelectedModuleForAssessment] = useState<string | null>(null);
+  const [courseAssessments, setCourseAssessments] = useState<any>({});
+  const [editingAssessment, setEditingAssessment] = useState<any>(null);
+  const [isSavingCourse, setIsSavingCourse] = useState(false);
 
   // Generate detailed module content
   const generateModuleContent = (moduleTitle: string, index: number): ModuleContent => {
@@ -153,6 +161,57 @@ export const FullCourseView = ({ course, onClose }: FullCourseViewProps) => {
     setActiveTab("content");
   };
 
+  const handleAddAssessment = (moduleId: string) => {
+    setSelectedModuleForAssessment(moduleId);
+    setShowAssessmentGenerator(true);
+  };
+
+  const handleAssessmentGenerated = (assessment: any) => {
+    if (selectedModuleForAssessment) {
+      setCourseAssessments(prev => ({
+        ...prev,
+        [selectedModuleForAssessment]: assessment
+      }));
+    }
+    setShowAssessmentGenerator(false);
+    setSelectedModuleForAssessment(null);
+  };
+
+  const handleEditAssessment = (moduleId: string) => {
+    setEditingAssessment(courseAssessments[moduleId]);
+    setSelectedModuleForAssessment(moduleId);
+    setShowAssessmentGenerator(true);
+  };
+
+  const handleSaveCourse = async () => {
+    setIsSavingCourse(true);
+    
+    // Simulate saving process
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    const savedCourse = {
+      ...course,
+      id: Date.now(),
+      savedAt: new Date().toISOString(),
+      modules: moduleContents,
+      assessments: courseAssessments,
+      status: 'saved',
+      progress: 0,
+      enrollments: 0
+    };
+    
+    // Save to localStorage
+    const existingCourses = JSON.parse(localStorage.getItem('myCourses') || '[]');
+    existingCourses.push(savedCourse);
+    localStorage.setItem('myCourses', JSON.stringify(existingCourses));
+    
+    setIsSavingCourse(false);
+    
+    // Show success message and close
+    alert('Course saved successfully! You can find it in "My Courses".');
+    onClose();
+  };
+
   const getModuleIcon = (type: string) => {
     switch (type) {
       case 'lesson': return <BookOpen className="w-4 h-4" />;
@@ -196,6 +255,19 @@ export const FullCourseView = ({ course, onClose }: FullCourseViewProps) => {
             <Button variant="outline" size="sm">
               <Download className="w-4 h-4 mr-2" />
               Export
+            </Button>
+            <Button 
+              onClick={handleSaveCourse}
+              disabled={isSavingCourse}
+              className="bg-ai-primary hover:bg-ai-primary/90"
+              size="sm"
+            >
+              {isSavingCourse ? (
+                <Sparkles className="w-4 h-4 mr-2 animate-spin" />
+              ) : (
+                <CheckCircle className="w-4 h-4 mr-2" />
+              )}
+              {isSavingCourse ? 'Saving...' : 'Save Course'}
             </Button>
           </div>
         </div>
@@ -325,6 +397,17 @@ export const FullCourseView = ({ course, onClose }: FullCourseViewProps) => {
                                 </div>
                               </div>
                               <div className="flex items-center space-x-2">
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleAddAssessment(module.id);
+                                  }}
+                                  className="text-xs"
+                                >
+                                  {courseAssessments[module.id] ? 'Edit Assessment' : 'Add Assessment'}
+                                </Button>
                                 {module.completed && (
                                   <CheckCircle className="w-5 h-5 text-ai-success" />
                                 )}
@@ -446,47 +529,92 @@ export const FullCourseView = ({ course, onClose }: FullCourseViewProps) => {
                               Module Assessments
                             </CardTitle>
                           </CardHeader>
-                          <CardContent className="space-y-4">
-                            {selectedModule.content.assessments.map((assessment, assessmentIndex) => (
-                              <div key={assessmentIndex} className="border rounded-lg p-4">
-                                <h4 className="font-semibold mb-3">{assessment.type}</h4>
-                                <div className="space-y-3">
-                                  {assessment.questions.map((question, questionIndex) => (
-                                    <div key={questionIndex} className="border rounded p-3">
-                                      <p className="font-medium text-sm mb-2">
-                                        Question {questionIndex + 1}: {question.question}
-                                      </p>
-                                      {question.options && (
-                                        <div className="space-y-1 mb-2">
-                                          {question.options.map((option, optionIndex) => (
-                                            <div 
-                                              key={optionIndex} 
-                                              className={`text-xs p-2 rounded ${
-                                                optionIndex === question.correct 
-                                                  ? 'bg-ai-success/20 border border-ai-success/30' 
-                                                  : 'bg-muted/50'
-                                              }`}
-                                            >
-                                              {String.fromCharCode(65 + optionIndex)}. {option}
-                                            </div>
-                                          ))}
-                                        </div>
-                                      )}
-                                      {question.points && (
-                                        <Badge variant="outline" className="text-xs">
-                                          {question.points} points
-                                        </Badge>
-                                      )}
-                                      {question.explanation && (
-                                        <p className="text-xs text-muted-foreground mt-2 italic">
-                                          💡 {question.explanation}
-                                        </p>
-                                      )}
-                                    </div>
+                          <CardContent>
+                            <div className="space-y-4">
+                              {/* Module's Built-in Assessments */}
+                              <div>
+                                <h5 className="font-medium text-sm mb-2">Built-in Assessments</h5>
+                                <ul className="space-y-2">
+                                  {selectedModule.content.assessments.map((assessment, i) => (
+                                    <li key={i} className="space-y-2">
+                                      <div className="flex items-center justify-between">
+                                        <h6 className="font-medium text-sm">{assessment.type}</h6>
+                                        <Badge variant="outline">{assessment.questions.length} Questions</Badge>
+                                      </div>
+                                      <div className="space-y-1">
+                                        {assessment.questions.slice(0, 2).map((q, qi) => (
+                                          <div key={qi} className="p-2 bg-muted/50 rounded text-xs">
+                                            <p className="font-medium">{q.question}</p>
+                                            {q.options && (
+                                              <div className="mt-1 space-y-0.5">
+                                                {q.options.map((option, oi) => (
+                                                  <div key={oi} className={`text-xs ${oi === q.correct ? 'text-ai-success font-medium' : 'text-muted-foreground'}`}>
+                                                    {String.fromCharCode(65 + oi)}. {option}
+                                                  </div>
+                                                ))}
+                                              </div>
+                                            )}
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </li>
                                   ))}
-                                </div>
+                                </ul>
                               </div>
-                            ))}
+
+                              {/* AI-Generated Assessment */}
+                              {courseAssessments[selectedModule.id] && (
+                                <div>
+                                  <div className="flex items-center justify-between mb-2">
+                                    <h5 className="font-medium text-sm">AI-Generated Assessment</h5>
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      onClick={() => handleEditAssessment(selectedModule.id)}
+                                      className="text-xs"
+                                    >
+                                      Edit Assessment
+                                    </Button>
+                                  </div>
+                                  <Card className="bg-ai-primary/5 border-ai-primary/20">
+                                    <CardContent className="p-3">
+                                      <div className="space-y-2">
+                                        <div className="flex items-center justify-between">
+                                          <h6 className="font-medium text-sm">{courseAssessments[selectedModule.id].title}</h6>
+                                          <div className="flex space-x-1">
+                                            <Badge variant="outline" className="text-xs">
+                                              {courseAssessments[selectedModule.id].mcqs?.length || 0} MCQs
+                                            </Badge>
+                                            <Badge variant="outline" className="text-xs">
+                                              {courseAssessments[selectedModule.id].shortQuestions?.length || 0} Short Q
+                                            </Badge>
+                                          </div>
+                                        </div>
+                                        <p className="text-xs text-muted-foreground">
+                                          {courseAssessments[selectedModule.id].description}
+                                        </p>
+                                        <div className="text-xs text-ai-primary">
+                                          Total Points: {courseAssessments[selectedModule.id].metadata?.totalPoints || 0}
+                                        </div>
+                                      </div>
+                                    </CardContent>
+                                  </Card>
+                                </div>
+                              )}
+
+                              {/* Add Assessment Button */}
+                              {!courseAssessments[selectedModule.id] && (
+                                <Button
+                                  onClick={() => handleAddAssessment(selectedModule.id)}
+                                  variant="outline"
+                                  size="sm"
+                                  className="w-full"
+                                >
+                                  <Plus className="w-4 h-4 mr-2" />
+                                  Generate AI Assessment for this Module
+                                </Button>
+                              )}
+                            </div>
                           </CardContent>
                         </Card>
                       </div>
@@ -582,6 +710,22 @@ export const FullCourseView = ({ course, onClose }: FullCourseViewProps) => {
           </div>
         </div>
       </div>
+      
+      {/* Assessment Generator Modal */}
+      {showAssessmentGenerator && (
+        <AssessmentGenerator
+          onClose={() => {
+            setShowAssessmentGenerator(false);
+            setSelectedModuleForAssessment(null);
+            setEditingAssessment(null);
+          }}
+          onAssessmentGenerated={handleAssessmentGenerated}
+          existingAssessment={editingAssessment}
+          moduleTitle={selectedModuleForAssessment ? 
+            moduleContents.find(m => m.id === selectedModuleForAssessment)?.title : ''
+          }
+        />
+      )}
     </div>
   );
 };

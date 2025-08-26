@@ -9,6 +9,7 @@ import { Progress } from "@/components/ui/progress";
 import { AssessmentGenerator } from "./AssessmentGenerator";
 import { CoursePreview } from "./CoursePreview";
 import { FullCourseView } from "./FullCourseView";
+import { MyCoursesViewer } from "./MyCoursesViewer";
 import { 
   Brain, 
   Sparkles, 
@@ -23,7 +24,8 @@ import {
   Zap,
   Upload,
   Eye,
-  Plus
+  Plus,
+  BookmarkCheck
 } from "lucide-react";
 
 interface Message {
@@ -69,6 +71,7 @@ export const CourseGenerator = () => {
   const [coverImage, setCoverImage] = useState<string | null>(null);
   const [isGeneratingCoverImage, setIsGeneratingCoverImage] = useState(false);
   const [editingCourse, setEditingCourse] = useState<any>(null);
+  const [showMyCourses, setShowMyCourses] = useState(false);
   const [manualCourseData, setManualCourseData] = useState({
     title: '',
     description: '',
@@ -1336,12 +1339,18 @@ export const CourseGenerator = () => {
           />
         )}
 
-        {showFullCourseView && generatedCourse && (
-          <FullCourseView 
-            course={generatedCourse}
-            onClose={() => setShowFullCourseView(false)}
-          />
-        )}
+      {showFullCourseView && generatedCourse && (
+        <FullCourseView
+          course={generatedCourse}
+          onClose={() => setShowFullCourseView(false)}
+        />
+      )}
+
+      {showMyCourses && (
+        <MyCoursesViewer
+          onClose={() => setShowMyCourses(false)}
+        />
+      )}
     </div>
   );
 };

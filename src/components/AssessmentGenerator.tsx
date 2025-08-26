@@ -45,17 +45,31 @@ interface GeneratedAssessment {
   };
 }
 
-export const AssessmentGenerator = ({ onClose }: { onClose: () => void }) => {
+interface AssessmentGeneratorProps {
+  onClose: () => void;
+  onAssessmentGenerated?: (assessment: GeneratedAssessment) => void;
+  existingAssessment?: GeneratedAssessment | null;
+  moduleTitle?: string;
+}
+
+export const AssessmentGenerator = ({ 
+  onClose, 
+  onAssessmentGenerated,
+  existingAssessment,
+  moduleTitle 
+}: AssessmentGeneratorProps) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: "Hello! I'm your AI Assessment Generator. I'll help you create detailed assessments with MCQs and short questions. Let's start with some questions about your assessment needs.",
+      text: `Hello! I'm your AI Assessment Generator. ${moduleTitle ? `I'll help you create detailed assessments for "${moduleTitle}".` : "I'll help you create detailed assessments with MCQs and short questions."} Let's start with some questions about your assessment needs.`,
       sender: 'bot',
       timestamp: new Date()
     },
     {
       id: '2',
-      text: "What topic or subject should this assessment cover?",
+      text: moduleTitle ? 
+        `For the module "${moduleTitle}", what difficulty level should this assessment be? (Beginner, Intermediate, Advanced)` :
+        "What topic or subject should this assessment cover?",
       sender: 'bot',
       timestamp: new Date()
     }
@@ -63,10 +77,22 @@ export const AssessmentGenerator = ({ onClose }: { onClose: () => void }) => {
   const [inputText, setInputText] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
-  const [assessmentData, setAssessmentData] = useState<any>({});
-  const [generatedAssessment, setGeneratedAssessment] = useState<GeneratedAssessment | null>(null);
+  const [assessmentData, setAssessmentData] = useState<any>(
+    moduleTitle ? { topic: moduleTitle } : {}
+  );
+  const [generatedAssessment, setGeneratedAssessment] = useState<GeneratedAssessment | null>(
+    existingAssessment || null
+  );
 
-  const conversationFlow = [
+  const conversationFlow = moduleTitle ? [
+    `For the module "${moduleTitle}", what difficulty level should this assessment be? (Beginner, Intermediate, Advanced)`,
+    "How many multiple choice questions would you like? (5-50)",
+    "How many short answer questions do you need? (2-20)",
+    "What specific learning objectives should this assessment test?",
+    "Any particular areas or subtopics you want to emphasize?",
+    "What's the target audience for this assessment? (Students, professionals, etc.)",
+    "How much time should learners have to complete this assessment?"
+  ] : [
     "What topic or subject should this assessment cover?",
     "What difficulty level should this assessment be? (Beginner, Intermediate, Advanced)",
     "How many multiple choice questions would you like? (5-50)",
@@ -320,13 +346,21 @@ export const AssessmentGenerator = ({ onClose }: { onClose: () => void }) => {
                   </div>
 
                   <div className="flex space-x-2 pt-4">
-                    <Button size="sm" variant="ai" className="flex-1">
+                    <Button 
+                      size="sm" 
+                      className="flex-1 bg-ai-primary hover:bg-ai-primary/90"
+                      onClick={() => {
+                        if (onAssessmentGenerated && generatedAssessment) {
+                          onAssessmentGenerated(generatedAssessment);
+                        }
+                      }}
+                    >
                       <CheckCircle className="w-3 h-3 mr-1" />
                       Use Assessment
                     </Button>
                     <Button size="sm" variant="outline" className="flex-1">
                       <MessageSquare className="w-3 h-3 mr-1" />
-                      Modify
+                      Regenerate
                     </Button>
                   </div>
                 </div>
