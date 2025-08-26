@@ -227,6 +227,48 @@ export const AIAssessmentCreator = () => {
       assignedStudents: 31,
       completedAttempts: 26,
       avgScore: 81.2
+    },
+    {
+      id: '6',
+      title: 'Artificial Intelligence Ethics',
+      description: 'Assessment on ethical considerations in AI development and deployment',
+      difficulty: 'Advanced',
+      mcqCount: 25,
+      shortCount: 10,
+      totalPoints: 150,
+      estimatedTime: '75 minutes',
+      createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+      assignedStudents: 35,
+      completedAttempts: 32,
+      avgScore: 87.2
+    },
+    {
+      id: '7',
+      title: 'Web Development Full Stack',
+      description: 'Complete assessment covering frontend and backend web technologies',
+      difficulty: 'Intermediate',
+      mcqCount: 20,
+      shortCount: 8,
+      totalPoints: 120,
+      estimatedTime: '60 minutes',
+      createdAt: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000),
+      assignedStudents: 42,
+      completedAttempts: 38,
+      avgScore: 79.8
+    },
+    {
+      id: '8',
+      title: 'Cybersecurity Fundamentals',
+      description: 'Basic cybersecurity principles and threat assessment',
+      difficulty: 'Beginner',
+      mcqCount: 15,
+      shortCount: 5,
+      totalPoints: 75,
+      estimatedTime: '40 minutes',
+      createdAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
+      assignedStudents: 38,
+      completedAttempts: 35,
+      avgScore: 82.5
     }
   ]);
   const [activeView, setActiveView] = useState<'create' | 'my-assessments'>('create');
@@ -825,179 +867,6 @@ export const AIAssessmentCreator = () => {
             </Card>
           ))}
         </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold flex items-center">
-            <Brain className="w-6 h-6 mr-2 text-ai-primary" />
-            AI Assessment Creator
-          </h2>
-          <p className="text-muted-foreground">Create intelligent assessments with AI assistance</p>
-        </div>
-        <Button
-          variant="outline"
-          onClick={() => setActiveView('my-assessments')}
-        >
-          <FileCheck className="w-4 h-4 mr-2" />
-          My Assessments ({savedAssessments.length})
-        </Button>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Chat Interface */}
-        <div className="lg:col-span-2">
-          <Card className="h-[600px] flex flex-col">
-            <CardHeader className="border-b">
-              <CardTitle className="flex items-center">
-                <Sparkles className="w-5 h-5 mr-2 text-ai-primary" />
-                AI Assessment Assistant
-              </CardTitle>
-              <CardDescription>
-                Chat with AI to create customized assessments for your students
-              </CardDescription>
-            </CardHeader>
-            
-            <ScrollArea className="flex-1 p-4 max-h-[400px]">
-              <div className="space-y-4 pr-4">
-                {messages.map((message) => (
-                  <div
-                    key={message.id}
-                    className={`flex items-start space-x-3 ${
-                      message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''
-                    }`}
-                  >
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                      message.sender === 'bot' 
-                        ? 'bg-ai-primary/10 text-ai-primary' 
-                        : 'bg-ai-secondary/10 text-ai-secondary'
-                    }`}>
-                      {message.sender === 'bot' ? <Bot className="w-4 h-4" /> : <User className="w-4 h-4" />}
-                    </div>
-                    <div className={`max-w-[70%] p-3 rounded-lg ${
-                      message.sender === 'bot'
-                        ? 'bg-muted'
-                        : 'bg-ai-primary text-primary-foreground'
-                    }`}>
-                      <p className="text-sm whitespace-pre-wrap leading-relaxed">{message.text}</p>
-                      <div className="text-xs opacity-70 mt-1">
-                        {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                {isGenerating && (
-                  <div className="flex items-center space-x-3 text-muted-foreground">
-                    <div className="w-8 h-8 rounded-full bg-ai-primary/10 flex items-center justify-center">
-                      <Bot className="w-4 h-4 text-ai-primary animate-pulse" />
-                    </div>
-                    <div className="bg-muted px-4 py-2 rounded-lg max-w-md">
-                      <div className="flex items-center space-x-2 mb-2">
-                        <Loader2 className="w-4 h-4 text-ai-primary animate-spin" />
-                        <span className="text-sm font-medium">AI Assessment Generator</span>
-                      </div>
-                      {aiStage && (
-                        <div className="text-sm text-muted-foreground">
-                          {aiStage}
-                        </div>
-                      )}
-                      {!aiStage && (
-                        <div className="flex items-center space-x-2">
-                          <div className="w-2 h-2 bg-ai-primary rounded-full animate-bounce"></div>
-                          <div className="w-2 h-2 bg-ai-primary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                          <div className="w-2 h-2 bg-ai-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                          <span className="text-sm ml-2">AI is thinking...</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </ScrollArea>
-
-            <div className="p-4 border-t">
-              <div className="flex space-x-2">
-                <Input
-                  value={inputText}
-                  onChange={(e) => setInputText(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  placeholder="Describe the assessment you want to create..."
-                  disabled={isGenerating}
-                />
-                <Button 
-                  onClick={handleSendMessage}
-                  disabled={!inputText.trim() || isGenerating}
-                  size="sm"
-                  variant="ai"
-                >
-                  <Send className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-          </Card>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Quick Actions</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <Button 
-                className="w-full justify-start" 
-                variant="outline"
-                onClick={resetConversation}
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Create New Assessment
-              </Button>
-              <Button 
-                className="w-full justify-start" 
-                variant="outline"
-                onClick={() => setActiveView('my-assessments')}
-              >
-                <Eye className="w-4 h-4 mr-2" />
-                View My Assessments
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Assessment Stats</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-sm">Total Assessments</span>
-                  <span className="font-semibold">{savedAssessments.length}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-sm">Students Assigned</span>
-                  <span className="font-semibold">{savedAssessments.reduce((acc, curr) => acc + curr.assignedStudents, 0)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-sm">Completed Attempts</span>
-                  <span className="font-semibold">{savedAssessments.reduce((acc, curr) => acc + curr.completedAttempts, 0)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-sm">Avg Success Rate</span>
-                  <span className="font-semibold text-ai-success">
-                    {savedAssessments.length > 0 
-                      ? Math.round(savedAssessments.reduce((acc, curr) => acc + curr.avgScore, 0) / savedAssessments.length)
-                      : 0}%
-                  </span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
 
         {/* Student Assignment Dialog */}
         <Dialog open={showStudentSelection} onOpenChange={setShowStudentSelection}>
@@ -1194,7 +1063,7 @@ export const AIAssessmentCreator = () => {
                           </p>
                         </div>
                         <div className="p-3 bg-red-50 rounded-lg border border-red-200">
-                          <p className="text-sm font-medium text-red-800">Needs Improvement (0-59%)</p>
+                          <p className="text-sm font-medium text-red-808">Needs Improvement (0-59%)</p>
                           <p className="text-2xl font-bold text-red-600">
                             {assessmentInsights[selectedAssessment.id]?.filter(i => i.score < 60).length || 0}
                           </p>
@@ -1207,6 +1076,179 @@ export const AIAssessmentCreator = () => {
             )}
           </DialogContent>
         </Dialog>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold flex items-center">
+            <Brain className="w-6 h-6 mr-2 text-ai-primary" />
+            AI Assessment Creator
+          </h2>
+          <p className="text-muted-foreground">Create intelligent assessments with AI assistance</p>
+        </div>
+        <Button
+          variant="outline"
+          onClick={() => setActiveView('my-assessments')}
+        >
+          <FileCheck className="w-4 h-4 mr-2" />
+          My Assessments ({savedAssessments.length})
+        </Button>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Chat Interface */}
+        <div className="lg:col-span-2">
+          <Card className="h-[600px] flex flex-col">
+            <CardHeader className="border-b">
+              <CardTitle className="flex items-center">
+                <Sparkles className="w-5 h-5 mr-2 text-ai-primary" />
+                AI Assessment Assistant
+              </CardTitle>
+              <CardDescription>
+                Chat with AI to create customized assessments for your students
+              </CardDescription>
+            </CardHeader>
+            
+            <ScrollArea className="flex-1 p-4 max-h-[400px]">
+              <div className="space-y-4 pr-4">
+                {messages.map((message) => (
+                  <div
+                    key={message.id}
+                    className={`flex items-start space-x-3 ${
+                      message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''
+                    }`}
+                  >
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                      message.sender === 'bot' 
+                        ? 'bg-ai-primary/10 text-ai-primary' 
+                        : 'bg-ai-secondary/10 text-ai-secondary'
+                    }`}>
+                      {message.sender === 'bot' ? <Bot className="w-4 h-4" /> : <User className="w-4 h-4" />}
+                    </div>
+                    <div className={`max-w-[70%] p-3 rounded-lg ${
+                      message.sender === 'bot'
+                        ? 'bg-muted'
+                        : 'bg-ai-primary text-primary-foreground'
+                    }`}>
+                      <p className="text-sm whitespace-pre-wrap leading-relaxed">{message.text}</p>
+                      <div className="text-xs opacity-70 mt-1">
+                        {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                {isGenerating && (
+                  <div className="flex items-center space-x-3 text-muted-foreground">
+                    <div className="w-8 h-8 rounded-full bg-ai-primary/10 flex items-center justify-center">
+                      <Bot className="w-4 h-4 text-ai-primary animate-pulse" />
+                    </div>
+                    <div className="bg-muted px-4 py-2 rounded-lg max-w-md">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <Loader2 className="w-4 h-4 text-ai-primary animate-spin" />
+                        <span className="text-sm font-medium">AI Assessment Generator</span>
+                      </div>
+                      {aiStage && (
+                        <div className="text-sm text-muted-foreground">
+                          {aiStage}
+                        </div>
+                      )}
+                      {!aiStage && (
+                        <div className="flex items-center space-x-2">
+                          <div className="w-2 h-2 bg-ai-primary rounded-full animate-bounce"></div>
+                          <div className="w-2 h-2 bg-ai-primary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                          <div className="w-2 h-2 bg-ai-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                          <span className="text-sm ml-2">AI is thinking...</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </ScrollArea>
+
+            <div className="p-4 border-t">
+              <div className="flex space-x-2">
+                <Input
+                  value={inputText}
+                  onChange={(e) => setInputText(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Describe the assessment you want to create..."
+                  disabled={isGenerating}
+                />
+                <Button 
+                  onClick={handleSendMessage}
+                  disabled={!inputText.trim() || isGenerating}
+                  size="sm"
+                  variant="ai"
+                >
+                  <Send className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Quick Actions</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <Button 
+                className="w-full justify-start" 
+                variant="outline"
+                onClick={resetConversation}
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Create New Assessment
+              </Button>
+              <Button 
+                className="w-full justify-start" 
+                variant="outline"
+                onClick={() => setActiveView('my-assessments')}
+              >
+                <Eye className="w-4 h-4 mr-2" />
+                View My Assessments
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Assessment Stats</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-sm">Total Assessments</span>
+                  <span className="font-semibold">{savedAssessments.length}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm">Students Assigned</span>
+                  <span className="font-semibold">{savedAssessments.reduce((acc, curr) => acc + curr.assignedStudents, 0)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm">Completed Attempts</span>
+                  <span className="font-semibold">{savedAssessments.reduce((acc, curr) => acc + curr.completedAttempts, 0)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm">Avg Success Rate</span>
+                  <span className="font-semibold text-ai-success">
+                    {savedAssessments.length > 0 
+                      ? Math.round(savedAssessments.reduce((acc, curr) => acc + curr.avgScore, 0) / savedAssessments.length)
+                      : 0}%
+                  </span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 };
