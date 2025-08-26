@@ -272,6 +272,8 @@ export const AIAssessmentCreator = () => {
     }
   ]);
   const [activeView, setActiveView] = useState<'create' | 'my-assessments'>('create');
+  const [showAILoader, setShowAILoader] = useState(false);
+  const [showGeneratedAssessment, setShowGeneratedAssessment] = useState(false);
 
   const getStepPrompt = (step: ConversationStep): string => {
     switch (step) {
@@ -385,6 +387,10 @@ export const AIAssessmentCreator = () => {
     let botResponseText = "";
     
     if (currentStep === 'complete') {
+      // Trigger AI loader modal
+      setShowAILoader(true);
+      setIsGenerating(false);
+      
       // Show AI generation stages
       const stages = [
         "🤖 Analyzing your assessment requirements...",
@@ -399,7 +405,7 @@ export const AIAssessmentCreator = () => {
 
       for (let i = 0; i < stages.length; i++) {
         setAiStage(stages[i]);
-        await new Promise(resolve => setTimeout(resolve, 800));
+        await new Promise(resolve => setTimeout(resolve, 1000));
       }
 
       // Generate the actual assessment
@@ -418,9 +424,9 @@ export const AIAssessmentCreator = () => {
       };
 
       setGeneratedAssessment(assessment);
-      setShowAssessmentView(true);
+      setShowAILoader(false);
+      setShowGeneratedAssessment(true);
       setAiStage("");
-      setIsGenerating(false);
       return;
     } else {
       // Process current step and move to next
@@ -1249,6 +1255,317 @@ export const AIAssessmentCreator = () => {
           </Card>
         </div>
       </div>
+
+      {/* AI Generation Loader Modal */}
+      <Dialog open={showAILoader} onOpenChange={() => {}}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center justify-center text-center">
+              <Brain className="w-6 h-6 mr-2 text-ai-primary animate-pulse" />
+              AI Assessment Generator
+            </DialogTitle>
+          </DialogHeader>
+          <div className="py-8 text-center space-y-6">
+            <div className="relative">
+              <div className="w-20 h-20 mx-auto bg-gradient-to-br from-ai-primary/20 to-ai-secondary/20 rounded-full flex items-center justify-center">
+                <Wand2 className="w-10 h-10 text-ai-primary animate-spin" />
+              </div>
+              <div className="absolute -top-2 -right-2 w-6 h-6 bg-ai-accent rounded-full animate-bounce" />
+              <div className="absolute -bottom-2 -left-2 w-4 h-4 bg-ai-success rounded-full animate-bounce" style={{ animationDelay: '0.5s' }} />
+            </div>
+            
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold">Generating Your Assessment</h3>
+              <p className="text-muted-foreground">
+                Our AI is working hard to create a comprehensive assessment tailored to your requirements
+              </p>
+            </div>
+
+            <div className="bg-muted p-4 rounded-lg">
+              <div className="flex items-center space-x-3">
+                <Loader2 className="w-5 h-5 animate-spin text-ai-primary" />
+                <span className="text-sm">{aiStage || "Initializing AI agents..."}</span>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <div className="text-xs text-muted-foreground">Powered by Advanced AI</div>
+              <div className="flex justify-center space-x-1">
+                {[...Array(3)].map((_, i) => (
+                  <div 
+                    key={i}
+                    className="w-2 h-2 bg-ai-primary rounded-full animate-bounce"
+                    style={{ animationDelay: `${i * 0.2}s` }}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Generated Assessment Modal */}
+      <Dialog open={showGeneratedAssessment} onOpenChange={setShowGeneratedAssessment}>
+        <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden">
+          <DialogHeader>
+            <DialogTitle className="flex items-center justify-between">
+              <div className="flex items-center">
+                <FileText className="w-6 h-6 mr-2 text-ai-primary" />
+                Generated Assessment
+              </div>
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsEditMode(!isEditMode)}
+                >
+                  <Edit className="w-4 h-4 mr-2" />
+                  {isEditMode ? 'Preview' : 'Edit'}
+                </Button>
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    if (generatedAssessment) {
+                      const newAssessment: SavedAssessment = {
+                        id: generatedAssessment.id,
+                        title: generatedAssessment.title,
+                        description: generatedAssessment.description,
+                        difficulty: generatedAssessment.difficulty,
+                        mcqCount: generatedAssessment.questions.filter(q => q.type === 'mcq').length,
+                        shortCount: generatedAssessment.questions.filter(q => q.type === 'short').length,
+                        totalPoints: generatedAssessment.totalPoints,
+                        estimatedTime: generatedAssessment.timeLimit,
+                        createdAt: new Date(),
+                        assignedStudents: 0,
+                        completedAttempts: 0,
+                        avgScore: 0
+                      };
+                      setSavedAssessments(prev => [newAssessment, ...prev]);
+                      setShowGeneratedAssessment(false);
+                      setActiveView('my-assessments');
+                    }
+                  }}
+                >
+                  <Save className="w-4 h-4 mr-2" />
+                  Save to My Assessments
+                </Button>
+              </div>
+            </DialogTitle>
+          </DialogHeader>
+          
+          {generatedAssessment && (
+            <ScrollArea className="max-h-[75vh]">
+              <div className="space-y-6 p-1">
+                {/* Assessment Header */}
+                <Card>
+                  <CardHeader>
+                    <div className="space-y-4">
+                      {isEditMode ? (
+                        <Input
+                          value={generatedAssessment.title}
+                          onChange={(e) => setGeneratedAssessment(prev => 
+                            prev ? { ...prev, title: e.target.value } : null
+                          )}
+                          className="text-2xl font-bold"
+                          placeholder="Assessment Title"
+                        />
+                      ) : (
+                        <CardTitle className="text-2xl">{generatedAssessment.title}</CardTitle>
+                      )}
+                      
+                      {isEditMode ? (
+                        <Textarea
+                          value={generatedAssessment.description}
+                          onChange={(e) => setGeneratedAssessment(prev => 
+                            prev ? { ...prev, description: e.target.value } : null
+                          )}
+                          placeholder="Assessment Description"
+                          rows={2}
+                        />
+                      ) : (
+                        <CardDescription className="text-base">{generatedAssessment.description}</CardDescription>
+                      )}
+
+                      <div className="flex flex-wrap gap-4">
+                        <Badge variant="outline" className="px-3 py-1">
+                          <Target className="w-3 h-3 mr-1" />
+                          {generatedAssessment.difficulty}
+                        </Badge>
+                        <Badge variant="outline" className="px-3 py-1">
+                          <Clock className="w-3 h-3 mr-1" />
+                          {generatedAssessment.timeLimit}
+                        </Badge>
+                        <Badge variant="outline" className="px-3 py-1">
+                          <Award className="w-3 h-3 mr-1" />
+                          {generatedAssessment.totalPoints} Points
+                        </Badge>
+                        <Badge variant="outline" className="px-3 py-1">
+                          <HelpCircle className="w-3 h-3 mr-1" />
+                          {generatedAssessment.questions.length} Questions
+                        </Badge>
+                      </div>
+
+                      {isEditMode ? (
+                        <Textarea
+                          value={generatedAssessment.instructions}
+                          onChange={(e) => setGeneratedAssessment(prev => 
+                            prev ? { ...prev, instructions: e.target.value } : null
+                          )}
+                          placeholder="Instructions for students"
+                          rows={2}
+                        />
+                      ) : (
+                        <div className="bg-blue-50 border-l-4 border-blue-200 p-4 rounded">
+                          <h4 className="font-medium text-blue-900 mb-2">Instructions:</h4>
+                          <p className="text-blue-800">{generatedAssessment.instructions}</p>
+                        </div>
+                      )}
+                    </div>
+                  </CardHeader>
+                </Card>
+
+                {/* Questions */}
+                <div className="space-y-4">
+                  {generatedAssessment.questions.map((question, index) => (
+                    <Card key={question.id} className="border-l-4 border-l-ai-primary">
+                      <CardHeader>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <Badge variant="outline">
+                              Question {index + 1}
+                            </Badge>
+                            <Badge variant="secondary">
+                              {question.type.toUpperCase()}
+                            </Badge>
+                            <Badge variant="outline">
+                              {question.points} pts
+                            </Badge>
+                          </div>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        {isEditMode ? (
+                          <Textarea
+                            value={question.question}
+                            onChange={(e) => {
+                              const updatedQuestions = generatedAssessment.questions.map(q =>
+                                q.id === question.id ? { ...q, question: e.target.value } : q
+                              );
+                              setGeneratedAssessment(prev => prev ? {...prev, questions: updatedQuestions} : null);
+                            }}
+                            rows={2}
+                            className="text-lg"
+                          />
+                        ) : (
+                          <p className="text-lg font-medium">{question.question}</p>
+                        )}
+                        
+                        {question.type === 'mcq' && question.options && (
+                          <div className="space-y-3">
+                            {question.options.map((option, optionIndex) => (
+                              <div key={optionIndex} className="flex items-center space-x-3">
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                                  String.fromCharCode(65 + optionIndex) === question.correctAnswer 
+                                    ? 'bg-green-100 text-green-800 border-2 border-green-300' 
+                                    : 'bg-muted text-muted-foreground border'
+                                }`}>
+                                  {String.fromCharCode(65 + optionIndex)}
+                                </div>
+                                {isEditMode ? (
+                                  <Input
+                                    value={option}
+                                    onChange={(e) => {
+                                      const updatedQuestions = generatedAssessment.questions.map(q =>
+                                        q.id === question.id ? {
+                                          ...q, 
+                                          options: q.options?.map((opt, i) => i === optionIndex ? e.target.value : opt)
+                                        } : q
+                                      );
+                                      setGeneratedAssessment(prev => prev ? {...prev, questions: updatedQuestions} : null);
+                                    }}
+                                    className="flex-1"
+                                  />
+                                ) : (
+                                  <span className="flex-1">{option}</span>
+                                )}
+                                {String.fromCharCode(65 + optionIndex) === question.correctAnswer && (
+                                  <CheckCircle className="w-5 h-5 text-green-600" />
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {question.type === 'short' && (
+                          <div className="border-2 border-dashed border-muted rounded-lg p-4">
+                            <p className="text-muted-foreground text-center">
+                              Short answer response area (students will type their answer here)
+                            </p>
+                          </div>
+                        )}
+
+                        {question.type === 'essay' && (
+                          <div className="border-2 border-dashed border-muted rounded-lg p-6">
+                            <p className="text-muted-foreground text-center">
+                              Essay response area (students will write their detailed answer here)
+                            </p>
+                          </div>
+                        )}
+                        
+                        {question.explanation && (
+                          <div className="bg-blue-50 border-l-4 border-blue-200 p-3 rounded">
+                            <p className="text-sm text-blue-800">
+                              <strong>Explanation:</strong> {question.explanation}
+                            </p>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+
+                {/* Assessment Summary */}
+                <Card className="bg-gradient-to-r from-ai-primary/10 to-ai-secondary/10">
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <BookOpen className="w-5 h-5 mr-2 text-ai-primary" />
+                      Assessment Summary
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-ai-primary">
+                          {generatedAssessment.questions.filter(q => q.type === 'mcq').length}
+                        </div>
+                        <div className="text-sm text-muted-foreground">MCQ Questions</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-ai-primary">
+                          {generatedAssessment.questions.filter(q => q.type === 'short').length}
+                        </div>
+                        <div className="text-sm text-muted-foreground">Short Answer</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-ai-primary">
+                          {generatedAssessment.questions.filter(q => q.type === 'essay').length}
+                        </div>
+                        <div className="text-sm text-muted-foreground">Essay Questions</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-ai-primary">
+                          {generatedAssessment.totalPoints}
+                        </div>
+                        <div className="text-sm text-muted-foreground">Total Points</div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </ScrollArea>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
