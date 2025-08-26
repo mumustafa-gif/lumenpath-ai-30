@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { AssessmentGenerator } from "./AssessmentGenerator";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
 import { 
   Brain, 
   Send, 
@@ -18,7 +19,10 @@ import {
   Target,
   Clock,
   FileCheck,
-  UserCheck
+  UserCheck,
+  BarChart3,
+  TrendingUp,
+  Award
 } from "lucide-react";
 
 interface Message {
@@ -43,6 +47,22 @@ interface SavedAssessment {
   avgScore: number;
 }
 
+interface Student {
+  id: string;
+  name: string;
+  email: string;
+  avatar: string;
+  enrolled: boolean;
+}
+
+interface AssessmentInsight {
+  studentName: string;
+  score: number;
+  completedAt: Date;
+  timeSpent: string;
+  attempts: number;
+}
+
 export const AIAssessmentCreator = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -54,7 +74,37 @@ export const AIAssessmentCreator = () => {
   ]);
   const [inputText, setInputText] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
-  const [showAssessmentGenerator, setShowAssessmentGenerator] = useState(false);
+  const [showStudentSelection, setShowStudentSelection] = useState(false);
+  const [showInsights, setShowInsights] = useState(false);
+  const [selectedAssessment, setSelectedAssessment] = useState<SavedAssessment | null>(null);
+  
+  const [students] = useState<Student[]>([
+    { id: '1', name: 'Alex Johnson', email: 'alex.j@university.edu', avatar: '👨‍🎓', enrolled: true },
+    { id: '2', name: 'Sarah Chen', email: 'sarah.chen@university.edu', avatar: '👩‍🎓', enrolled: true },
+    { id: '3', name: 'Michael Rodriguez', email: 'm.rodriguez@university.edu', avatar: '👨‍🎓', enrolled: true },
+    { id: '4', name: 'Emma Wilson', email: 'emma.w@university.edu', avatar: '👩‍🎓', enrolled: true },
+    { id: '5', name: 'David Kim', email: 'david.kim@university.edu', avatar: '👨‍🎓', enrolled: true },
+    { id: '6', name: 'Lisa Thompson', email: 'lisa.t@university.edu', avatar: '👩‍🎓', enrolled: false },
+    { id: '7', name: 'James Brown', email: 'james.brown@university.edu', avatar: '👨‍🎓', enrolled: true },
+    { id: '8', name: 'Maria Garcia', email: 'maria.g@university.edu', avatar: '👩‍🎓', enrolled: true }
+  ]);
+
+  const [selectedStudents, setSelectedStudents] = useState<string[]>([]);
+
+  const [assessmentInsights] = useState<Record<string, AssessmentInsight[]>>({
+    '1': [
+      { studentName: 'Alex Johnson', score: 85, completedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), timeSpent: '42 min', attempts: 1 },
+      { studentName: 'Sarah Chen', score: 92, completedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), timeSpent: '38 min', attempts: 1 },
+      { studentName: 'Michael Rodriguez', score: 78, completedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), timeSpent: '51 min', attempts: 2 },
+      { studentName: 'Emma Wilson', score: 88, completedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), timeSpent: '45 min', attempts: 1 }
+    ],
+    '2': [
+      { studentName: 'David Kim', score: 95, completedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), timeSpent: '58 min', attempts: 1 },
+      { studentName: 'Lisa Thompson', score: 82, completedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), timeSpent: '62 min', attempts: 1 },
+      { studentName: 'James Brown', score: 79, completedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), timeSpent: '65 min', attempts: 2 }
+    ]
+  });
+
   const [savedAssessments, setSavedAssessments] = useState<SavedAssessment[]>([
     {
       id: '1',
@@ -97,6 +147,34 @@ export const AIAssessmentCreator = () => {
       assignedStudents: 48,
       completedAttempts: 41,
       avgScore: 85.7
+    },
+    {
+      id: '4',
+      title: 'Python Programming Assessment',
+      description: 'Practical coding assessment focusing on Python fundamentals',
+      difficulty: 'Intermediate',
+      mcqCount: 18,
+      shortCount: 6,
+      totalPoints: 100,
+      estimatedTime: '50 minutes',
+      createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+      assignedStudents: 29,
+      completedAttempts: 24,
+      avgScore: 76.8
+    },
+    {
+      id: '5',
+      title: 'Database Design Quiz',
+      description: 'Assessment on relational database concepts and SQL queries',
+      difficulty: 'Advanced',
+      mcqCount: 16,
+      shortCount: 7,
+      totalPoints: 90,
+      estimatedTime: '55 minutes',
+      createdAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
+      assignedStudents: 31,
+      completedAttempts: 26,
+      avgScore: 81.2
     }
   ]);
   const [activeView, setActiveView] = useState<'create' | 'my-assessments'>('create');
@@ -116,34 +194,18 @@ export const AIAssessmentCreator = () => {
     setIsGenerating(true);
 
     // Simulate AI processing
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
-    const botMessage: Message = {
-      id: (Date.now() + 1).toString(),
-      text: "Great! I'll help you create a detailed assessment for that topic. Let me open the AI Assessment Generator to gather more specific requirements and create your assessment.",
-      sender: 'bot',
-      timestamp: new Date()
-    };
-
-    setMessages(prev => [...prev, botMessage]);
-    setIsGenerating(false);
-
-    // Auto-open assessment generator after response
-    setTimeout(() => {
-      setShowAssessmentGenerator(true);
-    }, 1000);
-  };
-
-  const handleAssessmentGenerated = (assessment: any) => {
+    // Create a new assessment based on user input
     const newAssessment: SavedAssessment = {
       id: Date.now().toString(),
-      title: assessment.title,
-      description: assessment.description,
-      difficulty: assessment.metadata.difficulty,
-      mcqCount: assessment.mcqs.length,
-      shortCount: assessment.shortQuestions.length,
-      totalPoints: assessment.metadata.totalPoints,
-      estimatedTime: assessment.metadata.estimatedTime,
+      title: `${inputText} Assessment`,
+      description: `Comprehensive assessment covering ${inputText} concepts and applications`,
+      difficulty: ['Beginner', 'Intermediate', 'Advanced'][Math.floor(Math.random() * 3)],
+      mcqCount: Math.floor(Math.random() * 10) + 10,
+      shortCount: Math.floor(Math.random() * 5) + 3,
+      totalPoints: Math.floor(Math.random() * 50) + 50,
+      estimatedTime: `${Math.floor(Math.random() * 30) + 30} minutes`,
       createdAt: new Date(),
       assignedStudents: 0,
       completedAttempts: 0,
@@ -151,15 +213,49 @@ export const AIAssessmentCreator = () => {
     };
 
     setSavedAssessments(prev => [newAssessment, ...prev]);
-    
-    const successMessage: Message = {
-      id: Date.now().toString(),
-      text: `✅ Assessment "${assessment.title}" has been successfully created and saved to your My Assessments! You can now assign it to students and track their progress.`,
+
+    const botMessage: Message = {
+      id: (Date.now() + 1).toString(),
+      text: `✅ Perfect! I've created a comprehensive "${newAssessment.title}" with ${newAssessment.mcqCount} multiple choice questions and ${newAssessment.shortCount} short answer questions (${newAssessment.totalPoints} points total, estimated ${newAssessment.estimatedTime}). The assessment has been saved to your My Assessments! You can now assign it to students and track their progress.`,
       sender: 'bot',
       timestamp: new Date()
     };
 
-    setMessages(prev => [...prev, successMessage]);
+    setMessages(prev => [...prev, botMessage]);
+    setIsGenerating(false);
+  };
+
+  const handleAssignStudents = (assessment: SavedAssessment) => {
+    setSelectedAssessment(assessment);
+    setShowStudentSelection(true);
+  };
+
+  const handleViewInsights = (assessment: SavedAssessment) => {
+    setSelectedAssessment(assessment);
+    setShowInsights(true);
+  };
+
+  const handleStudentSelection = (studentId: string, checked: boolean) => {
+    if (checked) {
+      setSelectedStudents(prev => [...prev, studentId]);
+    } else {
+      setSelectedStudents(prev => prev.filter(id => id !== studentId));
+    }
+  };
+
+  const confirmAssignment = () => {
+    if (selectedAssessment && selectedStudents.length > 0) {
+      setSavedAssessments(prev => 
+        prev.map(assessment => 
+          assessment.id === selectedAssessment.id 
+            ? { ...assessment, assignedStudents: assessment.assignedStudents + selectedStudents.length }
+            : assessment
+        )
+      );
+      setShowStudentSelection(false);
+      setSelectedStudents([]);
+      setSelectedAssessment(null);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -272,7 +368,7 @@ export const AIAssessmentCreator = () => {
                     size="sm" 
                     variant="outline" 
                     className="flex-1"
-                    onClick={() => assignToStudents(assessment.id)}
+                    onClick={() => handleAssignStudents(assessment)}
                   >
                     <UserCheck className="w-3 h-3 mr-1" />
                     Assign
@@ -281,6 +377,7 @@ export const AIAssessmentCreator = () => {
                     size="sm" 
                     variant="outline" 
                     className="flex-1"
+                    onClick={() => handleViewInsights(assessment)}
                   >
                     <Eye className="w-3 h-3 mr-1" />
                     Insights
@@ -400,7 +497,7 @@ export const AIAssessmentCreator = () => {
               <Button 
                 className="w-full justify-start" 
                 variant="outline"
-                onClick={() => setShowAssessmentGenerator(true)}
+                onClick={() => setInputText("Create a new assessment")}
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Create New Assessment
@@ -448,12 +545,115 @@ export const AIAssessmentCreator = () => {
         </div>
       </div>
 
-      {showAssessmentGenerator && (
-        <AssessmentGenerator
-          onClose={() => setShowAssessmentGenerator(false)}
-          onAssessmentGenerated={handleAssessmentGenerated}
-        />
-      )}
+      {/* Student Selection Modal */}
+      <Dialog open={showStudentSelection} onOpenChange={setShowStudentSelection}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Assign Assessment to Students</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Select students to assign "{selectedAssessment?.title}"
+            </p>
+            <ScrollArea className="h-64">
+              <div className="space-y-2">
+                {students.filter(s => s.enrolled).map((student) => (
+                  <div key={student.id} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted">
+                    <Checkbox
+                      checked={selectedStudents.includes(student.id)}
+                      onCheckedChange={(checked) => handleStudentSelection(student.id, checked as boolean)}
+                    />
+                    <div className="text-2xl">{student.avatar}</div>
+                    <div className="flex-1">
+                      <p className="font-medium">{student.name}</p>
+                      <p className="text-xs text-muted-foreground">{student.email}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
+            <div className="flex justify-between">
+              <Button variant="outline" onClick={() => setShowStudentSelection(false)}>
+                Cancel
+              </Button>
+              <Button 
+                onClick={confirmAssignment}
+                disabled={selectedStudents.length === 0}
+                variant="ai"
+              >
+                Assign to {selectedStudents.length} students
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Insights Modal */}
+      <Dialog open={showInsights} onOpenChange={setShowInsights}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center">
+              <BarChart3 className="w-5 h-5 mr-2" />
+              Assessment Insights: {selectedAssessment?.title}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-6">
+            {/* Overview Stats */}
+            <div className="grid grid-cols-3 gap-4">
+              <Card>
+                <CardContent className="p-4 text-center">
+                  <div className="text-2xl font-bold text-ai-primary">{selectedAssessment?.assignedStudents}</div>
+                  <div className="text-sm text-muted-foreground">Assigned</div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4 text-center">
+                  <div className="text-2xl font-bold text-ai-success">{selectedAssessment?.completedAttempts}</div>
+                  <div className="text-sm text-muted-foreground">Completed</div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4 text-center">
+                  <div className="text-2xl font-bold text-ai-warning">{selectedAssessment?.avgScore}%</div>
+                  <div className="text-sm text-muted-foreground">Avg Score</div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Student Performance */}
+            {selectedAssessment && assessmentInsights[selectedAssessment.id] && (
+              <div>
+                <h3 className="font-semibold mb-3 flex items-center">
+                  <Award className="w-4 h-4 mr-2" />
+                  Student Performance
+                </h3>
+                <ScrollArea className="h-48">
+                  <div className="space-y-2">
+                    {assessmentInsights[selectedAssessment.id].map((insight, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 bg-muted rounded-lg">
+                        <div>
+                          <p className="font-medium">{insight.studentName}</p>
+                          <p className="text-xs text-muted-foreground">
+                            Completed {insight.completedAt.toLocaleDateString()} • {insight.timeSpent} • {insight.attempts} attempt(s)
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <div className={`text-lg font-bold ${
+                            insight.score >= 90 ? 'text-ai-success' :
+                            insight.score >= 70 ? 'text-ai-warning' : 'text-ai-error'
+                          }`}>
+                            {insight.score}%
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </ScrollArea>
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
